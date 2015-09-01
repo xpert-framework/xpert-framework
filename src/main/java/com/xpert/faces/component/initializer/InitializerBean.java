@@ -38,7 +38,7 @@ public class InitializerBean {
                 this.dao.setEntityManager(this.entityManager);
             }
         } catch (Throwable t) {
-            logger.log(Level.SEVERE, "Error on InitilizerBean Cosntructor.", t);
+            logger.log(Level.SEVERE, "Error on InitilizerBean Constructor.", t);
         }
     }
 
@@ -55,7 +55,7 @@ public class InitializerBean {
 
     public void initialize(ComponentSystemEvent event) {
         try {
-            initialize(event.getComponent(), FacesContext.getCurrentInstance(), (String) null);
+            initialize(event.getComponent(), FacesContext.getCurrentInstance(), (String) null, null);
         } catch (Throwable t) {
             logger.log(Level.SEVERE, null, t);
         }
@@ -120,23 +120,27 @@ public class InitializerBean {
      * @param component Component to get ValueExpression
      * @param context Current FacesCOntext
      * @param property Property Name to be initialized
+     * @param entityManager
      */
-    public void initialize(UIComponent component, FacesContext context, String property) {
+    public void initialize(UIComponent component, FacesContext context, String property, EntityManager entityManager) {
         if (property == null || property.isEmpty()) {
             property = "value";
         }
         ValueExpression valueExpression = component.getValueExpression(property);
-        initialize(component, context, valueExpression);
+        initialize(component, context, valueExpression, entityManager);
     }
 
-    /**
+    /** * 
      *
      * @param component Component to get ValueExpression
      * @param context Current FacesContext
      * @param valueExpression If passed ValueExpression will not be used, this value will
-     * be initilized
+     * @param entityManager* be initilized
      */
-    public void initialize(UIComponent component, FacesContext context, ValueExpression valueExpression) {
+    public void initialize(UIComponent component, FacesContext context, ValueExpression valueExpression, EntityManager entityManager) {
+        //set current entitymanager
+        this.entityManager = entityManager;
+        this.dao.setEntityManager(entityManager);
         if (valueExpression != null) {
             String expression = valueExpression.getExpressionString();
             Matcher matcher = Pattern.compile("\\#\\{.*?\\}").matcher(expression);
@@ -146,6 +150,22 @@ public class InitializerBean {
         }
     }
 
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public DAO getDao() {
+        return dao;
+    }
+
+    public void setDao(DAO dao) {
+        this.dao = dao;
+    }
+    
     public class ClassIdentifier {
 
         private Object id;

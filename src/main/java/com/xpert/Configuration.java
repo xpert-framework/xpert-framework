@@ -30,6 +30,7 @@ public class Configuration {
     public static Class METADATA_IMPL;
     public static Class AUDITING_LISTENER;
     public static Class ENTITY_MANAGER_FACTORY;
+    public static Class AUDIT_ENTITY_MANAGER_FACTORY;
     public static String BUNDLE;
 
     public static EntityManager getEntityManager() {
@@ -37,6 +38,19 @@ public class Configuration {
             EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
             if (entityManagerFactory == null) {
                 throw new RuntimeException("No EntityManagerFactory defined in xpert-config.xml");
+            }
+            return entityManagerFactory.getEntityManager();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    public static EntityManager getAuditEntityManager() {
+        try {
+            EntityManagerFactory entityManagerFactory = getAuditEntityManagerFactory();
+            if (entityManagerFactory == null) {
+                throw new RuntimeException("No AuditEntityManagerFactory defined in xpert-config.xml");
             }
             return entityManagerFactory.getEntityManager();
         } catch (Exception ex) {
@@ -58,6 +72,17 @@ public class Configuration {
         }
         try {
             return (EntityManagerFactory) ENTITY_MANAGER_FACTORY.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static EntityManagerFactory getAuditEntityManagerFactory() {
+        if (AUDIT_ENTITY_MANAGER_FACTORY == null) {
+            return null;
+        }
+        try {
+            return (EntityManagerFactory) AUDIT_ENTITY_MANAGER_FACTORY.newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -142,6 +167,14 @@ public class Configuration {
                         try {
                             ENTITY_MANAGER_FACTORY = Class.forName(children.item(temp).getTextContent(), true, Thread.currentThread().getContextClassLoader());
                             logger.log(Level.INFO, "Found EntityManagerFactory: {0}", ENTITY_MANAGER_FACTORY.getName());
+                        } catch (ClassNotFoundException ex) {
+                            logger.log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (children.item(temp).getNodeName().equals("audit-entity-manager-factory")) {
+                        try {
+                            AUDIT_ENTITY_MANAGER_FACTORY = Class.forName(children.item(temp).getTextContent(), true, Thread.currentThread().getContextClassLoader());
+                            logger.log(Level.INFO, "Found AuditEntityManagerFactory: {0}", AUDIT_ENTITY_MANAGER_FACTORY.getName());
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }

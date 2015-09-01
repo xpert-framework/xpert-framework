@@ -54,7 +54,7 @@
                                 </p:column>
                                 <p:column headerText="#{xmsg['object']}">
                                     <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
-                                        <x:initializer/>
+                                        <x:initializer entityManager="#{auditDeleteBean.baseDAO.entityManager}"/>
                                         <h:outputText value=", " rendered="#{status.index gt 0}"/>    
                                         <h:outputText value="#{metadata.getFieldName(cc.attrs.for)}: " style="font-weight: bold;"/>    
                                         <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    

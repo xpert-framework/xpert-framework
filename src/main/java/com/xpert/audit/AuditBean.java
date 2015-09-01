@@ -1,6 +1,6 @@
 package com.xpert.audit;
 
-import com.xpert.DAO;
+import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
@@ -27,7 +27,7 @@ public class AuditBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        baseDAO = new DAO(Configuration.AUDITING_IMPL);
+        baseDAO = new AuditDAO(Configuration.AUDITING_IMPL);
     }
     
     public boolean isPrimeFaces3(){
@@ -118,4 +118,10 @@ public class AuditBean implements Serializable{
     public void setObject(Object object) {
         this.object = object;
     }
+
+    public BaseDAO getBaseDAO() {
+        return baseDAO;
+    }
+    
+    
 }

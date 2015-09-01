@@ -100,7 +100,11 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     private Audit getNewAudit() {
-        return new Audit(getEntityManager());
+        if (Configuration.AUDIT_ENTITY_MANAGER_FACTORY != null) {
+            return new Audit(getEntityManager(), Configuration.getAuditEntityManager());
+        } else {
+            return new Audit(getEntityManager());
+        }
     }
 
     @Override

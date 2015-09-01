@@ -1,5 +1,6 @@
 package com.xpert.audit;
 
+import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.DAO;
 import com.xpert.audit.model.AbstractAuditing;
@@ -33,7 +34,7 @@ public class AuditDeleteBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        baseDAO = new DAO(Configuration.AUDITING_IMPL);
+        baseDAO = new AuditDAO(Configuration.AUDITING_IMPL);
     }
 
     public boolean isPrimeFaces3() {
@@ -119,4 +120,10 @@ public class AuditDeleteBean implements Serializable {
     public void setAuditings(LazyDataModel<AbstractAuditing> auditings) {
         this.auditings = auditings;
     }
+
+    public BaseDAO getBaseDAO() {
+        return baseDAO;
+    }
+    
+    
 }

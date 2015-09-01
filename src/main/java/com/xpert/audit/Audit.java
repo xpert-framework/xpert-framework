@@ -35,11 +35,20 @@ public class Audit {
     private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<Class, List<Method>>();
     private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<Method, Boolean>();
     private final EntityManager entityManager;
+    private final EntityManager auditEntityManager;
     private final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;
+        this.auditEntityManager = entityManager;
     }
+    
+    public Audit(EntityManager entityManager, EntityManager auditEntityManager) {
+        this.entityManager = entityManager;
+        this.auditEntityManager = auditEntityManager;
+    }
+    
+    
 
     /**
      * Get the object from database
@@ -245,13 +254,13 @@ public class Audit {
                 List<AbstractMetadata> metadatas = null;
                 boolean auditPersited = false;
                 if (auditingType.equals(AuditingType.INSERT) || auditingType.equals(AuditingType.DELETE)) {
-                    entityManager.persist(auditing);
+                    auditEntityManager.persist(auditing);
                     metadatas = getMetadata(object, null, auditing);
                     auditPersited = true;
                 } else if (auditingType.equals(AuditingType.UPDATE)) {
                     metadatas = getMetadata(object, persisted, auditing);
                     if (metadatas != null && !metadatas.isEmpty()) {
-                        entityManager.persist(auditing);
+                        auditEntityManager.persist(auditing);
                         auditPersited = true;
                     }
                 }
@@ -267,7 +276,7 @@ public class Audit {
 
                 if (metadatas != null && !metadatas.isEmpty()) {
                     for (AbstractMetadata metadata : metadatas) {
-                        entityManager.persist(metadata);
+                        auditEntityManager.persist(metadata);
                     }
                 }
 

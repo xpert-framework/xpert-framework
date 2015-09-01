@@ -53,11 +53,14 @@ public class InitializerHandler extends TagHandler {
 
     public void apply(final FaceletContext faceletContext, final UIComponent parent) throws IOException {
         if (ComponentHandler.isNew(parent)) {
-            ValueExpression valueExpression = getValueExpression(faceletContext);
-            InitializerBean initializerBean = getInitializerBean(faceletContext.getFacesContext(), getEntityManager(faceletContext));
+
+            EntityManager entityManager = getEntityManager(faceletContext);
             
+            ValueExpression valueExpression = getValueExpression(faceletContext);
+            InitializerBean initializerBean = getInitializerBean(faceletContext.getFacesContext(), entityManager);
+
             InitializerEventListener initializerEventListener = new InitializerEventListener(
-                    getProperty(faceletContext), valueExpression, faceletContext, parent, initializerBean);
+                    getProperty(faceletContext), valueExpression, faceletContext, parent, initializerBean, entityManager);
 
             parent.subscribeToEvent(PreRenderComponentEvent.class, initializerEventListener);
         }

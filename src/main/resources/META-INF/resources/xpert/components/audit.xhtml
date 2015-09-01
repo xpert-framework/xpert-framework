@@ -77,7 +77,7 @@
                                             <p:column colspan="5">  
                                                 <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}"
                                                              value="#{audit.metadatas}" rowIndexVar="indexMetadata">
-                                                    <x:initializer/>
+                                                    <x:initializer entityManager="#{auditBean.baseDAO.entityManager}"/>
                                                     <p:column style="text-align: center;">
                                                         <h:outputText value="#{indexMetadata+1}" />
                                                     </p:column>
@@ -132,7 +132,7 @@
                                                 <p:column colspan="5">  
                                                     <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}"
                                                                  value="#{audit.metadatas}" rowIndexVar="indexMetadata">
-                                                        <x:initializer/>
+                                                         <x:initializer entityManager="#{auditBean.baseDAO.entityManager}"/>
                                                         <p:column style="text-align: center;">
                                                             <h:outputText value="#{indexMetadata+1}" />
                                                         </p:column>
@@ -185,7 +185,7 @@
                                                 <p:column colspan="5">  
                                                     <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}"
                                                                  value="#{audit.metadatas}" rowIndexVar="indexMetadata">
-                                                        <x:initializer/>
+                                                         <x:initializer entityManager="#{auditBean.baseDAO.entityManager}"/>
                                                         <p:column style="text-align: center;">
                                                             <h:outputText value="#{indexMetadata+1}" />
                                                         </p:column>
