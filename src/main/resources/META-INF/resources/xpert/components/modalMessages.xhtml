@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface >
+        <cc:attribute name="autoUpdate" default="false" type="java.lang.Boolean" />
+        <cc:attribute name="escape" default="true" type="java.lang.Boolean"/>
+        <cc:attribute name="showDetail" default="false" type="java.lang.Boolean"/>
+        <cc:attribute name="showSummary" default="true" type="java.lang.Boolean"/>
+        <cc:attribute name="globalOnly" default="false" type="java.lang.Boolean"/>
+        <cc:attribute name="onconfirm" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation> 
+        <h:outputStylesheet library="xpert" name="css/style.css" />
+        <h:outputScript library="xpert" name="scripts/core.js" target="head" />
+        <div id="#{cc.attrs.clientId}" >
+            <p:outputPanel autoUpdate="#{cc.attrs.autoUpdate}">
+                <h:panelGroup rendered="#{not empty facesContext.messageList}">
+                    <p:dialog showHeader="false" closable="false" modal="true" appendToBody="true"
+                              id="xpertModalMessages1"
+                              onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)"
+                              rendered="#{primeFacesVersion.primeFaces3}"
+                              styleClass="faces-modal-messages" resizable="false"
+                              widgetVar="xpertModalDialogMessages" visible="true">
+                        <div class="modal-messages">
+                            <div class="modal-messages-list">
+                                <p:messages escape="#{cc.attrs.escape}" showDetail="#{cc.attrs.showDetail}" 
+                                            showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}"/>
+                            </div>
+                            <div align="center">
+                                <p:commandButton onclick="Xpert.closeModalMessages(xpertModalDialogMessages, function(){ #{cc.attrs.onconfirm} })"
+                                                 styleClass="button-confirm-modal" type="button" value="Ok" />
+
+                            </div>
+                        </div>
+                    </p:dialog>
+                    <p:dialog showHeader="false" closable="false" modal="true" appendTo="@(body)"
+                              onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)"
+                              id="xpertModalMessages2"
+                              rendered="#{not primeFacesVersion.primeFaces3}"
+                              styleClass="faces-modal-messages" resizable="false"
+                              widgetVar="xpertModalDialogMessages" visible="true">
+                        <div class="modal-messages">
+                            <div class="modal-messages-list">
+                                <p:messages escape="#{cc.attrs.escape}" showDetail="#{cc.attrs.showDetail}" 
+                                            showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}"/>
+                            </div>
+                            <div align="center">
+                                <p:commandButton onclick="Xpert.closeModalMessages(PF('xpertModalDialogMessages'), function(){ #{cc.attrs.onconfirm} } )"
+                                                 styleClass="button-confirm-modal" type="button" value="Ok" />
+                            </div>
+                        </div>
+                    </p:dialog>
+                </h:panelGroup>
+            </p:outputPanel>
+        </div>
+    </cc:implementation>
+</html>

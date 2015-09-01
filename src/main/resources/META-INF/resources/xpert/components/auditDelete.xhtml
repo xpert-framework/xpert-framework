@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:x="http://xpert.com/faces"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="for" required="true" type="java.lang.Class"/>
+        <cc:attribute name="collapsed" type="java.lang.Boolean" default="true" />
+        <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
+        <cc:attribute name="panelStyleClass" type="java.lang.String"  />
+        <cc:attribute name="buttonIcon" type="java.lang.String" default="ui-icon-plus" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:outputScript library="xpert" name="scripts/core.js" target="head" />
+        <span id="#{cc.attrs.clientId}">
+            <h:panelGroup id="detail">
+
+                <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="#{cc.attrs.buttonIcon}"
+                                 rendered="#{cc.attrs.collapsed}"
+                                 styleClass="button-detail-auditing-delete #{cc.attrs.buttonStyleClass}" style="margin-bottom: 2px;"
+                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.button-detail-auditing-delete').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.panel-detail-auditing-delete').show()"
+                                 update="accordionDetail" value="#{xmsg.listDeletions}" >
+                    <f:setPropertyActionListener value="#{cc.attrs.for}" target="#{auditDeleteBean.entity}" />
+                </p:commandButton>
+
+                <h:panelGroup rendered="#{not cc.attrs.collapsed}">
+                    <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.for)}" />
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
+                    <p:accordionPanel id="accordionDetail" >
+                        <p:tab title="#{xmsg.deletions}">
+
+                            <p:dataTable var="audit" value="#{auditDeleteBean.auditings}" styleClass="datatable-auditing"
+                                         emptyMessage="#{xmsg.noRecordFound}"  
+                                         rowsPerPageTemplate="10,20,30" rowIndexVar="index"
+                                         lazy="true"
+                                         paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate=" "
+                                         style="font-weight: normal;"
+                                         rows="10" paginatorPosition="bottom" >
+                                <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}">
+                                    <h:outputText value="#{audit.eventDate}" >
+                                        <f:convertDateTime dateStyle="medium" type="both"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{xmsg['object']}">
+                                    <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
+                                        <x:initializer/>
+                                        <h:outputText value=", " rendered="#{status.index gt 0}"/>    
+                                        <h:outputText value="#{metadata.getFieldName(cc.attrs.for)}: " style="font-weight: bold;"/>    
+                                        <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    
+                                    </ui:repeat>
+                                </p:column>
+                                <p:column headerText="#{xmsg['user']}">
+                                    <h:outputText value="#{audit.userName}" />
+                                </p:column>
+                                <p:column headerText="#{xmsg['ip']}">
+                                    <h:outputText value="#{audit.ip}" />
+                                </p:column>
+                                <p:column>  
+                                    <x:audit for="#{audit}" forClass="#{cc.attrs.for}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:accordionPanel>
+                </h:panelGroup>
+            </h:panelGroup>
+        </span>
+    </cc:implementation>
+</html>

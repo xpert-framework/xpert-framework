@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="value" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <table id="#{cc.attrs.clientId}">
+            <tr>
+                <ui:repeat var="locale" value="#{localeBean.locales}">
+                    <td valign="middle">
+                        <h:commandButton style="width: 32px; height: 20px; #{view.locale == locale ? 'border: 2px solid #CDAD00' : ''}" 
+                                         action="#{localeBean.changeLocale}"
+                                         image="#{resource['xpert:images/'.concat(locale).concat('.gif')]}" title="#{locale.country}">
+                            <f:setPropertyActionListener target="#{localeBean.locale}" value="#{locale}" />
+                        </h:commandButton>
+                    </td>
+                </ui:repeat>
+            </tr>
+        </table>
+    </cc:implementation>
+</html>

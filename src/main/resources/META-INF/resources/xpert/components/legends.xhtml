@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="calendar" type="java.lang.Boolean" default="false" />
+        <cc:attribute name="open" type="java.lang.Boolean" default="false" />
+        <cc:attribute name="close" type="java.lang.Boolean" default="false" />
+        <cc:attribute name="edit" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="delete" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="print" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="detail" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="select" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="download" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="replace" type="java.lang.Boolean" default="false"  />
+        <cc:attribute name="vertical" type="java.lang.Boolean" default="false" />
+        <cc:attribute name="report" type="java.lang.Boolean" default="false" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:outputStylesheet library="xpert" name="css/style.css" />
+        <div class="uix-legends" id="#{cc.attrs.clientId}">
+            <h:panelGrid class="uix-legends-grid" columns="#{cc.attrs.vertical ? 1 : 2}" >
+                <p:commandButton rendered="#{cc.attrs.edit}" styleClass="legends-item" value="#{xmsg['edit']}" type="button" icon="ui-icon-pencil" />
+                <p:commandButton rendered="#{cc.attrs.delete}" styleClass="legends-item" value="#{xmsg['delete']}" type="button" icon="ui-icon-trash" />
+                <p:commandButton rendered="#{cc.attrs.print}" styleClass="legends-item" value="#{xmsg['print']}" type="button" icon="ui-icon-print" />
+                <p:commandButton rendered="#{cc.attrs.detail}" styleClass="legends-item" value="#{xmsg['detail']}" type="button" icon="ui-icon-zoomin" />
+                <p:commandButton rendered="#{cc.attrs.select}" styleClass="legends-item" value="#{xmsg['select']}" type="button" icon="ui-icon-check" />
+                <p:commandButton rendered="#{cc.attrs.download}" styleClass="legends-item" value="#{xmsg['download']}" type="button" icon="ui-icon-disk" />
+                <p:commandButton rendered="#{cc.attrs.replace}" styleClass="legends-item" value="#{xmsg['replace']}" type="button" icon="ui-icon-transferthick-e-w" />
+                <p:commandButton rendered="#{cc.attrs.report}" styleClass="legends-item" value="#{xmsg['report']}" type="button" icon="ui-icon-document" />
+                <p:commandButton rendered="#{cc.attrs.calendar}" styleClass="legenda-tabela" value="#{xmsg['calendar']}" type="button" icon="ui-icon-calendar" />
+                <p:commandButton rendered="#{cc.attrs.open}" styleClass="legenda-tabela" value="#{xmsg['open']}" type="button" icon="ui-icon-unlocked" />
+                <p:commandButton rendered="#{cc.attrs.close}" styleClass="legenda-tabela" value="#{xmsg['close']}" type="button" icon="ui-icon-locked" />
+                
+                
+            </h:panelGrid>
+        </div>
+    </cc:implementation>
+</html>

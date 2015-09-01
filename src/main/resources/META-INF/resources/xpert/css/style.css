@@ -1,0 +1,74 @@
+.modal-messages{}
+.conteiner-message{margin: 3px 0;}
+.conteiner-message .info{background: #FFFFE0; border-color: #EEE8AA; color: #4F4F4F; border: 1px solid #CDAD00}
+.inner-conteiner-message{padding: 10px; margin: 10px 0;}
+.icon-conteiner-message{margin: 0 3px; float: left;}
+.overlay-download {position: absolute;left: 0px;top: 0px;width:100%;height:100%; text-align:center; z-index: 1000;}
+.overlay-download .content{font-size: 14px; width:150px; background-color: #fff; border:1px solid #9C9C9C; padding:15px; text-align:center;  position: fixed; top: 50%;left: 50%; margin-top: -50px; margin-left: -100px;}
+.overlay-download .content p{margin: 3px 0; color:#9C9C9C; font-weight: bold;}
+.x-loading-image {background: url("#{resource['xpert:images/loading.gif']}") no-repeat;  display: block; padding: 0; height: 30px; width: 30px;}
+.hidden{display: none;}
+.datatable-auditing{}
+.datatable-auditing td{font-size: 11px;}
+.datatable-auditing .ui-datatable-summaryrow{display: none;}
+.datatable-auditing .ui-datatable-summaryrow td{font-size: 11px; font-weight: normal;}
+.legends-item{font-size: 9px !important; font-weight: normal !important; margin-bottom: 1px; width: 62px; border: 0 !important;}
+.panel-calendar-filter{width: 100px;margin: 0 auto; font-size: 0.9em}
+.panel-calendar-filter table td{padding: 0 !important; border: 0 !important;}
+.panel-calendar-filter > table {table-layout: auto;}
+.panel-calendar-filter .ui-inputfield {width: 55px;}
+.panel-calendar-filter .calendar-filter{white-space: nowrap;}
+.calendar-filter{}
+.calendar-filter input{width: 70px;padding: 2px; }
+.uix-center{text-align: center;}
+.uix-datatable-index{text-align: center;width: 1%;padding: 2px !important;}
+.uix-datatable-actions{text-align: center;width: 1%}
+.uix-legends{white-space: normal;margin: 0 auto;}
+.uix-legends-grid, .uix-legends-grid td{border: 0 !important;}
+.uix-legends .uix-legends-grid td{padding: 0px !important;}
+.uix-legends .ui-button .ui-button-text{padding: 1px; padding-left: 12px;}
+.form-detail .form-group > label{font-weight: bold;}
+.bold{font-weight: bold;}
+.uix-autocomplete{display: block !important;}
+.uix-autocomplete .ui-inputfield{width: 100%; height: 34px;}
+
+.uix-content-detail::after {content: "\00a0"}
+.ui-dialog .container-fluid .row{margin-left: 0; margin-right: 0;}
+.uix-form-detail .form-control-static::after {content: "\00a0"}
+.uix-form-detail .control-label {font-weight: bold;}
+.uix-dialog-fluid { width: 85% !important; height: 85% !important;left: 7.5% !important;}
+.uix-dialog-fluid .ui-resizable-handle{display: none !important;}
+.uix-dialog-fluid .ui-dialog-content { max-height: 80% !important;}
+.uix-datatable-actions{white-space: nowrap !important;}
+.panel-calendar-filter a{font-weight: normal; font-size: 10px;}
+th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
+.faces-modal-messages{max-height: 90%; max-width: 90%; overflow-y: auto !important;}
+.uix-table-actions{text-align: right;  margin-bottom: 3px; margin-top: 3px;}
+.uix-audit-delete{text-align: center; margin-top: 10px;}
+.uix-confirm-dialog{max-width: 90%; max-height: 90%;}
+.uix-confirm-dialog .ui-dialog-content{max-height: 80% !important;}
+.uix-confirm-dialog .dialog-confirm-message{max-height: 300px;}
+.uix-spinner{padding: 0;}
+.uix-spinner .ui-inputfield{border: 0; width: 100%; height: 32px;}
+.uix-calendar{white-space: nowrap}
+.uix-calendar .ui-inputfield{width: 100%; height: 34px;}
+.uix-calendar .ui-inputfield.hasDatepicker {padding-right: 35px;}
+.uix-calendar .ui-datepicker-trigger.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only { left: -31px;}
+.uix-select-menu{padding: 0; width: 100% !important; }
+.uix-select-menu.ui-selectonemenu , .uix-select-menu.ui-selectcheckboxmenu{height: 34px;}
+.uix-select-menu .ui-selectonemenu-label{width: 100% !important;}
+.uix-select-menu .ui-inputfield{padding: 7px;}
+.uix-select-menu .ui-selectonemenu-trigger{width:  25px !important;}
+.uix-select-menu label{margin-bottom: 0;}
+.uix-select-menu .ui-selectcheckboxmenu-trigger{width:  25px !important;}
+.uix-select-menu .ui-selectcheckboxmenu-label {padding: 7px !important;}
+.uix-select-menu .ui-selectonemenu-trigger .ui-icon {margin-top: 7px !important;}
+.uix-select-menu .ui-selectcheckboxmenu-trigger .ui-icon {margin-top: 7px !important;}
+.uix-select-menupanel .ui-selectonemenu-filter-container{width: 100%}
+.uix-select-menupanel .ui-inputfield{width: 100% !important}
+.uix-select-menu .ui-inputfield.ui-selectlistbox-filter{width: 100%}
+.uix-select-menu .ui-chkbox-box{margin-right: 5px;}
+
+
+
+

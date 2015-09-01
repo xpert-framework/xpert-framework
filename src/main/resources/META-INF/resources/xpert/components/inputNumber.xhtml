@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="limit" type="java.lang.Integer" default="15"/>
+        <cc:attribute name="centsSeparator" type="String"/>
+        <cc:attribute name="thousandsSeparator" type="String" />
+        <cc:attribute name="centsLimit" type="java.lang.Integer" default="2"/>
+        <cc:attribute name="requiredMessage" />
+        <cc:attribute name="required" default="false"/>
+        <cc:attribute name="value"/>
+        <cc:attribute name="readonly"/>
+        <cc:attribute name="disabled"/>
+        <cc:attribute name="allowNegative" default="false"/>
+        <cc:attribute name="size" type="java.lang.Integer" default="20"/>
+        <cc:attribute name="style" type="String"/>
+        <cc:attribute name="styleClass" type="String"/>
+        <cc:attribute name="converterMessage" type="String" displayName="Invalid value"/>
+        <cc:editableValueHolder name="input" targets="input" />
+        <cc:clientBehavior name="valueChange" event="valueChange" default="true"  targets="input"/>
+        <cc:clientBehavior name="keyup" event="keyup" targets="input"/>
+        <cc:clientBehavior name="keydown" event="keydown" targets="input"/>
+        <cc:clientBehavior name="blur" event="blur" targets="input"/>
+        <cc:clientBehavior name="change" event="change" targets="input"/>
+        <cc:clientBehavior name="click" event="click" targets="input"/>
+        <cc:clientBehavior name="focus" event="focus" targets="input"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <span id="#{cc.attrs.clientId}">
+            <p:inputText  readonly="#{cc.attrs.readonly}" id="input" style="#{cc.attrs.style}"  
+                          styleClass="#{cc.attrs.styleClass}" value="#{cc.attrs.value}"
+                          disabled="#{cc.attrs.disabled}"
+                          required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
+                          size="#{cc.attrs.size}" converterMessage="#{cc.attrs.converterMessage}" >
+                <f:convertNumber maxFractionDigits="#{cc.attrs.centsLimit}" locale="#{view.locale}"
+                                 minFractionDigits="#{cc.attrs.centsLimit}" />
+            </p:inputText>
+            <h:outputScript library="xpert" name="scripts/jquery.price_format.js" target="head" />
+            <h:panelGroup rendered="#{not cc.attrs.readonly and not cc.attrs.disabled}">
+                <script type="text/javascript">$(function() {$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}:input')).priceFormat({limit: #{cc.attrs.limit}, prefix: '', centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', allowNegative:#{cc.attrs.allowNegative}, centsLimit: #{cc.attrs.centsLimit}});});</script>
+            </h:panelGroup>
+        </span>
+    </cc:implementation>
+</html>

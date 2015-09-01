@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="value"/>
+        <cc:attribute name="readonly" type="java.lang.Boolean" default="false"/>
+        <cc:attribute name="disabled" type="java.lang.Boolean" default="false"/>
+        <cc:attribute name="size" default="20"/>
+        <cc:attribute name="required" default="false" type="java.lang.Boolean"/>
+        <cc:attribute name="requiredMessage"/>
+        <cc:attribute name="style"/>
+        <cc:attribute name="styleClass"/>
+        <cc:attribute name="placeHolder" default=""/>
+        <cc:editableValueHolder name="input" targets="input" />
+        <cc:clientBehavior name="valueChange" event="valueChange" default="true"  targets="input"/>
+        <cc:clientBehavior name="keyup" event="keyup" targets="input"/>
+        <cc:clientBehavior name="keydown" event="keydown" targets="input"/>
+        <cc:clientBehavior name="blur" event="blur" targets="input"/>
+        <cc:clientBehavior name="change" event="change" targets="input"/>
+        <cc:clientBehavior name="click" event="click" targets="input"/>
+        <cc:clientBehavior name="focus" event="focus" targets="input"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <span id="#{cc.attrs.clientId}">
+            <p:inputMask id="input" mask="#{formatMB.format.cnpj}" validator="cnpjValidator"  placeHolder="#{cc.attrs.placeHolder}"
+                         style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}"
+                         value="#{cc.attrs.value}" converter="cnpjConverter" size="#{cc.attrs.size}" 
+                         required="#{cc.attrs.required}" requiredMessage="#{cc.attrs.requiredMessage}"
+                         readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"/>
+        </span>
+    </cc:implementation>
+</html>

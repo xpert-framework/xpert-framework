@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface >
+        <cc:attribute name="requiredUserMessage" default="User is Required" />
+        <cc:attribute name="requiredPasswordMessage" default="Password is Required" />
+        <cc:attribute name="labelUser" default="User" />
+        <cc:attribute name="labelPassword" default="Password" />
+        <cc:attribute name="labelButtonLogin" default="Login" />
+        <cc:attribute name="managedBean" required="true" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation> 
+
+        <h:panelGrid>
+
+            <h:outputLabel for="user" value="#{cc.attrs.labelUser}"/>
+            <p:inputText id="user" value="#{cc.attrs.managedBean.userLogin}" size="30" required="true" requiredMessage="#{cc.attrs.requiredUserMessage}"/>
+
+            <h:outputLabel for="password" value="#{cc.attrs.labelPassword}"/>
+            <p:password feedback="false" id="password" value="#{cc.attrs.managedBean.userPassword}" size="30" required="true" requiredMessage="#{cc.attrs.requiredPasswordMessage}"/>
+
+        </h:panelGrid>
+        <p:commandButton process="@form" update="@form" value="#{cc.attrs.labelButtonLogin}" action="#{cc.attrs.managedBean.login}"/>
+
+    </cc:implementation>
+</html>

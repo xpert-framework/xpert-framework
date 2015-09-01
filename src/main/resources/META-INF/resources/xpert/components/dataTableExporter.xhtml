@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="target"/>
+        <cc:attribute name="fileName"/>
+        <cc:attribute name="fontSize" default="7" />
+        <cc:attribute name="landscape" default="true"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <span id="#{cc.attrs.clientId}" class="uix-table-export">
+
+            <p:commandButton type="button" title="#{xmsg['export']}"  value="#{xmsg['export']}" icon="ui-icon-arrowthickstop-1-s"
+                             id="buttonExport" />
+
+            <p:overlayPanel for="buttonExport">
+
+                <p:menuButton value="#{xmsg['currentPage']}">
+                    <p:menuitem value="Excel" immediate="true" ajax="false">
+                        <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
+                                     skipComponents="javax.faces.component.UIPanel"/>
+                    </p:menuitem>
+                    <p:menuitem value="PDF" immediate="true" ajax="false">
+                        <pe:exporter pageOnly="true" cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
+                                     orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" 
+                                     skipComponents="javax.faces.component.UIPanel"
+                                     preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                                     type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                    </p:menuitem>
+                    <p:menuitem value="CSV" immediate="true" ajax="false">
+                        <p:dataExporter pageOnly="true" type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                    </p:menuitem>
+                </p:menuButton>
+                <p:menuButton value="#{xmsg['allPages']}">
+                    <p:menuitem value="Excel" immediate="true" ajax="false">
+                        <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
+                                      skipComponents="javax.faces.component.UIPanel"/>
+                    </p:menuitem>
+                    <p:menuitem value="PDF" immediate="true" ajax="false">
+                        <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" 
+                                     cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
+                                     skipComponents="javax.faces.component.UIPanel"
+                                     preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                                     target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                    </p:menuitem>
+                    <p:menuitem value="CSV" immediate="true" ajax="false">
+                        <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                    </p:menuitem>
+                </p:menuButton>
+
+            </p:overlayPanel>
+        </span>
+
+    </cc:implementation>
+</html>
