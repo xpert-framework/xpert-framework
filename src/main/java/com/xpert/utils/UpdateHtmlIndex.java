@@ -15,10 +15,17 @@ public class UpdateHtmlIndex {
     public static void main(String[] args) throws FileNotFoundException {
         updateIndex("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven");
     }
+    
+    public static void main2(String[] args) throws FileNotFoundException {
+        File file = new File("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven\\.index\\");
+        file.mkdirs();
+    }
 
     public static void updateIndex(String file) throws FileNotFoundException {
         updateIndex(new File(file), "");
     }
+    
+   
 
     public static void updateIndex(File file, String root) throws FileNotFoundException {
         if (file == null) {
@@ -41,9 +48,14 @@ public class UpdateHtmlIndex {
         html.append("<a href=\"../\">../</a>\n");
         if (files != null && files.length > 0) {
             for (File child : files) {
-                if (!child.getName().equals("index.html")) {
+                if (!child.getName().equals("index.html") && !child.getName().equals(".index")) {
 
-                    String link = "<a href=\"" + child.getName() + "/\">" + child.getName() + "</a>";
+                    String fileName = child.getName();
+                    if(child.isDirectory()){
+                        fileName = fileName+"/";
+                    }
+                    
+                    String link = "<a href=\"" + fileName + "\">" + fileName + "</a>";
                     html.append(link);
                     html.append(org.apache.commons.lang.StringUtils.rightPad("", 51 - child.getName().length()));
                     html.append(dateFormat.format(file.lastModified()));
