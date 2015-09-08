@@ -53,7 +53,7 @@ public abstract class AbstractBaseBean<T> {
     public abstract AbstractBusinessObject getBO();
 
     /**
-     * @return Default order od LazyDatamodel
+     * @return Default order of LazyDataModel
      */
     public abstract String getDataModelOrder();
 
