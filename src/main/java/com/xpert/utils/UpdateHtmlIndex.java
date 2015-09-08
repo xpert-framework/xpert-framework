@@ -57,7 +57,7 @@ public class UpdateHtmlIndex {
                     
                     String link = "<a href=\"" + fileName + "\">" + fileName + "</a>";
                     html.append(link);
-                    html.append(org.apache.commons.lang.StringUtils.rightPad("", 51 - child.getName().length()));
+                    html.append(org.apache.commons.lang.StringUtils.rightPad("", 51 - fileName.length()));
                     html.append(dateFormat.format(file.lastModified()));
                     html.append(org.apache.commons.lang.StringUtils.rightPad("", 19));
                     if (child.isDirectory()) {
