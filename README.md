@@ -22,7 +22,17 @@ Add this dependency to your `pom.xml`.
     <version>1.8.2</version>
 </dependency>
 ```
-<sub>_* Xpert-framework is not in maven central, so you need to manually install_</sub>
+
+Add this repository:
+
+```xml
+<repositories>
+	<repository>
+		<id>xpert-framework</id>
+		<url>http://xpert-framework.github.io/maven/</url>
+	</repository>
+</repositories>
+```
 
 **Archetypes**
 
