@@ -29,7 +29,11 @@ import javax.swing.JTextArea;
  * @author ayslan
  */
 public class MakerSwingFrame extends javax.swing.JFrame {
-
+    
+    public static final String URL_DOCUMENTATION = "https://github.com/xpert-framework/xpert-framework/wiki";
+    public static final String URL_SHOWCASE = "http://showcase.xpertsistemas.com.br/";
+    public static final String URL_XPERT_SISTEMAS = "http://showcase.xpertsistemas.com.br/";
+    
     private static final String JAVA_PROJECT_PREFFIX = File.separator + "java";
     private static final Logger logger = Logger.getLogger(MakerSwingFrame.class.getName());
     private static final Color BLUE = new Color(66, 139, 202);
@@ -173,9 +177,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         createLabelTabbedPanel("Create Classes", 2);
 
         //create links
-        SwingUtils.createHiperLink(labelLinkDocs, "https://code.google.com/p/xpert-framework/wiki/Download?tm=2", "https://code.google.com/p/xpert-framework/wiki/Download?tm=2");
-        SwingUtils.createHiperLink(labelLinkShowcase, "http://showcase.xpertsistemas.com.br/", "http://showcase.xpertsistemas.com.br/");
-        SwingUtils.createHiperLink(labelLinkXpertSistemas, "http://www.xpertsistemas.com.br/", "http://www.xpertsistemas.com.br/");
+        SwingUtils.createHiperLink(labelLinkDocs, MakerSwingFrame.URL_DOCUMENTATION, MakerSwingFrame.URL_DOCUMENTATION);
+        SwingUtils.createHiperLink(labelLinkShowcase, MakerSwingFrame.URL_SHOWCASE, MakerSwingFrame.URL_SHOWCASE);
+        SwingUtils.createHiperLink(labelLinkXpertSistemas, MakerSwingFrame.URL_XPERT_SISTEMAS, MakerSwingFrame.URL_XPERT_SISTEMAS);
 
         addTootipTextWithLocations(textClassMB, "Directory of Class Managed Bean (ClassMB)");
         addTootipTextWithLocations(textResourceBundleLocation, "Directory of default messages resource bundles");
@@ -848,11 +852,13 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         labelLinkDocs.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelLinkDocs.setForeground(new java.awt.Color(51, 51, 255));
-        labelLinkDocs.setText("https://code.google.com/p/xpert-framework/wiki/Download?tm=2");
+        labelLinkDocs.setText(MakerSwingFrame.URL_DOCUMENTATION);
+        labelLinkDocs.setToolTipText(MakerSwingFrame.URL_DOCUMENTATION);
 
         labelLinkShowcase.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelLinkShowcase.setForeground(new java.awt.Color(51, 51, 255));
-        labelLinkShowcase.setText("http://showcase.xpertsistemas.com.br/");
+        labelLinkShowcase.setText(MakerSwingFrame.URL_XPERT_SISTEMAS);
+        labelLinkShowcase.setToolTipText(MakerSwingFrame.URL_XPERT_SISTEMAS);
 
         labelShowcase.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelShowcase.setText("Xpert-framework showcase:");
@@ -872,7 +878,8 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
         labelLinkXpertSistemas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelLinkXpertSistemas.setForeground(new java.awt.Color(51, 51, 255));
-        labelLinkXpertSistemas.setText("http://www.xpertsistemas.com.br/");
+        labelLinkXpertSistemas.setText(MakerSwingFrame.URL_XPERT_SISTEMAS);
+        labelLinkXpertSistemas.setToolTipText(MakerSwingFrame.URL_XPERT_SISTEMAS);
 
         javax.swing.GroupLayout panelClassesConfigurationLayout = new javax.swing.GroupLayout(panelClassesConfiguration);
         panelClassesConfiguration.setLayout(panelClassesConfigurationLayout);
