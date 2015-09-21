@@ -4,6 +4,7 @@ import com.xpert.faces.component.datefilter.DateFilter;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.query.RestrictionsNormalizer;
+import com.xpert.utils.StringEscapeUtils;
 import java.io.IOException;
 import java.util.Map;
 import javax.el.ValueExpression;
@@ -66,7 +67,11 @@ public class RestorableFilterRenderer extends Renderer {
                                 String columnId = column.getContainerClientId(context);
                                 String filterId = columnId + separator + "filter";
                                 Object filterValue = filters.get(expressionString);
-                                bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(filterValue).append("');");
+                                String escapedValue = "";
+                                if (filterValue != null) {
+                                    escapedValue = StringEscapeUtils.escapeJavaScript(filterValue.toString());
+                                }
+                                bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(escapedValue).append("');");
                                 UIComponent header = column.getFacet("header");
                                 if (header != null) {
                                     for (UIComponent child : header.getChildren()) {
