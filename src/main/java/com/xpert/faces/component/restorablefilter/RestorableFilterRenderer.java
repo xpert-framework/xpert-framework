@@ -67,9 +67,8 @@ public class RestorableFilterRenderer extends Renderer {
                                 String columnId = column.getContainerClientId(context);
                                 String filterId = columnId + separator + "filter";
                                 Object filterValue = filters.get(expressionString);
-                                String escapedValue = "";
                                 if (filterValue != null) {
-                                    escapedValue = StringEscapeUtils.escapeJavaScript(filterValue.toString());
+                                    String escapedValue = StringEscapeUtils.escapeJavaScript(filterValue.toString());
                                     bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(escapedValue).append("');");
                                     UIComponent header = column.getFacet("header");
                                     if (header != null) {
