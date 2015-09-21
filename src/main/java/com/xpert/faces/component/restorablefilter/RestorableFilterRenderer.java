@@ -70,23 +70,23 @@ public class RestorableFilterRenderer extends Renderer {
                                 String escapedValue = "";
                                 if (filterValue != null) {
                                     escapedValue = StringEscapeUtils.escapeJavaScript(filterValue.toString());
-                                }
-                                bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(escapedValue).append("');");
-                                UIComponent header = column.getFacet("header");
-                                if (header != null) {
-                                    for (UIComponent child : header.getChildren()) {
-                                        if (child instanceof DateFilter) {
-                                            String[] dates = filterValue.toString().split(RestrictionsNormalizer.DATE_FILTER_INTERVAL_SEPARATOR);
-                                            String start = "";
-                                            if (dates.length > 0) {
-                                                start = dates[0];
+                                    bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(escapedValue).append("');");
+                                    UIComponent header = column.getFacet("header");
+                                    if (header != null) {
+                                        for (UIComponent child : header.getChildren()) {
+                                            if (child instanceof DateFilter) {
+                                                String[] dates = filterValue.toString().split(RestrictionsNormalizer.DATE_FILTER_INTERVAL_SEPARATOR);
+                                                String start = "";
+                                                if (dates.length > 0) {
+                                                    start = dates[0];
+                                                }
+                                                String end = "";
+                                                if (dates.length > 1) {
+                                                    end = dates[1];
+                                                }
+                                                bodyScript.append("Xpert.refreshDateFilter('").append(columnId).append("', '").append(start).append("','").append(end).append("');");
+                                                break;
                                             }
-                                            String end = "";
-                                            if (dates.length > 1) {
-                                                end = dates[1];
-                                            }
-                                            bodyScript.append("Xpert.refreshDateFilter('").append(columnId).append("', '").append(start).append("','").append(end).append("');");
-                                            break;
                                         }
                                     }
                                 }
