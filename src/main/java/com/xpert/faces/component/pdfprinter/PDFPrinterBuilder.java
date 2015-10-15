@@ -97,7 +97,11 @@ public class PDFPrinterBuilder {
             chainingReplacedElementFactory.addReplacedElementFactory(new SVGReplacedElementFactory(iTextRenderer.getOutputDevice()));
             SharedContext sharedContext = iTextRenderer.getSharedContext();
             sharedContext.setReplacedElementFactory(chainingReplacedElementFactory);
-            sharedContext.setUserAgentCallback(new CustomUserAgentCallback(cacheCss, replaceHttp));
+            CustomUserAgentCallback customUserAgentCallback = new CustomUserAgentCallback(iTextRenderer.getOutputDevice());
+            customUserAgentCallback.setLoadFromCache(cacheCss);
+            customUserAgentCallback.setReplaceHttps(replaceHttp);
+            customUserAgentCallback.setSharedContext(sharedContext);
+            sharedContext.setUserAgentCallback(customUserAgentCallback);
             iTextRenderer.setDocumentFromString(content);
 
             //to convert svg
