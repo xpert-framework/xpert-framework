@@ -79,8 +79,8 @@ public class RestorableFilter extends UIComponentBase {
         return (String) getStateHelper().eval(RestorableFilter.PropertyKeys.target, null);
     }
 
-    public void setTarget(final String confirmLabel) {
-        setAttribute(RestorableFilter.PropertyKeys.target, confirmLabel);
+    public void setTarget(final String target) {
+        setAttribute(RestorableFilter.PropertyKeys.target, target);
     }
 
     @SuppressWarnings("unchecked")

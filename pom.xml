@@ -7,7 +7,7 @@
     <name>xpert-framework</name>
     <version>1.8.3-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <url>http://maven.apache.org</url>
+    <url>http://xpert-framework.github.io/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -135,7 +135,7 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.1</version>
                 <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/../../maven</altDeploymentRepository>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/../../xpert-framework.github.io/maven/</altDeploymentRepository>
                 </configuration>
             </plugin>
         </plugins>
@@ -145,7 +145,7 @@
         <repository>
             <id>internal.repo</id>
             <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}/../../maven</url>
+            <url>file://${project.build.directory}/../../xpert-framework.github.io/maven</url>
         </repository>
     </distributionManagement>
     
