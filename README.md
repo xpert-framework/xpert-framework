@@ -15,6 +15,7 @@ Version | Release Date
 **Maven**
 
 Add this dependency to your `pom.xml`.
+
 ```xml
 <dependency>
     <groupId>com.xpert</groupId>
