@@ -26,6 +26,7 @@ Add this dependency to your `pom.xml`.
 
 Add this repository:
 
+
 ```xml
 <repositories>
 	<repository>
