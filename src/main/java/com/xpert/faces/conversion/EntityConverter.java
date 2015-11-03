@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.component.UIComponent;
@@ -44,8 +45,9 @@ public class EntityConverter implements Converter {
             String id;
 
             id = this.getId(object);
-            if (id == null) {
-                id = "";
+            if (id == null || id.trim().isEmpty()) {
+                //generated a automated id for the object
+                id = UUID.randomUUID().toString();
             }
             id = id.trim();
             putInViewMap(id, context, component, object);
