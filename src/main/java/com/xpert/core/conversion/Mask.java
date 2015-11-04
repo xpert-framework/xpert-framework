@@ -24,7 +24,7 @@ public class Mask {
     public static String maskTelefone(String phone) {
         return mask(phone, "(##)####-####");
     }
-    
+
     public static String maskPlacaCarro(String placa) {
         return mask(placa, "###-####");
     }
@@ -55,10 +55,10 @@ public class Mask {
         if (value == null) {
             return null;
         }
-        if (value.toString().length() > 11) {
-            return maskCnpj(value.toString());
+        if (value.length() > 11) {
+            return maskCnpj(value);
         } else {
-            return maskCpf(value.toString());
+            return maskCpf(value);
         }
     }
 
@@ -79,4 +79,5 @@ public class Mask {
         }
         return mask;
     }
+
 }
