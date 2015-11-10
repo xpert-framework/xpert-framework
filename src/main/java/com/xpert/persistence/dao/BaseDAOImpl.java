@@ -199,19 +199,27 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public void delete(Object id, boolean audit) throws DeleteException {
+        delete(getEntityClass(), id, audit);
+    }
+
+    @Override
+    public void delete(Class entityClass, Object id) throws DeleteException {
+        delete(entityClass, id, Configuration.isAudit());
+    }
+
+    @Override
+    public void delete(Class entityClass, Object id, boolean audit) throws DeleteException {
 
         try {
-
             if (audit) {
                 getNewAudit().delete(id, getEntityClass());
             }
-
-            Query query = getEntityManager().createQuery("DELETE FROM " + getEntityClass().getName() + " WHERE " + EntityUtils.getIdFieldName(getEntityClass()) + " = ?1 ");
+            Query query = getEntityManager().createQuery("DELETE FROM " + entityClass.getName() + " WHERE " + EntityUtils.getIdFieldName(entityClass) + " = ?1 ");
             query.setParameter(1, id);
             query.executeUpdate();
         } catch (Exception ex) {
             if (ex instanceof ConstraintViolationException || ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-                throw new DeleteException("Object from class " + getEntityClass() + " with ID: " + id + " cannot be deleted");
+                throw new DeleteException("Object from class " + entityClass + " with ID: " + id + " cannot be deleted");
             } else {
                 throw new RuntimeException(ex);
             }

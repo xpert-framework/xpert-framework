@@ -142,6 +142,25 @@ public interface BaseDAO<T> {
      * @throws DeleteException 
      */
     public void delete(Object id, boolean audit) throws DeleteException;
+    
+    /**
+     * Delete a object from database. This method create a HQL to do the deletion
+     * 
+     * @param entityClass
+     * @param id Object Id
+     * @throws DeleteException 
+     */
+    public void delete(Class entityClass, Object id) throws DeleteException;
+
+    /**
+     * Delete a object from database. This method create a HQL to do the deletion
+     * 
+     * @param entityClass
+     * @param id
+     * @param audit Audit Operation
+     * @throws DeleteException 
+     */
+    public void delete(Class entityClass, Object id, boolean audit) throws DeleteException;
 
     /**
      * Delete a object from database. This method call entityManager.remove()
