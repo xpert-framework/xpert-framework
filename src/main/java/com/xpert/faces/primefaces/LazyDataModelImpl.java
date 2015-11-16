@@ -259,8 +259,15 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //update current restrictions
         queryRestrictions = currentQueryRestrictions;
 
-        List<T> dados = buildQueryBuilder()
-                .select(select)
+        //added distinct verification
+        QueryBuilder queryBuilder = buildQueryBuilder();
+        if (joinBuilder != null && joinBuilder.isDistinct()) {
+            queryBuilder.selectDistinct(select);
+        } else {
+            queryBuilder.select(select);
+        }
+        
+        List<T> dados = queryBuilder
                 .orderBy(orderBy)
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
@@ -305,14 +312,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (rowKey != null && !rowKey.isEmpty()) {
             //convert id (id can be integer, long, string, etc...)
             Object id = EntityUtils.getIdFromString(rowKey, getDao().getEntityClass());
-            if(id != null){
+            if (id != null) {
                 return getDao().find(id);
             }
         }
         return null;
     }
 
-    
     @Override
     public Object getRowKey(Object object) {
         if (object != null) {

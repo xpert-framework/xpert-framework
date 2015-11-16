@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class JoinBuilder extends ArrayList<Join> {
 
     private String rootAlias;
+    private boolean distinct;
     
     public String getJoinString() {
         return getJoinString(QueryType.SELECT);
@@ -37,6 +38,11 @@ public class JoinBuilder extends ArrayList<Join> {
 
     public JoinBuilder(String rootAlias) {
         this.rootAlias = rootAlias;
+    }
+
+    public JoinBuilder(String rootAlias, boolean distinct) {
+        this.rootAlias = rootAlias;
+        this.distinct = distinct;
     }
     
     public JoinBuilder leftJoin(String join) {
@@ -123,5 +129,9 @@ public class JoinBuilder extends ArrayList<Join> {
         return rootAlias;
     }
 
+    public boolean isDistinct() {
+        return distinct;
+    }
+    
     
 }
