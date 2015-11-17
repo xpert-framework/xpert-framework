@@ -29,7 +29,7 @@ public class QueryBuilder {
     /**
      * to be used in SUM, MAX, MIN, COUNT
      */
-    private String atrribute;
+    private String attribute;
     private Class from;
     private String alias;
     private final JoinBuilder joins = new JoinBuilder();
@@ -54,16 +54,6 @@ public class QueryBuilder {
     public QueryBuilder from(Class from, String alias) {
         this.from = from;
         this.alias = alias;
-        return this;
-    }
-
-    public QueryBuilder selectDistinct(String attributes) {
-        this.attributes = "DISTINCT " + attributes;
-        return this;
-    }
-
-    public QueryBuilder select(String attributes) {
-        this.attributes = attributes;
         return this;
     }
 
@@ -100,7 +90,11 @@ public class QueryBuilder {
         StringBuilder queryString = new StringBuilder();
 
         if (type.equals(QueryType.COUNT)) {
-            queryString.append("SELECT COUNT(*) ");
+            if (select != null && !select.trim().isEmpty()) {
+                queryString.append("SELECT COUNT(").append(select).append(") ");
+            } else {
+                queryString.append("SELECT COUNT(*) ");
+            }
         } else if (type.equals(QueryType.MAX)) {
             queryString.append("SELECT MAX(").append(select).append(") ");
         } else if (type.equals(QueryType.MIN)) {
@@ -218,10 +212,10 @@ public class QueryBuilder {
             type = QueryType.SELECT;
         }
 
-        if (type.equals(QueryType.SELECT)) {
+        if (type.equals(QueryType.SELECT) || type.equals(QueryType.COUNT)) {
             queryString.append(QueryBuilder.getQuerySelectClausule(type, attributes));
         } else {
-            queryString.append(QueryBuilder.getQuerySelectClausule(type, atrribute));
+            queryString.append(QueryBuilder.getQuerySelectClausule(type, attribute));
         }
 
         queryString.append("FROM ").append(from.getName()).append(" ");
@@ -288,11 +282,41 @@ public class QueryBuilder {
         return parameters;
     }
 
+    public QueryBuilder selectDistinct(String attributes) {
+        this.attributes = "DISTINCT " + attributes;
+        return this;
+    }
+
+    public QueryBuilder select(String attributes) {
+        this.attributes = attributes;
+        return this;
+    }
+
     /**
      * @return Value of clausule "SELECT COUNT(*)"
      */
     public Long count() {
         type = QueryType.COUNT;
+        return (Long) createQuery().getSingleResult();
+    }
+
+    /**
+     * @param attributes
+     * @return Value of clausule "SELECT COUNT(attributes)"
+     */
+    public Long count(String attributes) {
+        type = QueryType.COUNT;
+        this.attributes = attributes;
+        return (Long) createQuery().getSingleResult();
+    }
+
+    /**
+     * @param attributes
+     * @return Value of clausule "SELECT COUNT(attributes)"
+     */
+    public Long countDistinct(String attributes) {
+        type = QueryType.COUNT;
+        this.attributes = "DISTINCT " + attributes;
         return (Long) createQuery().getSingleResult();
     }
 
@@ -303,7 +327,7 @@ public class QueryBuilder {
      */
     public Number avg(String property) {
         type = QueryType.AVG;
-        atrribute = property;
+        attribute = property;
         return (Number) createQuery().getSingleResult();
     }
 
@@ -328,7 +352,7 @@ public class QueryBuilder {
      */
     public Number sum(String property) {
         type = QueryType.SUM;
-        atrribute = property;
+        attribute = property;
         return (Number) createQuery().getSingleResult();
     }
 
@@ -352,7 +376,7 @@ public class QueryBuilder {
      */
     public Object max(String property) {
         type = QueryType.MAX;
-        atrribute = property;
+        attribute = property;
         return createQuery().getSingleResult();
     }
 
@@ -376,7 +400,7 @@ public class QueryBuilder {
      */
     public Object min(String property) {
         type = QueryType.MIN;
-        atrribute = property;
+        attribute = property;
         return createQuery().getSingleResult();
     }
 

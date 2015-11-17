@@ -266,7 +266,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         } else {
             queryBuilder.select(select);
         }
-        
+
         List<T> dados = queryBuilder
                 .orderBy(orderBy)
                 .setFirstResult(first)
@@ -281,9 +281,18 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
 
-            currentRowCount = dao.getQueryBuilder().from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
+            QueryBuilder queryBuilderCount = dao.getQueryBuilder()
+                    .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                     .join(joinBuilder)
-                    .add(currentQueryRestrictions).count().intValue();
+                    .add(currentQueryRestrictions);
+
+            //added distinct verification
+            if (joinBuilder != null && joinBuilder.isDistinct()) {
+                currentRowCount = queryBuilderCount.countDistinct(joinBuilder.getRootAlias()).intValue();
+            } else {
+                currentRowCount = queryBuilderCount.count().intValue();
+            }
+
             if (DEBUG) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
             }

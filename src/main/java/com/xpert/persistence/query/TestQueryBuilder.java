@@ -15,7 +15,7 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryParameters());
     }
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
                 .like("nome1", "TESTE")
@@ -42,7 +42,7 @@ public class TestQueryBuilder {
 
     }
 
-    public static void main3(String[] args) {
+    public static void main5(String[] args) {
 
         QueryBuilder queryBuilder = new QueryBuilder(null).selectDistinct("b")
                 .from(Object.class, "o")
@@ -58,19 +58,20 @@ public class TestQueryBuilder {
                 .endGroup()
                 .orderBy("a.teste");
 
-        // queryBuilder.getResultList();
-        try {
-            queryBuilder.sum("o.teste");
-        } catch (Exception ex) {
-        }
-        try {
-            queryBuilder.count();
-        } catch (Exception ex) {
-        }
-        try {
-            queryBuilder.getResultList();
-        } catch (Exception ex) {
-        }
+        System.out.println(queryBuilder.getQueryString());
+
+    }
+    public static void main(String[] args) {
+
+        QueryBuilder queryBuilder = new QueryBuilder(null)
+                .from(Object.class, "o")
+                .innerJoin("outro a")
+                .debug();
+        
+        
+        queryBuilder.countDistinct("o");
+
+        System.out.println(queryBuilder.getQueryString());
 
     }
 
