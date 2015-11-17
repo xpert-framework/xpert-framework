@@ -280,11 +280,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
-
-            QueryBuilder queryBuilderCount = dao.getQueryBuilder()
-                    .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
-                    .join(joinBuilder)
-                    .add(currentQueryRestrictions);
+            
+            //create a querybuilder for count
+            QueryBuilder queryBuilderCount = buildQueryBuilder();
 
             //added distinct verification
             if (joinBuilder != null && joinBuilder.isDistinct()) {
@@ -431,7 +429,11 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return
      */
     public List getAllResults(String orderBy) {
-        return dao.getQueryBuilder().from(dao.getEntityClass()).select(attributes).add(queryRestrictions).join(joinBuilder)
+        return dao.getQueryBuilder()
+                .from(dao.getEntityClass())
+                .select(attributes)
+                .add(queryRestrictions)
+                .join(joinBuilder)
                 .orderBy(orderBy).getResultList();
     }
 
