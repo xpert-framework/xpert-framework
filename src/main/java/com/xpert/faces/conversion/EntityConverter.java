@@ -18,7 +18,7 @@ import org.hibernate.proxy.HibernateProxy;
  * Generic converter to Objects. This converter puts object in faces ViewMap.
  * Classes with fields annotated with @Id (JPA) or @ConverterId
  * (xpert-framework) can be converted. It's important to override "equals" from
- * object and compare by id.
+ * object and compare by id (or a unique identifier).
  *
  * @author ayslan
  */

@@ -4,7 +4,8 @@ import com.xpert.persistence.dao.BaseDAOImpl;
 import javax.persistence.EntityManager;
 
 /**
- *
+ * A generic BaseDAOImpl implementation.
+ * 
  * @author Ayslan
  * @param <T> Type of DAO
  */
