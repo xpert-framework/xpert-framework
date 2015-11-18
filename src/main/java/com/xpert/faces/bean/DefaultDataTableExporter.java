@@ -9,9 +9,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Default Managed Bean to process export.
- * This bean add manipulates the Object in pre/post events in export.
- * 
+ * Default Managed Bean to process export. This bean add manipulates the Object
+ * in pre/post events in export.
+ *
  * @author Ayslan
  */
 public class DefaultDataTableExporter {
@@ -24,10 +24,10 @@ public class DefaultDataTableExporter {
         if (document != null) {
             //try to get PNG
             String logoPath = FacesUtils.getRealPath(LOGO_PATH_PNG);
-            if(logoPath != null && !new File(logoPath).exists()){
-                //try to get JPG
+            //if not found try to get JPG
+            if (logoPath == null || logoPath.isEmpty() || !new File(logoPath).exists()) {
                 logoPath = FacesUtils.getRealPath(LOGO_PATH_JPG);
-                if(!new File(logoPath).exists()){
+                if (logoPath == null || logoPath.isEmpty() || !new File(logoPath).exists()) {
                     return;
                 }
             }
