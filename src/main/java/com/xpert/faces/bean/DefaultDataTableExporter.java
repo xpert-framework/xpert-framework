@@ -24,7 +24,7 @@ public class DefaultDataTableExporter {
         if (document != null) {
             //try to get PNG
             String logoPath = FacesUtils.getRealPath(LOGO_PATH_PNG);
-            if(!new File(logoPath).exists()){
+            if(logoPath != null && !new File(logoPath).exists()){
                 //try to get JPG
                 logoPath = FacesUtils.getRealPath(LOGO_PATH_JPG);
                 if(!new File(logoPath).exists()){
