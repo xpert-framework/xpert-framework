@@ -6,6 +6,7 @@ Xpert-Framework is a component suite for JSF 2, EJB and JPA/Hibernate, integrate
 
 Version | Release Date
 --------|-------------
+[xpert-framework-1.8.3-SNAPSHOT](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.3-SNAPSHOT.jar) | 13/08/2015
 [xpert-framework-1.8.2](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.2.jar) | 13/08/2015
 [xpert-framework-1.8.1](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.1.jar) | 08/05/2015
 [xpert-framework-1.8](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.jar) | 28/10/2014
@@ -15,7 +16,6 @@ Version | Release Date
 **Maven**
 
 Add this dependency to your `pom.xml`.
-
 ```xml
 <dependency>
     <groupId>com.xpert</groupId>
@@ -26,14 +26,12 @@ Add this dependency to your `pom.xml`.
 
 Add this repository:
 
-
 ```xml
-<repositories>
-	<repository>
-		<id>xpert-framework</id>
-		<url>http://xpert-framework.github.io/maven/</url>
-	</repository>
-</repositories>
+<repository>
+	<id>xpert-framework</id>
+	<name>xpert-framework</name>
+	<url>http://xpert-framework.github.io/maven/</url>
+</repository>
 ```
 
 **Archetypes**
@@ -67,8 +65,9 @@ Web Version:
 - [Dependências](https://github.com/xpert-framework/xpert-framework/wiki/Depend%C3%AAncias)
 - [Configurando o arquivo **xpert-config.xml**](https://github.com/xpert-framework/xpert-framework/wiki/Arquivo-xpert-config.xml)
 - [Classes Utilitárias](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios)
- - [DateUtils (Utilitário para operações com data)](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios#dateutils-utilit%C3%A1rio-para-opera%C3%A7%C3%B5es-com-data)
- - [CollectionsUtils (Utilitário para operações com coleções)](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios#collectionsutils-utilit%C3%A1rio-para-opera%C3%A7%C3%B5es-com-cole%C3%A7%C3%B5es)
+  - [DateUtils (Utilitário para operações com data)](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios#dateutils-utilit%C3%A1rio-para-opera%C3%A7%C3%B5es-com-data)
+  - [CollectionsUtils (Utilitário para operações com coleções)](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios#collectionsutils-utilit%C3%A1rio-para-opera%C3%A7%C3%B5es-com-cole%C3%A7%C3%B5es)
+  - [PrimeFacesUtils (Utilitário para o primefaces)](https://github.com/xpert-framework/xpert-framework/wiki/Utilit%C3%A1rios#primefacesutils-utilit%C3%A1rio-para-o-primefaces)
 - [Xpert-Faces](https://github.com/xpert-framework/xpert-framework/wiki/xpert-faces)
  - [Introdução](https://github.com/xpert-framework/xpert-framework/wiki/xpert-faces#introducao)
  - [Conversores](https://github.com/xpert-framework/xpert-framework/wiki/Conversores)
