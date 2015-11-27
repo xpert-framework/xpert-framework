@@ -6,7 +6,7 @@ Xpert-Framework is a component suite for JSF 2, EJB and JPA/Hibernate, integrate
 
 Version | Release Date
 --------|-------------
-[xpert-framework-1.8.3-SNAPSHOT](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.3-SNAPSHOT.jar) | 13/08/2015
+[xpert-framework-1.8.3-SNAPSHOT](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.3-SNAPSHOT.jar) | 27/11/2015
 [xpert-framework-1.8.2](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.2.jar) | 13/08/2015
 [xpert-framework-1.8.1](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.1.jar) | 08/05/2015
 [xpert-framework-1.8](https://github.com/xpert-framework/download/raw/master/xpert-framework-1.8.jar) | 28/10/2014
