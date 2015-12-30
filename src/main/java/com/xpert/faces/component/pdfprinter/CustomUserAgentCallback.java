@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.xhtmlrenderer.pdf.ITextOutputDevice;
 import org.xhtmlrenderer.pdf.ITextUserAgent;
 import org.xhtmlrenderer.resource.CSSResource;
-import org.xhtmlrenderer.swing.NaiveUserAgent;
 
 /**
  *
