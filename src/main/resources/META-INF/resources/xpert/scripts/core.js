@@ -4,8 +4,8 @@ Xpert = {
     },
     closeModalMessages: function (widgetDialog, onconfirm) {
         widgetDialog.hide();
-        if(onconfirm){
-           onconfirm(); 
+        if (onconfirm) {
+            onconfirm();
         }
         $('.faces-modal-messages').remove();
         $('div[id*=xpertModalMessages]').remove();
@@ -102,12 +102,12 @@ Xpert = {
         }
 
         $("body").delegate(selector + " .ui-filter-column input", "focus", function (e) {
-            
+
             var attr = $(this).attr("data-x-filteronenter");
-            if(attr != null && attr != undefined && attr != false){
+            if (attr != null && attr != undefined && attr != false) {
                 return;
             }
-            
+
             var events = $._data(this, "events");
             var originalEvent;
             $.each(events, function (i, event) {
@@ -213,6 +213,22 @@ Xpert = {
         $(selector + " > .ui-tree-selectable .ui-chkbox-box, " + selector + " > .ui-tree-selectable .ui-treenode-label").addClass("ui-state-disabled").click(function () {
             return false;
         });
+    },
+    fixColumnToggler: function () {
+        var $element = $(".ui-columntoggler-item:contains($(function())");
+        if ($element.length > 0) {
+            var originalText = $element.text();
+            //pt_br, es
+            var indexOfFunction = originalText.indexOf("de$(function()");
+            if (indexOfFunction < 0) {
+                //en
+                indexOfFunction = originalText.indexOf("from$(function()");
+            }
+            if (indexOfFunction > -1) {
+                var newText = originalText.substring(0, indexOfFunction);
+                $element.find("> label").text(newText);
+            }
+        }
     }
 };
 Xpert.behavior = {
