@@ -20,8 +20,8 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
 
-        <div class="uix-table-actions" id="#{cc.attrs.clientId}" rendered="#{cc.attrs.options}">
-            <p:menuButton value="#{xmsg['options']}">
+        <div class="uix-table-actions" id="#{cc.attrs.clientId}" >
+            <p:menuButton value="#{xmsg['options']}" rendered="#{cc.attrs.options}">
                 <p:menuitem value="#{xmsg['refresh']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="ui-icon-refresh" url="#"/>
                 <p:menuitem value="#{xmsg['clearFilters']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.clearFilters();" icon="ui-icon-close" url="#"/>
             </p:menuButton>
