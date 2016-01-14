@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ELContext;
@@ -12,6 +13,7 @@ import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
@@ -33,6 +35,36 @@ import javax.servlet.http.HttpSession;
  * @author Ayslan
  */
 public class FacesUtils {
+
+    /**
+     * Verify if FacesContext has message using getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty()
+     * }
+     *
+     * @return "true" if messages is not empty
+     */
+    public static boolean hasMessage() {
+        List<FacesMessage> messages = FacesContext.getCurrentInstance().getMessageList();
+        return messages != null && !messages.isEmpty();
+    }
+
+    /**
+     * Verify if FacesContext has message for a specific Severity using
+     * getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty() }
+     *
+     * @param severity
+     * @return "true" if messages is not empty
+     */
+    public static boolean hasMessage(FacesMessage.Severity severity) {
+        List<FacesMessage> messages = FacesContext.getCurrentInstance().getMessageList();
+        if (messages != null) {
+            for (FacesMessage message : messages) {
+                if (message.getSeverity() != null && message.getSeverity().equals(severity)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Return generated HTML from component.
