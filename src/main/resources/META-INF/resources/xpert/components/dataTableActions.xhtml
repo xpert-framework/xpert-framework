@@ -13,6 +13,7 @@
         <cc:attribute name="target"/>
         <cc:attribute name="export" type="java.lang.Boolean" default="true"/>
         <cc:attribute name="options" type="java.lang.Boolean" default="true"/>
+        <cc:attribute name="landscape" default="true"/>
         <cc:attribute name="fileName"/>
         <cc:attribute name="widgetVar"/>
     </cc:interface>
@@ -25,7 +26,7 @@
                 <p:menuitem value="#{xmsg['refresh']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="ui-icon-refresh" url="#"/>
                 <p:menuitem value="#{xmsg['clearFilters']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.clearFilters();" icon="ui-icon-close" url="#"/>
             </p:menuButton>
-            <x:dataTableExporter rendered="#{cc.attrs.export}" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+            <x:dataTableExporter rendered="#{cc.attrs.export}" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" landscape="#{cc.attrs.landscape}"/>
         </div>
 
     </cc:implementation>
