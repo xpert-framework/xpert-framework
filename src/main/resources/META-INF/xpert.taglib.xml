@@ -309,4 +309,29 @@
         </attribute>
     </tag>
     
+    <tag>
+        <tag-name>restrictionCollector</tag-name>
+        <handler-class>
+            com.xpert.faces.component.restriction.RestrictionCollectorTagHandler
+        </handler-class>
+        <attribute>
+            <description>Property to be used in restriction.</description>
+            <name>property</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Type of restriction to be used in restriction. When not defined "eq" is default value. Types can be "eq", "ne", "gt", "lt", "gte", "lte", "like", "notlike", "in", "notin", "null", "notnull"</description>
+            <name>type</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Reference to the List of restrction or LazyDataModelImpl instance.</description>
+            <name>addTo</name>
+            <required>true</required>
+            <type>java.lang.Object</type>
+        </attribute>
+    </tag>
+    
 </facelet-taglib>
