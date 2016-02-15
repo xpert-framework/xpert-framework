@@ -310,10 +310,16 @@
     </tag>
     
     <tag>
-        <tag-name>restrictionCollector</tag-name>
+        <tag-name>restriction</tag-name>
         <handler-class>
-            com.xpert.faces.component.restriction.RestrictionCollectorTagHandler
+            com.xpert.faces.component.restriction.RestrictionTagHandler
         </handler-class>
+        <attribute>
+            <description>Reference to the List of restrction or LazyDataModelImpl instance.</description>
+            <name>addTo</name>
+            <required>false</required>
+            <type>java.lang.Object</type>
+        </attribute>
         <attribute>
             <description>Property to be used in restriction.</description>
             <name>property</name>
@@ -321,16 +327,46 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
-            <description>Type of restriction to be used in restriction. When not defined "eq" is default value. Types can be "eq", "ne", "gt", "lt", "gte", "lte", "like", "notlike", "in", "notin", "null", "notnull"</description>
+            <description>Type of restriction to be used in restriction. Types can be "eq", "ne", "gt", "lt", "gte", "lte", "like", "notlike", "in", "notin", "null", "notnull". Default value is "eq". </description>
             <name>type</name>
             <required>false</required>
             <type>java.lang.String</type>
         </attribute>
         <attribute>
+            <description>Define if query using like will be converted to "ilike"</description>
+            <name>ilike</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description>Type of like query. Types can be "both", "begin", "end". Default value is "both".</description>
+            <name>likeType</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>javax.persistence.TemporalType of JPA, to be used in date operations. Types can be "time", "timestamp" and "date". Default value is null. </description>
+            <name>temporalType</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <tag-name>restrictionCollector</tag-name>
+        <handler-class>
+            com.xpert.faces.component.restriction.RestrictionCollectorTagHandler
+        </handler-class>
+        <attribute>
             <description>Reference to the List of restrction or LazyDataModelImpl instance.</description>
             <name>addTo</name>
-            <required>true</required>
+            <required>false</required>
             <type>java.lang.Object</type>
+        </attribute>
+        <attribute>
+            <description>Debug restrictions and LazyDataModel in application log. Useful for development. Default value is "false"</description>
+            <name>debug</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
         </attribute>
     </tag>
     
