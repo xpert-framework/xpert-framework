@@ -7,7 +7,7 @@
       xmlns:h="http://java.sun.com/jsf/html">
 
     <!-- INTERFACE -->
-    <cc:interface>
+    <cc:interface componentType="com.xpert.faces.component.InputNumber">
         <cc:attribute name="limit" type="java.lang.Integer" default="15"/>
         <cc:attribute name="centsSeparator" type="String"/>
         <cc:attribute name="thousandsSeparator" type="String" />
@@ -21,6 +21,7 @@
         <cc:attribute name="size" type="java.lang.Integer" default="20"/>
         <cc:attribute name="style" type="String"/>
         <cc:attribute name="styleClass" type="String"/>
+        <cc:attribute name="converter" />
         <cc:attribute name="converterMessage" type="String" displayName="Invalid value"/>
         <cc:editableValueHolder name="input" targets="input" />
         <cc:clientBehavior name="valueChange" event="valueChange" default="true"  targets="input"/>
