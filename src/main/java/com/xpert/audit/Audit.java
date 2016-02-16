@@ -269,7 +269,7 @@ public class Audit {
                 //add to context
                 if (auditPersited == true) {
                     AuditContext context = AuditContext.getCurrentInstance();
-                    if (context != null) {
+                    if (context != null && context.isActive()) {
                         context.setAuditing(object, auditing);
                     }
                 }

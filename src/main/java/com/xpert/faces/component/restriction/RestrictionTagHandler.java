@@ -126,13 +126,13 @@ public class RestrictionTagHandler extends TagHandler {
             RestrictionComponent restrictionComponent = new RestrictionComponent(parent, addToVE, propertyVE, typeVE, ilikeVE, likeTypeVE, temporalTypeVE);
 
             Map<String, Object> requestMap = faceletContext.getFacesContext().getExternalContext().getRequestMap();
-            List<RestrictionComponent> currentRestrictions = (List<RestrictionComponent>) requestMap.get(RestrictionComponent.class.getName());
+            List<RestrictionComponent> currentRestrictions = (List<RestrictionComponent>) requestMap.get(RestrictionCollector.RESTRICTIONS);
             if (currentRestrictions == null) {
                 currentRestrictions = new ArrayList<RestrictionComponent>();
             }
             currentRestrictions.add(restrictionComponent);
             //add to requestmap
-            requestMap.put(RestrictionComponent.class.getName(), currentRestrictions);
+            requestMap.put(RestrictionCollector.RESTRICTIONS, currentRestrictions);
 
         }
     }

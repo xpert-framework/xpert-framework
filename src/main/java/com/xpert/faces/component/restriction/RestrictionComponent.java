@@ -1,7 +1,15 @@
 package com.xpert.faces.component.restriction;
 
+import com.xpert.persistence.query.LikeType;
+import com.xpert.persistence.query.Restriction;
+import com.xpert.persistence.query.RestrictionType;
+import java.util.Arrays;
+import java.util.Iterator;
+import javax.el.ELContext;
 import javax.el.ValueExpression;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
+import javax.persistence.TemporalType;
 
 /**
  * This class is a java bean with some values to be used in restrictions
@@ -37,6 +45,66 @@ public class RestrictionComponent {
         this.ilike = ilike;
         this.likeType = likeType;
         this.temporalType = temporalType;
+    }
+
+    /**
+     * Convert a instance of RestrictionComponent to Restriction
+     *
+     * @param elContext
+     * @param component
+     * @return
+     */
+    public Restriction toRestriction(ELContext elContext, UIComponent component) {
+
+        Restriction restriction = new Restriction();
+        RestrictionType restrictionType = null;
+        //if no value informed, then use "eq"
+        if (type != null) {
+            String restrictionTypeString = (String) type.getValue(elContext);
+            //if a type is informed, then validate the type
+            if (restrictionTypeString != null) {
+                restrictionType = RestrictionType.getByAcronym(restrictionTypeString);
+            }
+        } else {
+            restrictionType = RestrictionType.EQUALS;
+        }
+
+        boolean ilikeValue = true;
+        //if no value informed, then use "eq"
+        if (ilike != null) {
+            ilikeValue = Boolean.valueOf(ilike.toString());
+        }
+
+        LikeType likeTypeValue = null;
+        //if no valuee informed, then use "both"
+        if (likeType != null) {
+            //get from enum
+            likeTypeValue = LikeType.valueOf(likeType.getValue(elContext).toString().toUpperCase());
+        } else {
+            //default value
+            likeTypeValue = LikeType.BOTH;
+        }
+
+        TemporalType temporalTypeValue = null;
+        //if no value informed, then use "null"
+        if (temporalType != null) {
+            //get from enum
+            temporalTypeValue = TemporalType.valueOf(temporalType.getValue(elContext).toString().toUpperCase());
+        }
+
+        Object value = ((EditableValueHolder) component).getValue();
+        //Hibernate do not accpet Object[] (arrays), so convert it to List
+        if (RestrictionType.IN.equals(restrictionType) && value != null && value instanceof Object[]) {
+            value = Arrays.asList((Object[]) value);
+        }
+        restriction.setValue(value);
+
+        restriction.setRestrictionType(restrictionType);
+        restriction.setProperty((String) property.getValue(elContext));
+        restriction.setIlike(ilikeValue);
+        restriction.setLikeType(likeTypeValue);
+        restriction.setTemporalType(temporalTypeValue);
+        return restriction;
     }
 
     public UIComponent getComponent() {

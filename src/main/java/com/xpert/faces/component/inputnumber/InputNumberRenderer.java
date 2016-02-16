@@ -40,13 +40,6 @@ public class InputNumberRenderer extends InputTextRenderer {
 
     public String getScript(String target, InputNumber inputNumber) {
 
-        //$(function() {$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}:input')).priceFormat({
-        //limit: #{cc.attrs.limit}, prefix: '',
-        // centsSeparator: '#{cc.attrs.centsSeparator == null ? localeBean.decimalSeparator : cc.attrs.centsSeparator}', 
-        //thousandsSeparator: '#{cc.attrs.thousandsSeparator == null ? localeBean.groupingSeparator : cc.attrs.thousandsSeparator}', 
-        //allowNegative:#{cc.attrs.allowNegative},
-        //centsLimit: #{cc.attrs.centsLimit}}
-        //);});
         StringBuilder script = new StringBuilder();
         script.append("$(function() {$(Xpert.escapeClientId('").append(target).append("')).priceFormat({");
         script.append("limit: ").append(inputNumber.getLimit()).append(", ");
