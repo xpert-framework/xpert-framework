@@ -1,7 +1,6 @@
 package com.xpert.faces.component.restriction;
 
 import com.xpert.faces.primefaces.LazyDataModelImpl;
-import static com.xpert.faces.utils.FacesUtils.findComponent;
 import com.xpert.persistence.query.LikeType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
@@ -19,13 +18,17 @@ import javax.el.ValueExpression;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UINamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.persistence.TemporalType;
 
+/**
+ * This class is a ActionListener used to add restrictions to a List or a LazyDataModel
+ * 
+ * @author Ayslan
+ */
 public class RestrictionCollector implements ActionListener, StateHolder {
 
     private static final Logger logger = Logger.getLogger(RestrictionCollector.class.getName());
@@ -216,7 +219,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
     }
 
     public Object saveState(FacesContext context) {
-        Object[] state = new Object[4];
+        Object[] state = new Object[2];
         state[0] = addTo;
         state[1] = debug;
 

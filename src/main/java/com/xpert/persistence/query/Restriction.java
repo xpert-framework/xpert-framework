@@ -618,12 +618,15 @@ public class Restriction {
 
         if (value != null) {
             builder.append("(Value: ").append(value).append(") ");
+            builder.append("(Type: ").append(value.getClass().getName()).append(") ");
         }
 
-        if (likeType != null) {
-            builder.append("(LikeType: ").append(likeType.name()).append(") ");
+        if (restrictionType != null && restrictionType.equals(RestrictionType.LIKE)) {
+            if (likeType != null) {
+                builder.append("(LikeType: ").append(likeType.name()).append(") ");
+            }
+            builder.append("(Ilike: ").append(ilike).append(") ");
         }
-        builder.append("(Ilike: ").append(ilike).append(") ");
         if (temporalType != null) {
             builder.append("(TemporalType: ").append(temporalType.name()).append(") ");
         }

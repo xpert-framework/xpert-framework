@@ -1,11 +1,9 @@
 package com.xpert.faces.component.restriction;
 
 import com.xpert.persistence.query.LikeType;
-import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +19,12 @@ import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 import javax.persistence.TemporalType;
 
+/**
+ * TagHandler for the component "x:restriction".
+ * This taghandler store input values into request map. These values are used to be added into a list of restrictions or a LazyDataModel
+ *
+ * @author Ayslan
+ */
 public class RestrictionTagHandler extends TagHandler {
 
     private final TagAttribute addTo;
@@ -73,7 +77,7 @@ public class RestrictionTagHandler extends TagHandler {
 
                 }
             }
-            
+
             if (ilike != null) {
                 ilikeVE = ilike.getValueExpression(faceletContext, Boolean.class);
             }
@@ -97,7 +101,7 @@ public class RestrictionTagHandler extends TagHandler {
 
                 }
             }
-            
+
             if (temporalType != null) {
                 temporalTypeVE = temporalType.getValueExpression(faceletContext, String.class);
 

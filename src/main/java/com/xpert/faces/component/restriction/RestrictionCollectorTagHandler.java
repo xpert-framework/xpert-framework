@@ -14,6 +14,12 @@ import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
+/**
+ * TagHandler for the component "x:restrictionCollector".
+ * This taghandler add a ActionListener (RestrictionCollector) to the current component
+ * 
+ * @author Ayslan
+ */
 public class RestrictionCollectorTagHandler extends TagHandler {
 
     private final TagAttribute addTo;

@@ -9,6 +9,7 @@ import javax.faces.convert.NumberConverter;
 import org.primefaces.component.inputtext.InputTextRenderer;
 
 /**
+ * Renderer to the component "inputNumber"
  *
  * @author Ayslan
  */
@@ -26,7 +27,7 @@ public class InputNumberRenderer extends InputTextRenderer {
             numberConverter.setLocale(context.getViewRoot().getLocale());
             inputNumber.setConverter(numberConverter);
         }
-        
+
         //add script
         final ResponseWriter writer = context.getResponseWriter();
         final String clientId = component.getClientId(context);

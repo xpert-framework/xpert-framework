@@ -3,6 +3,12 @@ package com.xpert.faces.component.restriction;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 
+/**
+ * This class is a java bean with some values to be used in restrictions
+ * creation.
+ *
+ * @author Ayslan
+ */
 public class RestrictionComponent {
 
     private UIComponent component;
@@ -32,7 +38,7 @@ public class RestrictionComponent {
         this.likeType = likeType;
         this.temporalType = temporalType;
     }
-    
+
     public UIComponent getComponent() {
         return component;
     }
@@ -40,7 +46,7 @@ public class RestrictionComponent {
     public void setComponent(UIComponent component) {
         this.component = component;
     }
-    
+
     public ValueExpression getAddTo() {
         return addTo;
     }
@@ -88,6 +94,5 @@ public class RestrictionComponent {
     public void setTemporalType(ValueExpression temporalType) {
         this.temporalType = temporalType;
     }
-    
 
 }
