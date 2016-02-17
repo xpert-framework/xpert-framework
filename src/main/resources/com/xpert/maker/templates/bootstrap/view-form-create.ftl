@@ -38,7 +38,7 @@
                          </#if>
                          <#-- Decimal (BigDecimal, Double) -->
                          <#if field.decimal == true>
-                         <h:outputLabel for="${field.label}:input" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" />
+                         <h:outputLabel for="${field.label}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" />
                          <x:inputNumber id="${field.label}" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="form-control"/>
                          </#if>
                          <#-- Date p:calendar wont work with form-control, he has a span over the input and class goes for span -->

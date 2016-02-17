@@ -26,7 +26,7 @@ import org.primefaces.model.SortOrder;
  */
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
-    private static boolean DEBUG = false;
+    private boolean debug = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
     private static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
     private static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
@@ -190,7 +190,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                     if (filterByHandler != null && restrictionsFromFilterByHandler != null && !restrictionsFromFilterByHandler.isEmpty()) {
                         filterRestrictions.addAll(restrictionsFromFilterByHandler);
                     } else {
-                        if (DEBUG) {
+                        if (debug) {
                             logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
                         }
                         //primefaces 5 can add custom types in filter not only String
@@ -229,7 +229,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         orderBy = getOrderBy(orderBy, order);
 
-        if (DEBUG) {
+        if (debug) {
             logger.log(Level.INFO, "Lazy Count Type: {0}. Using order by {1}", new Object[]{lazyCountType, orderBy});
         }
 
@@ -273,7 +273,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .setMaxResults(pageSize)
                 .getResultList();
 
-        if (DEBUG) {
+        if (debug) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
         }
 
@@ -291,7 +291,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 currentRowCount = queryBuilderCount.count().intValue();
             }
 
-            if (DEBUG) {
+            if (debug) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
             }
             this.setRowCount(currentRowCount);
@@ -303,7 +303,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             this.setRowCount(Integer.MAX_VALUE);
         }
 
-        if (DEBUG) {
+        if (debug) {
             long end = System.currentTimeMillis();
             logger.log(Level.INFO, "Load method executed in {0} milliseconds", (end - begin));
         }
@@ -344,7 +344,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return dao.getQueryBuilder()
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .join(joinBuilder)
-                .add(queryRestrictions);
+                .add(queryRestrictions)
+                .debug(debug);
     }
 
     /**
@@ -434,7 +435,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .select(attributes)
                 .add(queryRestrictions)
                 .join(joinBuilder)
-                .orderBy(orderBy).getResultList();
+                .orderBy(orderBy)
+                .debug(debug)
+                .getResultList();
     }
 
     /**
@@ -575,5 +578,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setRestorableFilter(boolean restorableFilter) {
         this.restorableFilter = restorableFilter;
     }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+    
 
 }

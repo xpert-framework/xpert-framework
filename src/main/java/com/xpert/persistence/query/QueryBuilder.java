@@ -80,6 +80,11 @@ public class QueryBuilder {
         this.debug = true;
         return this;
     }
+    
+    public QueryBuilder debug(boolean debug) {
+        this.debug = debug;
+        return this;
+    }
 
     public static String getQuerySelectClausule(QueryType type, String select) {
 

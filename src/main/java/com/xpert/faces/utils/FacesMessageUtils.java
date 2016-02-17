@@ -5,15 +5,37 @@ import com.xpert.core.exception.StackException;
 import com.xpert.core.exception.UniqueFieldException;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.i18n.I18N;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 /**
  * Util class to show FacesMessages
- * 
+ *
  * @author ayslan
  */
 public class FacesMessageUtils {
+
+    /**
+     * Verify if FacesContext has message using getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty()
+     * }
+     *
+     * @return "true" if messages is not empty
+     */
+    public static boolean hasMessage() {
+        return FacesUtils.hasMessage();
+    }
+
+    /**
+     * Verify if FacesContext has message for a specific Severity using
+     * getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty() }
+     *
+     * @param severity
+     * @return "true" if messages is not empty
+     */
+    public static boolean hasMessage(FacesMessage.Severity severity) {
+         return FacesUtils.hasMessage(severity);
+    }
 
     /**
      * Shows a sucess message (FacesMessage.SEVERITY_INFO)
@@ -25,8 +47,8 @@ public class FacesMessageUtils {
 
     /**
      * Shows a info message (FacesMessage.SEVERITY_INFO)
-     * 
-     * @param sumario 
+     *
+     * @param sumario
      */
     public static void info(String sumario) {
         getMessage(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO, sumario);
@@ -34,9 +56,9 @@ public class FacesMessageUtils {
 
     /**
      * Shows a info message (FacesMessage.SEVERITY_INFO)
-     * 
+     *
      * @param sumario
-     * @param parameters 
+     * @param parameters
      */
     public static void info(String sumario, Object... parameters) {
         getMessage(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO, sumario, parameters);
@@ -44,8 +66,8 @@ public class FacesMessageUtils {
 
     /**
      * Shows a info message (FacesMessage.SEVERITY_INFO)
-     * 
-     * @param stackException 
+     *
+     * @param stackException
      */
     public static void info(StackException stackException) {
         getStackExceptionMessage(stackException, FacesMessage.SEVERITY_INFO);
