@@ -95,6 +95,7 @@ Web Version:
 	- [Modal Messages](https://github.com/xpert-framework/xpert-framework/wiki/Modal-Messages)
 	- [PDFPrinter](https://github.com/xpert-framework/xpert-framework/wiki/PdfPrinter)
 	- [RestorableFilter](https://github.com/xpert-framework/xpert-framework/wiki/RestorableFilter)
+	- [RestrictionCollector](https://github.com/xpert-framework/xpert-framework/wiki/RestrictionCollector)
 	- [Spread Checkbox/Radio](https://github.com/xpert-framework/xpert-framework/wiki/Spread-Checkbox-Radio)
 	- [Sum, Avg, Min e Max](https://github.com/xpert-framework/xpert-framework/wiki/Sum,-Avg,-Min-e-Max)
 - [I18N do Bean validation](https://github.com/xpert-framework/xpert-framework/wiki/i18n-do-BeanValidation)
