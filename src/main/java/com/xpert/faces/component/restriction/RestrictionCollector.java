@@ -190,9 +190,9 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         boolean checkDebug = (debugValue == null) ? false : (Boolean.valueOf(debugValue.toString()));
       
         if (!isExecuteComponent(context, component)) {
-            if (checkDebug) {
-                logger.log(Level.INFO, "Component: {0} is ignored from restrictions", new Object[]{component.getClientId()});
-            }
+//            if (checkDebug) {
+//                logger.log(Level.INFO, "Component: {0} is ignored from restrictions", new Object[]{component.getClientId()});
+//            }
             return;
         }
 
