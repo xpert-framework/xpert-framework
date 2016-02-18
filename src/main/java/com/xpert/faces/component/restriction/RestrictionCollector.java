@@ -130,7 +130,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
             for (RestrictionComponent restrictionComponent : currentRestrictions) {
                 Restriction restriction = restrictionComponent.toRestriction(elContext, restrictionComponent.getComponent());
                 if (!isEmpty(restriction.getValue())) {
-                    restrictions.add(restrictionComponent.toRestriction(elContext, restrictionComponent.getComponent()));
+                    restrictions.add(restriction);
                 }
             }
         }
@@ -234,32 +234,22 @@ public class RestrictionCollector implements ActionListener, StateHolder {
                 logger.log(Level.INFO, "Expression ''addTo'' is null. Restriction ''{0}'' of component ''{1}'' will not be added", new Object[]{restriction.getProperty(), component.getClientId()});
             }
 
-            //if new value is empty then remove restriction
-            if (isEmpty(restriction.getValue())) {
-                //use iterator to remove
-                Iterator<Restriction> itRestrictions = restrictions.iterator();
-                while (itRestrictions.hasNext()) {
-                    Restriction current = itRestrictions.next();
-                    if (current.getProperty().equals(restriction.getProperty()) && current.getRestrictionType().equals(restriction.getRestrictionType())) {
-                        if (checkDebug) {
-                            logger.log(Level.INFO, "Restriction removed: {0}. Component: {1}", new Object[]{current, component.getClientId()});
-                        }
-                        itRestrictions.remove();
-                        break;
-                    }
-                }
-            } else {
+            //try to remove values
+            removeValues(restriction, restrictions, component, checkDebug);
+//            removeEmptyValues(restriction, restrictions, component, checkDebug);
 
+            //if the new value is not empty then add the restriction
+            if (!isEmpty(restriction.getValue())) {
                 if (restrictions != null) {
                     if (checkDebug) {
                         logger.log(Level.INFO, "Restriction added: {0}. Component: {1}", new Object[]{restriction, component.getClientId()});
                     }
                     //verify unique
                     boolean found = false;
-                    for (Restriction restr : restrictions) {
-                        if (restr.getProperty().equals(restriction.getProperty()) && restr.getRestrictionType().equals(restriction.getRestrictionType())) {
-                            restr.setValue(restriction.getValue());
-                            restr.setIndex(index);
+                    for (Restriction current : restrictions) {
+                        if (isSameRestriction(restriction, current)) {
+                            current.setValue(restriction.getValue());
+                            current.setIndex(index);
                             found = true;
                             break;
                         }
@@ -275,6 +265,46 @@ public class RestrictionCollector implements ActionListener, StateHolder {
                 }
             }
 
+        }
+    }
+
+    public boolean isSameRestriction(Restriction restriction, Restriction other) {
+        //o novo metodo compara pelo id do componente, antes era verificado apenas o nome e o tipo da restricao
+        // return restriction.getProperty().equals(other.getProperty()) && restriction.getRestrictionType().equals(other.getRestrictionType());
+        return restriction.getComponentId() != null && restriction.getComponentId().equals(other.getComponentId());
+    }
+
+    public void removeValues(Restriction restriction, List<Restriction> restrictions, UIComponent component, boolean checkDebug) {
+        if (restrictions != null) {
+            Iterator<Restriction> itRestrictions = restrictions.iterator();
+            while (itRestrictions.hasNext()) {
+                Restriction current = itRestrictions.next();
+                if (isSameRestriction(restriction, current)) {
+                    if (checkDebug) {
+                        logger.log(Level.INFO, "Restriction removed: {0}. Component: {1}", new Object[]{current, component.getClientId()});
+                    }
+                    itRestrictions.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void removeEmptyValues(Restriction restriction, List<Restriction> restrictions, UIComponent component, boolean checkDebug) {
+        //if new value is empty then remove restriction
+        if (isEmpty(restriction.getValue()) && restrictions != null) {
+            //use iterator to remove
+            Iterator<Restriction> itRestrictions = restrictions.iterator();
+            while (itRestrictions.hasNext()) {
+                Restriction current = itRestrictions.next();
+                if (current.getProperty().equals(restriction.getProperty()) && current.getRestrictionType().equals(restriction.getRestrictionType())) {
+                    if (checkDebug) {
+                        logger.log(Level.INFO, "Restriction removed: {0}. Component: {1}", new Object[]{current, component.getClientId()});
+                    }
+                    itRestrictions.remove();
+                    break;
+                }
+            }
         }
     }
 

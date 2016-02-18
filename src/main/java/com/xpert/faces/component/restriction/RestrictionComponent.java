@@ -104,6 +104,8 @@ public class RestrictionComponent {
         restriction.setIlike(ilikeValue);
         restriction.setLikeType(likeTypeValue);
         restriction.setTemporalType(temporalTypeValue);
+        restriction.setComponentId(component.getId());
+        
         return restriction;
     }
 

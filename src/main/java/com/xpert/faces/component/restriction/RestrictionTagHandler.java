@@ -69,7 +69,7 @@ public class RestrictionTagHandler extends TagHandler {
                 //validate
                 String typeString = (String) type.getValue(faceletContext);
                 //if a type is informed, then validate the type
-                if (typeString != null) {
+                if (typeString != null && !typeString.trim().isEmpty()) {
                     RestrictionType restrictionType = RestrictionType.getByAcronym(typeString);
                     if (restrictionType == null) {
                         throw new FacesException("Restriction type \"" + typeString + "\" not found. The supported types are: " + RestrictionType.getAcronymList());

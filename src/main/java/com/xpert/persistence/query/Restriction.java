@@ -19,6 +19,7 @@ public class Restriction implements Comparable<Restriction> {
     private List<QueryParameter> parameters;
     private boolean ilike = true;
     private Integer index;
+    private String componentId;
 
     /**
      * If both index are null then return "0"
@@ -155,6 +156,14 @@ public class Restriction implements Comparable<Restriction> {
         this.restrictionType = restrictionType;
         this.likeType = likeType;
         this.ilike = ilike;
+    }
+
+    public String getComponentId() {
+        return componentId;
+    }
+
+    public void setComponentId(String componentId) {
+        this.componentId = componentId;
     }
 
     public TemporalType getTemporalType() {

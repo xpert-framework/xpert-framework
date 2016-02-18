@@ -80,7 +80,7 @@ public class QueryBuilder {
         this.debug = true;
         return this;
     }
-    
+
     public QueryBuilder debug(boolean debug) {
         this.debug = debug;
         return this;
@@ -177,12 +177,26 @@ public class QueryBuilder {
                         queryString.append(propertyName);
                     }
                     //if Value is null set default to IS NULL
-                    if (restriction.getValue() == null) {
+                    if (restriction.getValue() == null || restriction.getRestrictionType().equals(RestrictionType.NULL) || restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
                         //  EQUALS null or IS_NULL
-                        if (restriction.getRestrictionType().equals(RestrictionType.EQUALS) || restriction.getRestrictionType().equals(RestrictionType.NULL)) {
+                        if (restriction.getRestrictionType().equals(RestrictionType.EQUALS)) {
                             queryString.append(" IS NULL ");
+                        } else if (restriction.getRestrictionType().equals(RestrictionType.NULL)) {
+                            //if has value and value is false, so negate value 
+                            //not NULL == NOT_NULL
+                            if (restriction.getValue() != null && restriction.getValue() instanceof Boolean && (Boolean) restriction.getValue() == false) {
+                                queryString.append(" IS NOT NULL ");
+                            } else {
+                                queryString.append(" IS NULL ");
+                            }
                         } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
-                            queryString.append(" IS NOT NULL ");
+                            //if has value and value is false, so negate value 
+                            //not NOT_NULL == NULL
+                            if (restriction.getValue() != null && restriction.getValue() instanceof Boolean && (Boolean) restriction.getValue() == false) {
+                                queryString.append(" IS NULL ");
+                            } else {
+                                queryString.append(" IS NOT NULL ");
+                            }
                         }
                     } else {
                         queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
