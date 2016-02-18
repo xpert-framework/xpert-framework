@@ -1,11 +1,10 @@
 package com.xpert.faces.component.restriction;
 
 import com.xpert.faces.primefaces.LazyDataModelImpl;
-import com.xpert.faces.utils.FacesUtils;
-import static com.xpert.faces.utils.FacesUtils.findComponent;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.Restrictions;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
     private ValueExpression addTo;
     private ValueExpression debug;
     private boolean _transient;
+    private List<Restriction> currentRestrictions;
 
     public RestrictionCollector() {
     }
@@ -89,12 +89,19 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         }
 
         Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
-        List<RestrictionComponent> currentRestrictions = (List<RestrictionComponent>) requestMap.get(RESTRICTIONS);
-        if (currentRestrictions != null) {
-            for (RestrictionComponent restrictionComponent : currentRestrictions) {
-                addRestriction(restrictionComponent.getComponent(), restrictionComponent, context);
+        List<RestrictionComponent> currentRequestRestrictions = (List<RestrictionComponent>) requestMap.get(RESTRICTIONS);
+        if (currentRequestRestrictions != null) {
+            int index = 0;
+            currentRestrictions = null;
+            for (RestrictionComponent restrictionComponent : currentRequestRestrictions) {
+                addRestriction(restrictionComponent.getComponent(), restrictionComponent, context, index);
+                index++;
+            }
+            if (currentRestrictions != null) {
+                Collections.sort(currentRestrictions);
             }
         }
+
     }
 
     /**
@@ -171,7 +178,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         return false;
     }
 
-    public void addRestriction(UIComponent component, RestrictionComponent restrictionComponent, FacesContext context) throws AbortProcessingException {
+    public void addRestriction(UIComponent component, RestrictionComponent restrictionComponent, FacesContext context, int index) throws AbortProcessingException {
 
         //if not EditableValueHolder try to add child
         if (!(component instanceof EditableValueHolder)) {
@@ -180,7 +187,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
             while (children.hasNext()) {
                 UIComponent child = (UIComponent) children.next();
                 // System.out.println(child);
-                addRestriction(child, restrictionComponent, context);
+                addRestriction(child, restrictionComponent, context, index);
             }
             return;
         }
@@ -188,11 +195,9 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         ELContext elContext = context.getELContext();
         Object debugValue = (debug != null) ? debug.getValue(elContext) : null;
         boolean checkDebug = (debugValue == null) ? false : (Boolean.valueOf(debugValue.toString()));
-      
+
         if (!isExecuteComponent(context, component)) {
-//            if (checkDebug) {
-//                logger.log(Level.INFO, "Component: {0} is ignored from restrictions", new Object[]{component.getClientId()});
-//            }
+            //logger.log(Level.INFO, "Component: {0} is ignored from restrictions", new Object[]{component.getClientId()});
             return;
         }
 
@@ -223,6 +228,11 @@ public class RestrictionCollector implements ActionListener, StateHolder {
             }
 
             Restriction restriction = restrictionComponent.toRestriction(elContext, component);
+            restriction.setIndex(index);
+
+            if (addToValue == null && checkDebug) {
+                logger.log(Level.INFO, "Expression ''addTo'' is null. Restriction ''{0}'' of component ''{1}'' will not be added", new Object[]{restriction.getProperty(), component.getClientId()});
+            }
 
             //if new value is empty then remove restriction
             if (isEmpty(restriction.getValue())) {
@@ -240,16 +250,16 @@ public class RestrictionCollector implements ActionListener, StateHolder {
                 }
             } else {
 
-                if (checkDebug) {
-                    logger.log(Level.INFO, "Restriction added: {0}. Component: {1}", new Object[]{restriction, component.getClientId()});
-                }
-
                 if (restrictions != null) {
+                    if (checkDebug) {
+                        logger.log(Level.INFO, "Restriction added: {0}. Component: {1}", new Object[]{restriction, component.getClientId()});
+                    }
                     //verify unique
                     boolean found = false;
                     for (Restriction restr : restrictions) {
                         if (restr.getProperty().equals(restriction.getProperty()) && restr.getRestrictionType().equals(restriction.getRestrictionType())) {
                             restr.setValue(restriction.getValue());
+                            restr.setIndex(index);
                             found = true;
                             break;
                         }
@@ -258,6 +268,10 @@ public class RestrictionCollector implements ActionListener, StateHolder {
                     if (found == false) {
                         restrictions.add(restriction);
                     }
+
+                    //set locally
+                    this.currentRestrictions = restrictions;
+
                 }
             }
 

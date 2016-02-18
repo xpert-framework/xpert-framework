@@ -9,7 +9,7 @@ import javax.persistence.TemporalType;
  *
  * @author Ayslan
  */
-public class Restriction {
+public class Restriction implements Comparable<Restriction> {
 
     private String property;
     private Object value;
@@ -18,6 +18,29 @@ public class Restriction {
     private TemporalType temporalType;
     private List<QueryParameter> parameters;
     private boolean ilike = true;
+    private Integer index;
+
+    /**
+     * If both index are null then return "0"
+     * If this.index == null return "-1"
+     * If other.index == null return "1"
+     * If Values are not null return "this.index.compareTo(other.index)"
+     * 
+     * @param other
+     * @return 
+     */
+    public int compareTo(Restriction other) {
+        if (this.index == null && other.index == null) {
+            return 0;
+        }
+        if (this.index == null) {
+            return -1;
+        }
+        if (other.index == null) {
+            return 1;
+        }
+        return this.index.compareTo(other.index);
+    }
 
     public Restriction() {
     }
@@ -605,6 +628,14 @@ public class Restriction {
         this.parameters = parameters;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -633,4 +664,5 @@ public class Restriction {
         builder.append("}");
         return builder.toString();
     }
+
 }
