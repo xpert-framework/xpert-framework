@@ -15,18 +15,19 @@ import org.primefaces.component.inputtext.InputTextRenderer;
  */
 public class InputNumberRenderer extends InputTextRenderer {
 
+    
+    
     @Override
     public void encodeEnd(final FacesContext context, final UIComponent component) throws IOException {
-        super.encodeEnd(context, component);
 
         InputNumber inputNumber = (InputNumber) component;
-        if (inputNumber.getConverter() == null) {
-            NumberConverter numberConverter = new NumberConverter();
+        if (inputNumber.getConverter() != null && inputNumber.getConverter() instanceof NumberConverter) {
+            NumberConverter numberConverter = (NumberConverter) inputNumber.getConverter();
             numberConverter.setMaxFractionDigits(inputNumber.getCentsLimit());
             numberConverter.setMinFractionDigits(inputNumber.getCentsLimit());
-            numberConverter.setLocale(context.getViewRoot().getLocale());
-            inputNumber.setConverter(numberConverter);
         }
+     
+        super.encodeEnd(context, component);
 
         //add script
         final ResponseWriter writer = context.getResponseWriter();

@@ -2,6 +2,8 @@ package com.xpert.faces.component.inputnumber;
 
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.NumberConverter;
 import org.primefaces.component.inputtext.InputText;
 
 /**
@@ -20,6 +22,14 @@ public class InputNumber extends InputText {
     public static final int DEFAULT_LIMIT = 15;
     public static final int DEFAULT_CENTS_LIMIT = 2;
 
+    public InputNumber() {
+        NumberConverter numberConverter = new NumberConverter();
+        Integer centLimit =(Integer) getStateHelper().eval(PropertyKeys.centsLimit, DEFAULT_CENTS_LIMIT);
+        numberConverter.setMaxFractionDigits(centLimit);
+        numberConverter.setMinFractionDigits(centLimit);
+        setConverter(numberConverter);
+    }
+    
     protected enum PropertyKeys {
 
         limit, centsSeparator, thousandsSeparator, centsLimit, allowNegative;
