@@ -33,6 +33,8 @@ public class RestrictionTagHandler extends TagHandler {
     private final TagAttribute ilike;
     private final TagAttribute likeType;
     private final TagAttribute temporalType;
+    private final TagAttribute rendered;
+    private final TagAttribute castAs;
 
     public RestrictionTagHandler(TagConfig tagConfig) {
         super(tagConfig);
@@ -42,6 +44,8 @@ public class RestrictionTagHandler extends TagHandler {
         this.ilike = getAttribute("ilike");
         this.likeType = getAttribute("likeType");
         this.temporalType = getAttribute("temporalType");
+        this.rendered = getAttribute("rendered");
+        this.castAs = getAttribute("castAs");
     }
 
     public void apply(FaceletContext faceletContext, UIComponent parent) throws IOException, FacesException, FaceletException, ELException {
@@ -54,10 +58,16 @@ public class RestrictionTagHandler extends TagHandler {
             ValueExpression ilikeVE = null;
             ValueExpression likeTypeVE = null;
             ValueExpression temporalTypeVE = null;
+            ValueExpression renderedVE = null;
+            ValueExpression castAsVE = null;
 
             //get value expressions
             if (addTo != null) {
                 addToVE = addTo.getValueExpression(faceletContext, Object.class);
+            }
+            
+            if (castAs != null) {
+                castAsVE = castAs.getValueExpression(faceletContext, Object.class);
             }
 
             if (property != null) {
@@ -121,9 +131,13 @@ public class RestrictionTagHandler extends TagHandler {
 
                 }
             }
+            
+            if(rendered != null){
+                renderedVE = rendered.getValueExpression(faceletContext, Boolean.class);
+            }
 
             //create component
-            RestrictionComponent restrictionComponent = new RestrictionComponent(parent, addToVE, propertyVE, typeVE, ilikeVE, likeTypeVE, temporalTypeVE);
+            RestrictionComponent restrictionComponent = new RestrictionComponent(parent, addToVE, propertyVE, typeVE, ilikeVE, likeTypeVE, temporalTypeVE, renderedVE, castAsVE);
 
             Map<String, Object> requestMap = faceletContext.getFacesContext().getExternalContext().getRequestMap();
             List<RestrictionComponent> currentRestrictions = (List<RestrictionComponent>) requestMap.get(RestrictionCollector.RESTRICTIONS);

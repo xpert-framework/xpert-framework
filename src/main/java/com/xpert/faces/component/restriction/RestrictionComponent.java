@@ -4,7 +4,6 @@ import com.xpert.persistence.query.LikeType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import java.util.Arrays;
-import java.util.Iterator;
 import javax.el.ELContext;
 import javax.el.ValueExpression;
 import javax.faces.component.EditableValueHolder;
@@ -26,6 +25,8 @@ public class RestrictionComponent {
     private ValueExpression ilike;
     private ValueExpression likeType;
     private ValueExpression temporalType;
+    private ValueExpression rendered;
+    private ValueExpression castAs;
 
     public RestrictionComponent() {
     }
@@ -37,7 +38,8 @@ public class RestrictionComponent {
         this.type = type;
     }
 
-    public RestrictionComponent(UIComponent component, ValueExpression addTo, ValueExpression property, ValueExpression type, ValueExpression ilike, ValueExpression likeType, ValueExpression temporalType) {
+    public RestrictionComponent(UIComponent component, ValueExpression addTo, ValueExpression property, ValueExpression type, ValueExpression ilike,
+            ValueExpression likeType, ValueExpression temporalType, ValueExpression rendered, ValueExpression castAs) {
         this.component = component;
         this.addTo = addTo;
         this.property = property;
@@ -45,6 +47,13 @@ public class RestrictionComponent {
         this.ilike = ilike;
         this.likeType = likeType;
         this.temporalType = temporalType;
+        this.rendered = rendered;
+        this.castAs = castAs;
+    }
+
+    public boolean isRendered(ELContext elContext) {
+        Object renderedValue = (getRendered() != null) ? getRendered().getValue(elContext) : null;
+        return (renderedValue == null) ? true : (Boolean.valueOf(renderedValue.toString()));
     }
 
     /**
@@ -92,6 +101,11 @@ public class RestrictionComponent {
             temporalTypeValue = TemporalType.valueOf(temporalType.getValue(elContext).toString().toUpperCase());
         }
 
+        String castAsValue = null;
+        if (castAs != null) {
+            castAsValue = (String) castAs.getValue(elContext);
+        }
+
         Object value = ((EditableValueHolder) component).getValue();
         //Hibernate do not accpet Object[] (arrays), so convert it to List
         if (RestrictionType.IN.equals(restrictionType) && value != null && value instanceof Object[]) {
@@ -105,7 +119,8 @@ public class RestrictionComponent {
         restriction.setLikeType(likeTypeValue);
         restriction.setTemporalType(temporalTypeValue);
         restriction.setComponentId(component.getId());
-        
+        restriction.setCastAs(castAsValue);
+
         return restriction;
     }
 
@@ -115,6 +130,22 @@ public class RestrictionComponent {
 
     public void setComponent(UIComponent component) {
         this.component = component;
+    }
+
+    public ValueExpression getCastAs() {
+        return castAs;
+    }
+
+    public void setCastAs(ValueExpression castAs) {
+        this.castAs = castAs;
+    }
+
+    public ValueExpression getRendered() {
+        return rendered;
+    }
+
+    public void setRendered(ValueExpression rendered) {
+        this.rendered = rendered;
     }
 
     public ValueExpression getAddTo() {

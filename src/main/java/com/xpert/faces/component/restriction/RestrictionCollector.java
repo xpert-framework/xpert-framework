@@ -129,7 +129,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         if (currentRestrictions != null) {
             for (RestrictionComponent restrictionComponent : currentRestrictions) {
                 Restriction restriction = restrictionComponent.toRestriction(elContext, restrictionComponent.getComponent());
-                if (!isEmpty(restriction.getValue())) {
+                if (restrictionComponent.isRendered(elContext) && !isEmpty(restriction.getValue())) {
                     restrictions.add(restriction);
                 }
             }
@@ -193,6 +193,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
         }
 
         ELContext elContext = context.getELContext();
+
         Object debugValue = (debug != null) ? debug.getValue(elContext) : null;
         boolean checkDebug = (debugValue == null) ? false : (Boolean.valueOf(debugValue.toString()));
 
@@ -239,7 +240,7 @@ public class RestrictionCollector implements ActionListener, StateHolder {
 //            removeEmptyValues(restriction, restrictions, component, checkDebug);
 
             //if the new value is not empty then add the restriction
-            if (!isEmpty(restriction.getValue())) {
+            if (restrictionComponent.isRendered(elContext) == true && !isEmpty(restriction.getValue())) {
                 if (restrictions != null) {
                     if (checkDebug) {
                         logger.log(Level.INFO, "Restriction added: {0}. Component: {1}", new Object[]{restriction, component.getClientId()});

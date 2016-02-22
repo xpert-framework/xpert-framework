@@ -41,6 +41,8 @@ public class RestrictionsNormalizer {
             restriction.setValue(originalRestriction.getValue());
             restriction.setParameters(originalRestriction.getParameters());
             restriction.setIlike(originalRestriction.isIlike());
+            restriction.setCastAs(originalRestriction.getCastAs());
+            restriction.setComponentId(originalRestriction.getComponentId());
 
             //if RestrictionType is null set default to EQUALS
             if (restriction.getRestrictionType() == null) {

@@ -12,6 +12,7 @@ import javax.persistence.TemporalType;
 public class Restriction implements Comparable<Restriction> {
 
     private String property;
+    private String castAs;
     private Object value;
     private RestrictionType restrictionType;
     private LikeType likeType;
@@ -158,6 +159,14 @@ public class Restriction implements Comparable<Restriction> {
         this.ilike = ilike;
     }
 
+    public String getCastAs() {
+        return castAs;
+    }
+
+    public void setCastAs(String castAs) {
+        this.castAs = castAs;
+    }
+    
     public String getComponentId() {
         return componentId;
     }

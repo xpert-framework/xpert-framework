@@ -161,6 +161,9 @@ public class QueryBuilder {
 
             if (processPropertyAndValue) {
                 String propertyName = restriction.getProperty();
+                if (restriction.getCastAs() != null && !restriction.getCastAs().isEmpty()) {
+                    propertyName = "CAST(" + propertyName + " AS " + restriction.getCastAs() + ")";
+                }
                 //custom query string
                 if (restriction.getRestrictionType().equals(RestrictionType.QUERY_STRING)) {
                     queryString.append(" (").append(restriction.getProperty()).append(") ");

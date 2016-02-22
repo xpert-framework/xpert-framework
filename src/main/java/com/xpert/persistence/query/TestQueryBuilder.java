@@ -63,8 +63,12 @@ public class TestQueryBuilder {
     }
     public static void main(String[] args) {
 
+        Restriction r = new Restriction("code", 1L);
+        r.setCastAs("string");
+        
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
+                .add(r)
                 .innerJoin("outro a")
                 .debug();
         
