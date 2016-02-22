@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import javax.faces.model.SelectItem;
 
 /**
- *
+ * ManagedBean to store a javax.faces.model.SelectItem list of boolean
+ * values and a empty value. This managed-bean can be used in EL #{booleanSelectItensEmptyOption}.
+ * 
+ * 
  * @author Ayslan
  */
 public class BooleanSelectItensEmptyOption extends ArrayList<SelectItem> {

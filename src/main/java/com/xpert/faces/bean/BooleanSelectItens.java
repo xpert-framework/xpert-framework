@@ -6,6 +6,9 @@ import javax.faces.model.SelectItem;
 
 /**
  *
+ * ManagedBean to store a javax.faces.model.SelectItem list of boolean values.
+ * This managed-bean can be used in EL #{booleanSelectItens}
+ * 
  * @author Ayslan
  */
 public class BooleanSelectItens extends ArrayList<SelectItem> {
