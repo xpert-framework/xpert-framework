@@ -23,13 +23,12 @@ public class Restriction implements Comparable<Restriction> {
     private String componentId;
 
     /**
-     * If both index are null then return "0"
-     * If this.index == null return "-1"
-     * If other.index == null return "1"
-     * If Values are not null return "this.index.compareTo(other.index)"
-     * 
+     * If both index are null then return "0" If this.index == null return "-1"
+     * If other.index == null return "1" If Values are not null return
+     * "this.index.compareTo(other.index)"
+     *
      * @param other
-     * @return 
+     * @return
      */
     public int compareTo(Restriction other) {
         if (this.index == null && other.index == null) {
@@ -166,7 +165,7 @@ public class Restriction implements Comparable<Restriction> {
     public void setCastAs(String castAs) {
         this.castAs = castAs;
     }
-    
+
     public String getComponentId() {
         return componentId;
     }
@@ -638,6 +637,17 @@ public class Restriction implements Comparable<Restriction> {
 
     }
 
+    /**
+     * Add a RestrictionType.MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return
+     */
+    public static Restriction memberOf(Object value, String property) {
+        return new Restriction(property, RestrictionType.MEMBER_OF, value);
+    }
+
     public List<QueryParameter> getParameters() {
         return parameters;
     }
@@ -678,6 +688,9 @@ public class Restriction implements Comparable<Restriction> {
         }
         if (temporalType != null) {
             builder.append("(TemporalType: ").append(temporalType.name()).append(") ");
+        }
+        if (castAs != null) {
+            builder.append("(castAs: ").append(castAs).append(") ");
         }
         builder.append("}");
         return builder.toString();

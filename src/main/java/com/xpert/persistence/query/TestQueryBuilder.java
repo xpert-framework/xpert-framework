@@ -68,6 +68,7 @@ public class TestQueryBuilder {
         
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
+                .memberOf("Joe", "names")
                 .add(r)
                 .innerJoin("outro a")
                 .debug();

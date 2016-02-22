@@ -16,6 +16,7 @@ public enum RestrictionType {
     NOT_LIKE("NOT LIKE", "notlike"),
     IN("IN", "in"),
     NOT_IN("NOT IN", "notin"),
+    MEMBER_OF("MEMBER OF", "memberof"),
     NULL("IS NULL", "null", true),
     NOT_NULL("IS NOT NULL", "notnull", true),
     DATA_TABLE_FILTER("LIKE"),

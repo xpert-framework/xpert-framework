@@ -177,7 +177,10 @@ public class QueryBuilder {
                     } else if (restriction.getTemporalType() != null && restriction.getTemporalType().equals(TemporalType.DATE)) {
                         queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
                     } else {
-                        queryString.append(propertyName);
+                        //member of has a own logic
+                        if (!restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF)) {
+                            queryString.append(propertyName);
+                        }
                     }
                     //if Value is null set default to IS NULL
                     if (restriction.getValue() == null || restriction.getRestrictionType().equals(RestrictionType.NULL) || restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
@@ -202,17 +205,25 @@ public class QueryBuilder {
                             }
                         }
                     } else {
-                        queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
-                        if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
-                            if (restriction.isIlike()) {
-                                queryString.append("UPPER(?").append(currentParameter).append(")");
+                        //member of has a own logic
+                        if (restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF)) {
+                            // ?1 member of property
+                            queryString.append("?").append(currentParameter);
+                            queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
+                            queryString.append(propertyName);
+                        } else {
+                            queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
+                            if (restriction.getRestrictionType().equals(RestrictionType.LIKE) || restriction.getRestrictionType().equals(RestrictionType.NOT_LIKE)) {
+                                if (restriction.isIlike()) {
+                                    queryString.append("UPPER(?").append(currentParameter).append(")");
+                                } else {
+                                    queryString.append("?").append(currentParameter);
+                                }
+                            } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
+                                queryString.append("(?").append(currentParameter).append(")");
                             } else {
                                 queryString.append("?").append(currentParameter);
                             }
-                        } else if (restriction.getRestrictionType().equals(RestrictionType.IN) || restriction.getRestrictionType().equals(RestrictionType.NOT_IN)) {
-                            queryString.append("(?").append(currentParameter).append(")");
-                        } else {
-                            queryString.append("?").append(currentParameter);
                         }
                         currentParameter++;
                     }
@@ -836,6 +847,18 @@ public class QueryBuilder {
      */
     public QueryBuilder like(String property, Object value) {
         this.add(new Restriction(property, RestrictionType.LIKE, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder memberOf(Object value, String property) {
+        this.add(new Restriction(property, RestrictionType.MEMBER_OF, value));
         return this;
     }
 
