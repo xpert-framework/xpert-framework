@@ -11,7 +11,7 @@ import javax.faces.render.Renderer;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ConfirmationRenderer extends Renderer {
 

@@ -9,7 +9,7 @@ import org.primefaces.component.calendar.Calendar;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class MaskRenderer extends Renderer {
 

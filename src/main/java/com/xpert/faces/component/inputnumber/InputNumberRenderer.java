@@ -11,7 +11,7 @@ import org.primefaces.component.inputtext.InputTextRenderer;
 /**
  * Renderer to the component "inputNumber"
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class InputNumberRenderer extends InputTextRenderer {
 

@@ -8,7 +8,7 @@ import javax.faces.model.DataModel;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class NumberFunctions {
 

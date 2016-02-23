@@ -18,7 +18,7 @@ import org.hibernate.persister.entity.AbstractEntityPersister;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class PersistenceMappedBean {
 

@@ -3,7 +3,7 @@ package com.xpert.audit.model;
 /**
  * Possible type to audit events
  *
- * @author Ayslan
+ * @author ayslan
  */
 public enum AuditingType {
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class JoinBuilder extends ArrayList<Join> {
 

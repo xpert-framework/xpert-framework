@@ -2,7 +2,7 @@ package com.xpert.persistence.exception;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class QueryFileNotFoundException extends RuntimeException{
 

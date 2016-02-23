@@ -13,7 +13,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  * @param <K> Key Type
  * @param <V> Value Type
  */

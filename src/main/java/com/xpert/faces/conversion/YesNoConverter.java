@@ -9,7 +9,7 @@ import javax.faces.convert.Converter;
  *
  * Converter to show Yes when true, No for false
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class YesNoConverter implements Converter {
 

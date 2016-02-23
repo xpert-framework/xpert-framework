@@ -5,7 +5,7 @@ import com.xpert.persistence.query.Restrictions;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class UniqueField {
 

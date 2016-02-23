@@ -8,7 +8,7 @@ import javax.faces.render.Renderer;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class SpreadRenderer extends Renderer {
 

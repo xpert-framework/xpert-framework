@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Collection of utility methods for the JSF API
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class FacesUtils {
 

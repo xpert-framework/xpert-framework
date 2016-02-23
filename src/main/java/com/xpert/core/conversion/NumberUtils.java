@@ -13,7 +13,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 /**
  * Utility class to manipulate Number.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class NumberUtils {
 

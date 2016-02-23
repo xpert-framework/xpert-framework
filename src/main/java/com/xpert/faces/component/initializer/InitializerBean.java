@@ -20,7 +20,7 @@ import org.hibernate.proxy.LazyInitializer;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class InitializerBean {
 

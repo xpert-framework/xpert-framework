@@ -2,7 +2,7 @@ package com.xpert;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Constants {
 

@@ -22,7 +22,7 @@ import javax.persistence.EntityManager;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class BeanMaker implements Serializable {
 

@@ -2,7 +2,7 @@ package com.xpert.audit;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class BeanModel {
     

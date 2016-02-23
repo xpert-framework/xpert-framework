@@ -2,7 +2,7 @@ package com.xpert.faces.component.api;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public enum SortOrder {
 

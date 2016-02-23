@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class LocaleBean implements Serializable {
 

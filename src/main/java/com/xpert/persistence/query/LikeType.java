@@ -2,7 +2,7 @@ package com.xpert.persistence.query;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public enum LikeType {
 

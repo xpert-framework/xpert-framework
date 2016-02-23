@@ -9,7 +9,7 @@ import javax.faces.render.Renderer;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class FilterOnEnterRenderer extends Renderer {
 

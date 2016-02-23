@@ -7,7 +7,7 @@ import org.primefaces.component.inputmask.InputMask;
 /**
  * Component "cnpj". This component is a primefaces InputMask but with cnpjValidator and cnpjConverter
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Cnpj extends InputMask {
 

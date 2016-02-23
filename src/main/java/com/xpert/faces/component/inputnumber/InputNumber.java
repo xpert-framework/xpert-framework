@@ -10,7 +10,7 @@ import org.primefaces.component.inputtext.InputText;
  * Component "inputNumber". This component is a primefaces InputText but with
  * some "number" funcionalities
  *
- * @author Ayslan
+ * @author ayslan
  */
 @ResourceDependencies({
     @ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),

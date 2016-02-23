@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class AuditBean implements Serializable{
 

@@ -25,7 +25,7 @@ import org.hibernate.proxy.HibernateProxy;
  * AuditingType. The values are compared by reflection. Classes, fields and
  * methdos annotated with @NotAudit must be ignored.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Audit {
 

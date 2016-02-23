@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
  * This class is a java bean with some values to be used in restrictions
  * creation.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class RestrictionComponent {
 

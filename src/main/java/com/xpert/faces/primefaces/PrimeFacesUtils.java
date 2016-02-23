@@ -6,7 +6,7 @@ import org.primefaces.context.RequestContext;
 /**
  * Util class to Primefaces
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public class PrimeFacesUtils {
 

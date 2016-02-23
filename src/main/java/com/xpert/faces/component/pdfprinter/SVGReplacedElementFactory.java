@@ -15,7 +15,7 @@ import org.xhtmlrenderer.render.BlockBox;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class SVGReplacedElementFactory extends ITextReplacedElementFactory {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  * @param <K> Key Type
  * @param <V> Value Type
  */

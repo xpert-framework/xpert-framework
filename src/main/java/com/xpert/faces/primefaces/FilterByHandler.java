@@ -5,7 +5,7 @@ import com.xpert.persistence.query.Restrictions;
 /**
  * Handler to LazyDataModelImpl filtering
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public interface FilterByHandler {
     

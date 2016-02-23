@@ -13,7 +13,7 @@ import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ChainingReplacedElementFactory implements ReplacedElementFactory {
     private List<ReplacedElementFactory> replacedElementFactories 

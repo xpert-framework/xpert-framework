@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 
 /**
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public class HumaniseCamelCase {
 

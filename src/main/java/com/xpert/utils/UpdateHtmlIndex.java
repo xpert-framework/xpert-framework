@@ -8,6 +8,8 @@ import java.util.Locale;
 
 /**
  *
+ * Generic class to generate xpert-framework artifacts
+ *
  * @author ayslan
  */
 public class UpdateHtmlIndex {
@@ -15,18 +17,22 @@ public class UpdateHtmlIndex {
     public static void main(String[] args) throws FileNotFoundException {
         updateIndex("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven");
     }
-    
-    public static void main2(String[] args) throws FileNotFoundException {
-        File file = new File("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven\\.index\\");
-        file.mkdirs();
-    }
 
+//    public static void main2(String[] args) throws FileNotFoundException {
+//        File file = new File("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven\\.index\\");
+//        file.mkdirs();
+//    }
     public static void updateIndex(String file) throws FileNotFoundException {
         updateIndex(new File(file), "");
     }
-    
-   
 
+    /**
+     * Create a HTML file (index.html) in folder and subfolders
+     *
+     * @param file
+     * @param root
+     * @throws FileNotFoundException
+     */
     public static void updateIndex(File file, String root) throws FileNotFoundException {
         if (file == null) {
             return;
@@ -51,10 +57,10 @@ public class UpdateHtmlIndex {
                 if (!child.getName().equals("index.html") && !child.getName().equals(".index")) {
 
                     String fileName = child.getName();
-                    if(child.isDirectory()){
-                        fileName = fileName+"/";
+                    if (child.isDirectory()) {
+                        fileName = fileName + "/";
                     }
-                    
+
                     String link = "<a href=\"" + fileName + "\">" + fileName + "</a>";
                     html.append(link);
                     html.append(org.apache.commons.lang.StringUtils.rightPad("", 51 - fileName.length()));
@@ -74,7 +80,7 @@ public class UpdateHtmlIndex {
         html.append("</pre>");
         html.append("<hr>");
         html.append("</body>\n</html>");
-        
+
         System.out.println(html);
 
         if (files != null && files.length > 0) {
@@ -84,7 +90,6 @@ public class UpdateHtmlIndex {
                 }
             }
         }
-
 
         PrintStream printStream = new PrintStream(file + "/index.html");
         printStream.print(html.toString());

@@ -9,7 +9,7 @@ import javax.faces.convert.Converter;
  *
  * CNPJ converter. Show a CNPJ with mask and remove mask when submit.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class CnpjConverter implements Converter {
 

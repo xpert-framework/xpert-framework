@@ -3,7 +3,7 @@ package com.xpert.faces.primefaces;
 /**
  * Handler to LazyDataModelImpl ordering
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public interface OrderByHandler {
     

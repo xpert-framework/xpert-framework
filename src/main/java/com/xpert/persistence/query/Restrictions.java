@@ -8,7 +8,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Restrictions extends ArrayList<Restriction> {
 

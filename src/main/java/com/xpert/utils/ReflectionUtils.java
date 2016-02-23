@@ -6,8 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Utility class to use reflections operations
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ReflectionUtils {
 

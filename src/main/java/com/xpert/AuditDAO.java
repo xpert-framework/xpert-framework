@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  * @param <T> Type of DAO
  */
 public class AuditDAO<T> extends BaseDAOImpl<T> {

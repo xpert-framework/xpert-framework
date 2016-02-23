@@ -28,7 +28,7 @@ import org.hibernate.proxy.HibernateProxy;
 /**
  * Utility class to manipulae JPA entities
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class EntityUtils {
 

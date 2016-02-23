@@ -4,7 +4,7 @@ import java.util.Locale;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class XpertResourceBundle {
 

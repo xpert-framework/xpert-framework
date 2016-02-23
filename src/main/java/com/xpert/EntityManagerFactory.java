@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public interface EntityManagerFactory {
  

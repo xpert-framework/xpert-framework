@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class UniqueFields extends ArrayList<UniqueField> {
 

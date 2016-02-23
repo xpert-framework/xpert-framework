@@ -35,8 +35,8 @@ public class DateFilterRenderer extends Renderer {
         DateFilter dateFilter = (DateFilter) component;
 
         String clientId = dateFilter.getClientId(context);
-        String startCalendarValue = (String) context.getExternalContext().getRequestParameterMap().get(clientId + "_calendar-start_input");
-        String endCalendarValue = (String) context.getExternalContext().getRequestParameterMap().get(dateFilter.getId() + "_calendar-end_input");
+        String startCalendarValue = context.getExternalContext().getRequestParameterMap().get(clientId + "_calendar-start_input");
+        String endCalendarValue = context.getExternalContext().getRequestParameterMap().get(dateFilter.getId() + "_calendar-end_input");
 
         if (startCalendarValue != null) {
             dateFilter.setCalendarStartValue(startCalendarValue);

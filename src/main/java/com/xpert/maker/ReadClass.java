@@ -12,7 +12,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ReadClass {
 

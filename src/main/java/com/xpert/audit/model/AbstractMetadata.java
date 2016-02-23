@@ -6,7 +6,7 @@ import javax.persistence.MappedSuperclass;
 /**
  * Abstract class to represent the fields of an audit event. Each metadata is a field from the entity that has a "old value" and "new value".
  * 
- * @author Ayslan
+ * @author ayslan
  */
 @MappedSuperclass
 public abstract class AbstractMetadata {

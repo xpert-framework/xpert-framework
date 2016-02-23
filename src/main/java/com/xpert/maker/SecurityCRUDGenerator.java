@@ -11,7 +11,7 @@ import javax.persistence.Embeddable;
  * Class to create acess control generation. The xpert-framework base project
  * has a class to generate Acess Control
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class SecurityCRUDGenerator {
 

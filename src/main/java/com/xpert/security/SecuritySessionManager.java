@@ -10,15 +10,24 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Class to control the user session
  *
  * @author ayslan
  */
 public class SecuritySessionManager {
 
+    /**
+     * Clears the current roles in session
+     *
+     * @param request
+     */
     public static void clearRoles(ServletRequest request) {
         ((HttpServletRequest) request).getSession().removeAttribute(Constants.USER_ROLES);
     }
 
+    /**
+     * Clears the current roles in session (of FacesContext)
+     */
     public static void clearRoles() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove(Constants.USER_ROLES);
     }
@@ -108,7 +117,7 @@ public class SecuritySessionManager {
      *
      * @param key
      * @param context
-     * @return 
+     * @return
      */
     public static boolean hasRole(String key, FacesContext context) {
         return hasRole(key, (ServletRequest) context.getExternalContext().getRequest());
@@ -172,10 +181,22 @@ public class SecuritySessionManager {
         return null;
     }
 
+    /**
+     * Returns the roles in current session
+     *
+     * @param request
+     * @return
+     */
     public static List<Role> getRoles(ServletRequest request) {
         return (List<Role>) ((HttpServletRequest) request).getSession().getAttribute(Constants.USER_ROLES);
     }
 
+    /**
+     * Returns the roles in current session (form FacesContext)
+     *
+     * @param context
+     * @return
+     */
     public static List<Role> getRoles(FacesContext context) {
         return (List<Role>) context.getExternalContext().getSessionMap().get(Constants.USER_ROLES);
     }

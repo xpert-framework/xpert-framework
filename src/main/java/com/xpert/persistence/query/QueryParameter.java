@@ -4,7 +4,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class QueryParameter {
 

@@ -2,7 +2,7 @@ package com.xpert.maker;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public enum BeanType {
 

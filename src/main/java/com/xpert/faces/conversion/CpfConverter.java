@@ -9,7 +9,7 @@ import javax.faces.convert.Converter;
  *
  * CPF converter. Show a CPF with mask and remove mask when submit
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class CpfConverter implements Converter {
 

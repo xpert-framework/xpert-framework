@@ -2,7 +2,7 @@ package com.xpert.core.exception;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class UniqueFieldException extends BusinessException {
 

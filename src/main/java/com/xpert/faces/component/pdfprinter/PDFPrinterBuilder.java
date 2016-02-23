@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class PDFPrinterBuilder {
 

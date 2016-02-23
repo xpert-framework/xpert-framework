@@ -23,27 +23,54 @@ import javax.swing.JTextField;
  */
 public class SwingUtils {
 
+    /**
+     * Position in center a JFrame
+     *
+     * @param jFrame
+     */
     public static void center(JFrame jFrame) {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
         jFrame.setLocation((screenSize.width - jFrame.getSize().width) / 2, (screenSize.height - jFrame.getSize().height) / 2);
     }
 
+    /**
+     * Copy a JTextField text (jTextField.getText()) to clipborad
+     *
+     * @param jTextField
+     */
     public static void copyToClipboard(JTextField jTextField) {
         copyToClipboard(jTextField.getText());
     }
 
+    /**
+     * Copy a JTextArea text (jTextArea.getText()) to clipborad
+     *
+     * @param jTextArea
+     */
     public static void copyToClipboard(JTextArea jTextArea) {
         copyToClipboard(jTextArea.getText());
     }
 
+    /**
+     * Copy a String to clipborad
+     *
+     * @param string
+     */
     public static void copyToClipboard(String string) {
         StringSelection stringSelection = new StringSelection(string);
         Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
         clpbrd.setContents(stringSelection, null);
     }
 
-    public static void createHiperLink(JLabel label, final String url, String text) {
+    /**
+     * Create a HTML hyperlink in JLabel component
+     *
+     * @param label
+     * @param url
+     * @param text
+     */
+    public static void createHyperLink(JLabel label, final String url, String text) {
         label.setToolTipText(url);
         label.setText("<html><a href=\"\">" + text + "</a></html>");
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));

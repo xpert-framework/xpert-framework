@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 /**
  * A generic BaseDAOImpl implementation.
  * 
- * @author Ayslan
+ * @author ayslan
  * @param <T> Type of DAO
  */
 public class DAO<T> extends BaseDAOImpl<T> {

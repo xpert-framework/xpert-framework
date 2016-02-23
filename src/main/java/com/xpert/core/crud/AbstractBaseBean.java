@@ -26,7 +26,7 @@ import javax.faces.context.FacesContext;
 /**
  * Generic Managed Bean to create CRUD
  *
- * @author Ayslan
+ * @author ayslan
  * @param <T> type of entity
  */
 public abstract class AbstractBaseBean<T> {

@@ -12,7 +12,7 @@ import java.io.IOException;
  * Default Managed Bean to process export. This bean add manipulates the Object
  * in pre/post events in export.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class DefaultDataTableExporter {
 

@@ -5,7 +5,7 @@ import org.primefaces.component.inputmask.InputMaskRenderer;
 /**
  * Renderer to the component "cpf"
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class CpfRenderer extends InputMaskRenderer {
 

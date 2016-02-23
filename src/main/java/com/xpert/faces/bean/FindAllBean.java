@@ -26,7 +26,7 @@ import org.apache.commons.beanutils.PropertyUtils;
  * try to select from data base. This bean works better on ViewScope to evict
  * duplicates query.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public abstract class FindAllBean {
 

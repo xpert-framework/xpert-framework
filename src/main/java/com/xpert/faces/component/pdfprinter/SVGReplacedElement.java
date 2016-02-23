@@ -29,7 +29,7 @@ import org.apache.batik.transcoder.print.PrintTranscoder;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class SVGReplacedElement implements ITextReplacedElement {
 

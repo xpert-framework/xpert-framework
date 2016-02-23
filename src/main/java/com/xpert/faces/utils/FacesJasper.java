@@ -20,7 +20,7 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 /**
  * Generic class to create Jasper Reports
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class FacesJasper {
 

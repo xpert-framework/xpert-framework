@@ -10,7 +10,7 @@ import javax.faces.convert.Converter;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class EntityConverterList implements Converter {
 

@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.URL;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class BeanValidator extends javax.faces.validator.BeanValidator {
 

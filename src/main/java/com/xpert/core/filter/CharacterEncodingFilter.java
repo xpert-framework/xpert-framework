@@ -15,7 +15,7 @@ import javax.servlet.ServletResponse;
  * request.setCharacterEncoding(UTF-8);
  * response.setCharacterEncoding(UTF-8);
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public class CharacterEncodingFilter implements Filter {
 

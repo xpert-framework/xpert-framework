@@ -5,7 +5,7 @@ import com.xpert.audit.model.AbstractAuditing;
 /**
  * Listener called on audit event
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public interface AbstractAuditingListener {
     

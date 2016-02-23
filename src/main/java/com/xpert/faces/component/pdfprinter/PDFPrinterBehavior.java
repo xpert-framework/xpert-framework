@@ -7,7 +7,7 @@ import javax.faces.component.behavior.ClientBehaviorContext;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),

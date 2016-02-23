@@ -18,7 +18,7 @@ import javax.faces.view.facelets.TagHandler;
  * TagHandler for the component "x:restrictionCollector".
  * This taghandler add a ActionListener (RestrictionCollector) to the current component
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public class RestrictionCollectorTagHandler extends TagHandler {
 

@@ -5,7 +5,7 @@ import com.xpert.faces.primefaces.PrimeFacesVersion;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class BeanConfiguration {
 

@@ -8,7 +8,7 @@ import org.primefaces.facelets.MethodRule;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class GroupHandler extends ComponentHandler {
 

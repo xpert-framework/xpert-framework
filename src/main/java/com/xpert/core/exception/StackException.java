@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class StackException extends Exception {
 

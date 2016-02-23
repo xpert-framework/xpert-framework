@@ -15,8 +15,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 /**
+ * A generic bean to do the login in security control
  *
- * @author Ayslan
+ * @author ayslan
  */
 public abstract class SecurityLoginBean {
 
@@ -27,26 +28,59 @@ public abstract class SecurityLoginBean {
         return EncryptionType.SHA256;
     }
 
+    /**
+     * Return if the login is "ignore case". Example
+     *
+     * "admin" == "ADMIN" and "admin" == "Admin"
+     *
+     * @return
+     */
     public boolean isLoginIgnoreCase() {
         return false;
     }
 
+    /**
+     * Return if the login is "upper case"
+     *
+     * @return
+     */
     public boolean isLoginUpperCase() {
         return true;
     }
 
+    /**
+     * Return if the login is "lower case"
+     *
+     * @return
+     */
     public boolean isLoginLowerCase() {
         return false;
     }
 
+    /**
+     * Indicate if a validation must be done if no roles are found
+     *
+     * @return
+     */
     public boolean isValidateWhenNoRolesFound() {
         return true;
     }
 
+    /**
+     * Return the "user" class
+     *
+     * @return
+     */
     public Class getUserClass() {
         return null;
     }
 
+    /**
+     * Return the user session, after a sucessful login the user is stored in
+     * this bean
+     *
+     * @return
+     */
     public abstract AbstractUserSession getUserSession();
 
     public abstract EntityManager getEntityManager();
@@ -200,6 +234,14 @@ public abstract class SecurityLoginBean {
         return user;
     }
 
+    /**
+     * Authenticates a user withe the password. If authentication fals then
+     * return null.
+     *
+     * @param user
+     * @param password
+     * @return
+     */
     public User authenticateUserPassword(User user, String password) {
         //compare password encryptedPassword
         if (user != null && user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
@@ -228,6 +270,9 @@ public abstract class SecurityLoginBean {
         return user;
     }
 
+    /**
+     * This method make the user login
+     */
     public void login() {
 
         //clear user session
@@ -278,23 +323,48 @@ public abstract class SecurityLoginBean {
 
     }
 
+    /**
+     * Add a FacesMessage.SEVERITY_ERROR in context
+     *
+     * @param message
+     */
     public void addErrorMessage(String message) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
     }
 
+    /**
+     * Returns the user login
+     *
+     * @return
+     */
     public String getUserLogin() {
         return userLogin;
     }
 
+    /**
+     * Sets the user login
+     *
+     * @param userLogin
+     */
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
     }
 
+    /**
+     * Returns the user password
+     *
+     * @return
+     */
     public String getUserPassword() {
         return userPassword;
     }
 
+    /**
+     * Sets the user login
+     *
+     * @param userPassword
+     */
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }

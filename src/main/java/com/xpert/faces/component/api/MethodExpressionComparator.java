@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class MethodExpressionComparator implements Comparator {
 

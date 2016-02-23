@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 /**
  * Utility class to use with java.util.Date and java.util.Calendar
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class DateUtils {
 

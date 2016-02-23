@@ -20,7 +20,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class QueryBuilder {
 

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Define to not audit the Class/Field/Method
  *
- * @author Ayslan
+ * @author ayslan
  */
 @Target(value = {ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

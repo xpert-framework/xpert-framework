@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ResourceBundleUtils {
 

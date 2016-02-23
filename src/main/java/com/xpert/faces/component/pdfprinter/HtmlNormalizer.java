@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
  *
  * Utility class to normalize HTML. A well formed HTML must be with tags closed.
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class HtmlNormalizer {
 

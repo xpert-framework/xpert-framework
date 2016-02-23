@@ -9,7 +9,7 @@ import javax.faces.model.SelectItem;
  * values and a empty value. This managed-bean can be used in EL #{booleanSelectItensEmptyOption}.
  * 
  * 
- * @author Ayslan
+ * @author ayslan
  */
 public class BooleanSelectItensEmptyOption extends ArrayList<SelectItem> {
 

@@ -4,7 +4,7 @@ import com.xpert.maker.model.ViewEntity;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Bean {
 

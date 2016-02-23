@@ -8,7 +8,7 @@ import javax.faces.component.UIComponentBase;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "css/style.css"),

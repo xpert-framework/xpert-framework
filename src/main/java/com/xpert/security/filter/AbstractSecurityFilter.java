@@ -16,11 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * A generic filter to security control
  *
  * @author ayslan
  */
 public abstract class AbstractSecurityFilter implements Filter {
-    
+
     private static final Logger logger = Logger.getLogger(AbstractSecurityFilter.class.getName());
 
     /**
@@ -61,24 +62,22 @@ public abstract class AbstractSecurityFilter implements Filter {
      * @return
      */
     public abstract String[] getIgnoredUrls();
-    
-    
-    
+
     /**
-     * Return a AbstractUserSession. This method can be override a custom way to obtain a AbstractUserSession instance.
-     * 
+     * Return a AbstractUserSession. This method can be override a custom way to
+     * obtain a AbstractUserSession instance.
+     *
      * @param request a ServletRequest from filter method "doFilter
      * @return AbstractUserSession from session usually a Session Scoped
-     */ 
-    public AbstractUserSession getSessionBean(ServletRequest request){
+     */
+    public AbstractUserSession getSessionBean(ServletRequest request) {
         return (AbstractUserSession) getFromSession(request, getUserSessionName());
     }
-    
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        
-        
+
         AbstractUserSession userSession = getSessionBean(request);
-        
+
         if (userSession == null || !isAuthenticated(userSession)) {
             if (isDebug()) {
                 logger.log(Level.INFO, "User not authenticated redirecting to: {0}", getHomePage());
@@ -86,7 +85,7 @@ public abstract class AbstractSecurityFilter implements Filter {
             redirectHome(request, response);
             return;
         }
-        
+
         if (!hasUrl((HttpServletRequest) request)) {
             if (isDebug()) {
                 logger.log(Level.INFO, "User {0} not authorized to url: {1}", new Object[]{userSession.getUser().getUserLogin(), ((HttpServletRequest) request).getRequestURI()});
@@ -94,7 +93,7 @@ public abstract class AbstractSecurityFilter implements Filter {
             redirectHome(request, response);
             return;
         }
-        
+
         if (getMoreAuthentication(request, response)) {
             try {
                 chain.doFilter(request, response);
@@ -103,9 +102,9 @@ public abstract class AbstractSecurityFilter implements Filter {
                 onError();
             }
         }
-        
+
     }
-    
+
     /**
      * @param request
      * @param attribute Attribute name of the object in session
@@ -114,12 +113,12 @@ public abstract class AbstractSecurityFilter implements Filter {
     public Object getFromSession(ServletRequest request, String attribute) {
         return ((HttpServletRequest) request).getSession().getAttribute(attribute);
     }
-    
+
     /**
      * Return true if the current session contains the current URL
-     * 
+     *
      * @param request
-     * @return 
+     * @return
      */
     public boolean hasUrl(HttpServletRequest request) {
         String currentView = request.getRequestURI().replaceFirst(request.getContextPath(), "");
@@ -128,7 +127,7 @@ public abstract class AbstractSecurityFilter implements Filter {
         }
         return SecuritySessionManager.hasURL(currentView, request);
     }
-    
+
     public void redirectHome(ServletRequest request, ServletResponse response) {
         //create faces context
         FacesUtils.getFacesContext((HttpServletRequest) request, (HttpServletResponse) response);
@@ -143,12 +142,13 @@ public abstract class AbstractSecurityFilter implements Filter {
     public boolean isDebug() {
         return true;
     }
-    
+
     /**
-     * Return true if userSession has a user authenticated calling method AbstractUserSession.isAuthenticated
-     * 
+     * Return true if userSession has a user authenticated calling method
+     * AbstractUserSession.isAuthenticated
+     *
      * @param userSession
-     * @return 
+     * @return
      */
     public boolean isAuthenticated(AbstractUserSession userSession) {
         return userSession.isAuthenticated();

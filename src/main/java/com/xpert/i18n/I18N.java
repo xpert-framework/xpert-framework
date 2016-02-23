@@ -11,7 +11,7 @@ import javax.faces.context.FacesContext;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class I18N {
 

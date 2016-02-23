@@ -8,8 +8,9 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
+ * Utility class to use with java.lang.String
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class StringUtils {
 
@@ -62,36 +63,76 @@ public class StringUtils {
 
     /**
      * Remove HTML tags from string
-     * 
+     *
      * @param string
-     * @return 
+     * @return
      */
     public static String removeHTML(String string) {
         return string.replaceAll("\\<.*?\\>", "");
     }
 
+    /**
+     * Return only number, "," and "." characters of a String
+     *
+     * @param string
+     * @return
+     */
     public static String getOnlyDecimalNumbers(String string) {
         return string.replaceAll("([^0-9|^,|^.])", "");
     }
 
+    /**
+     * Return only number characters of String
+     *
+     * @param string
+     * @return
+     */
     public static String getOnlyIntegerNumbers(String string) {
         return string.replaceAll("([^0-9])", "");
     }
 
+    /**
+     * Return only aplhanumeric characters of a String
+     *
+     * @param string
+     * @return
+     */
     public static String getAlphaNumeric(String string) {
         return string.replaceAll("[^a-z0-9A-Z -]", "");
     }
 
+    /**
+     * Remove duplicate white spaces in String and trim() the result.
+     *
+     * Example: "This is a Example" return "This is a Example"
+     *
+     * @param string
+     * @return
+     */
     public static String removeDuplicateWhiteSpace(String string) {
         Pattern pattern = Pattern.compile("\\s{2,}");
         Matcher matcher = pattern.matcher(string);
         return matcher.replaceAll(" ").trim();
     }
 
+    /**
+     * Extract a String of URL pattern in String
+     *
+     * @param string
+     * @return
+     */
     public static String extractUrl(String string) {
         return extractByRegex(string, PATTERN_URL);
     }
 
+    /**
+     * Extract a String by a regex
+     *
+     * @param string
+     * @param expressaoRegular
+     * @return
+     * @throws PatternSyntaxException
+     */
     public static String extractByRegex(String string, String expressaoRegular) throws PatternSyntaxException {
 
         String novaString = "";
@@ -110,6 +151,13 @@ public class StringUtils {
         return novaString;
     }
 
+    /**
+     * Convert s String to double value
+     *
+     * @param string
+     * @return
+     * @throws NumberFormatException
+     */
     public static Double stringToNumber(String string) throws NumberFormatException {
 
         Double valor = null;
@@ -124,9 +172,9 @@ public class StringUtils {
 
             if (string.contains(".") && !string.contains(",")) {
 
-                String casasDecimais = string.substring(string.lastIndexOf("."), string.length() - 1);
+                String decimals = string.substring(string.lastIndexOf("."), string.length() - 1);
 
-                if (casasDecimais.length() == 2 || casasDecimais.length() == 1) {
+                if (decimals.length() == 2 || decimals.length() == 1) {
                     return Double.valueOf(string);
                 } else {
                     return Double.valueOf(string.replace(".", ""));
@@ -151,10 +199,22 @@ public class StringUtils {
         return valor;
     }
 
+    /**
+     * Return only alpha characters
+     *
+     * @param string
+     * @return
+     */
     public static String onlyAlpha(String string) {
         return string.replaceAll("[^A-Za-zçáàãâäéèêëíìîïóòõôöúùûüÇÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜ ,.]", "");
     }
 
+    /**
+     * Convert a String to Camel Case
+     *
+     * @param string
+     * @return
+     */
     public static String converteToCamelCase(String string) {
         StringBuilder stringCamelCase = new StringBuilder();
         string = removeDuplicateWhiteSpace(string);
@@ -175,21 +235,42 @@ public class StringUtils {
         return stringCamelCase.toString();
     }
 
-    public static String fillZeros(int numero, int tamanho) {
-        return fillZeros(String.valueOf(numero), tamanho);
+    /**
+     * Fill a number with left zeros
+     *
+     * @param number
+     * @param size size of generated String
+     * @return
+     */
+    public static String fillZeros(int number, int size) {
+        return fillZeros(String.valueOf(number), size);
     }
 
-    public static String fillZeros(String string, int tamanho) {
+    /**
+     * Fill a String with left zeros
+     *
+     * @param string
+     * @param size size of generated String
+     * @return
+     */
+    public static String fillZeros(String string, int size) {
         String value = "";
         if (string != null && !string.trim().isEmpty()) {
             value = string;
-            for (int x = value.length(); x < tamanho; x++) {
+            for (int x = value.length(); x < size; x++) {
                 value = "0" + value;
             }
         }
         return value;
     }
 
+    /**
+     * return the String with first character with lower case Example: "Paul"
+     * returns "paul"
+     *
+     * @param string
+     * @return
+     */
     public static String getLowerFirstLetter(String string) {
         if (string.length() == 1) {
             return string.toLowerCase();
@@ -200,6 +281,13 @@ public class StringUtils {
         return "";
     }
 
+    /**
+     * return the String with first character with upper case Example: "paul"
+     * returns "Paul"
+     *
+     * @param string
+     * @return
+     */
     public static String getUpperFirstLetter(String string) {
         if (string.length() == 1) {
             return string.toUpperCase();
@@ -210,6 +298,12 @@ public class StringUtils {
         return "";
     }
 
+    /**
+     * Return true if the string only contais letters
+     *
+     * @param string
+     * @return
+     */
     public static boolean isOnlyLetter(String string) {
         char[] chars = string.toCharArray();
         for (char c : chars) {
@@ -220,6 +314,12 @@ public class StringUtils {
         return true;
     }
 
+    /**
+     * Return the String with no accents
+     *
+     * @param value
+     * @return
+     */
     public static String removeAccent(String value) {
         return Conversion.removeAccent(value);
     }

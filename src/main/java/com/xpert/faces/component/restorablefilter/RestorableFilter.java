@@ -13,7 +13,7 @@ import org.primefaces.component.datatable.DataTable;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js")

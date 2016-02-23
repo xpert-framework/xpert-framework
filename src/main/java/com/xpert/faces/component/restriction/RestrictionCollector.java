@@ -25,7 +25,7 @@ import javax.faces.event.ActionListener;
  * This class is a ActionListener used to add restrictions to a List or a
  * LazyDataModel
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class RestrictionCollector implements ActionListener, StateHolder {
 

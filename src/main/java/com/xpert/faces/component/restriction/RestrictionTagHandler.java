@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
  * TagHandler for the component "x:restriction".
  * This taghandler store input values into request map. These values are used to be added into a list of restrictions or a LazyDataModel
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class RestrictionTagHandler extends TagHandler {
 
@@ -77,7 +77,7 @@ public class RestrictionTagHandler extends TagHandler {
             if (type != null) {
                 typeVE = type.getValueExpression(faceletContext, String.class);
                 //validate
-                String typeString = (String) type.getValue(faceletContext);
+                String typeString = type.getValue(faceletContext);
                 //if a type is informed, then validate the type
                 if (typeString != null && !typeString.trim().isEmpty()) {
                     RestrictionType restrictionType = RestrictionType.getByAcronym(typeString);
@@ -96,7 +96,7 @@ public class RestrictionTagHandler extends TagHandler {
                 likeTypeVE = likeType.getValueExpression(faceletContext, String.class);
 
                 //validate
-                String typeString = (String) likeType.getValue(faceletContext);
+                String typeString = likeType.getValue(faceletContext);
                 //if a type is informed, then validate the type
                 if (typeString != null) {
                     boolean found = false;
@@ -116,7 +116,7 @@ public class RestrictionTagHandler extends TagHandler {
                 temporalTypeVE = temporalType.getValueExpression(faceletContext, String.class);
 
                 //validate
-                String typeString = (String) temporalType.getValue(faceletContext);
+                String typeString = temporalType.getValue(faceletContext);
                 //if a type is informed, then validate the type
                 if (typeString != null) {
                     boolean found = false;

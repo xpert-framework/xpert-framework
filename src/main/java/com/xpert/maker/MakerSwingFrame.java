@@ -177,9 +177,9 @@ public class MakerSwingFrame extends javax.swing.JFrame {
         createLabelTabbedPanel("Create Classes", 2);
 
         //create links
-        SwingUtils.createHiperLink(labelLinkDocs, MakerSwingFrame.URL_DOCUMENTATION, MakerSwingFrame.URL_DOCUMENTATION);
-        SwingUtils.createHiperLink(labelLinkShowcase, MakerSwingFrame.URL_SHOWCASE, MakerSwingFrame.URL_SHOWCASE);
-        SwingUtils.createHiperLink(labelLinkXpertSistemas, MakerSwingFrame.URL_XPERT_SISTEMAS, MakerSwingFrame.URL_XPERT_SISTEMAS);
+        SwingUtils.createHyperLink(labelLinkDocs, MakerSwingFrame.URL_DOCUMENTATION, MakerSwingFrame.URL_DOCUMENTATION);
+        SwingUtils.createHyperLink(labelLinkShowcase, MakerSwingFrame.URL_SHOWCASE, MakerSwingFrame.URL_SHOWCASE);
+        SwingUtils.createHyperLink(labelLinkXpertSistemas, MakerSwingFrame.URL_XPERT_SISTEMAS, MakerSwingFrame.URL_XPERT_SISTEMAS);
 
         addTootipTextWithLocations(textClassMB, "Directory of Class Managed Bean (ClassMB)");
         addTootipTextWithLocations(textResourceBundleLocation, "Directory of default messages resource bundles");

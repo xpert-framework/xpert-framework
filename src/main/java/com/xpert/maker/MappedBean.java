@@ -4,7 +4,7 @@ import com.xpert.utils.HumaniseCamelCase;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class MappedBean {
 

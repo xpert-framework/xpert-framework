@@ -20,7 +20,7 @@ import org.primefaces.component.datatable.DataTable;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class RestorableFilterRenderer extends Renderer {
 

@@ -7,7 +7,7 @@ import javax.persistence.*;
 /**
  * Abstract class to represent a audit event.
  * 
- * @author Ayslan
+ * @author ayslan
  */
 @MappedSuperclass
 public abstract class AbstractAuditing {

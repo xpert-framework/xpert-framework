@@ -5,7 +5,7 @@ import org.primefaces.component.inputmask.InputMaskRenderer;
 /**
  * Renderer to the component "cnpj"
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class CnpjRenderer extends InputMaskRenderer {
 

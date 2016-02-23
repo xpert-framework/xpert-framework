@@ -34,7 +34,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class BeanCreator {
 

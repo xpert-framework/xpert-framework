@@ -5,7 +5,7 @@ import com.xpert.faces.primefaces.PrimeFacesUtils;
 /**
  * Generic managed bean to acess utils methods and funtions from xpert-framework
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Xpert {
 

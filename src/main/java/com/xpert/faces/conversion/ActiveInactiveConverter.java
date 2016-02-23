@@ -9,7 +9,7 @@ import javax.faces.convert.Converter;
  *
  * Converter to show Active when true and Inactive when false
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class ActiveInactiveConverter implements Converter {
 

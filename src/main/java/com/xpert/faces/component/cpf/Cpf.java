@@ -8,7 +8,7 @@ import org.primefaces.component.inputmask.InputMask;
  * Component "cpf". This component is a primefaces InputMask but with cpfValidator and cpfConverter
 
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class Cpf extends InputMask {
 

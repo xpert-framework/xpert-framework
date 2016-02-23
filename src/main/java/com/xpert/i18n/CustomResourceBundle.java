@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
  * Customize messages in view.
  * This bundle evicts a not found property that JSF shows something like "???propertyName??"
  *
- * @author Ayslan
+ * @author ayslan
  */
 public class CustomResourceBundle extends ResourceBundle {
 
