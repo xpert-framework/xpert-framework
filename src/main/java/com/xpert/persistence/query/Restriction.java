@@ -648,6 +648,17 @@ public class Restriction implements Comparable<Restriction> {
         return new Restriction(property, RestrictionType.MEMBER_OF, value);
     }
 
+    /**
+     * Add a RestrictionType.NOT_MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return
+     */
+    public static Restriction notMemberOf(Object value, String property) {
+        return new Restriction(property, RestrictionType.NOT_MEMBER_OF, value);
+    }
+
     public List<QueryParameter> getParameters() {
         return parameters;
     }

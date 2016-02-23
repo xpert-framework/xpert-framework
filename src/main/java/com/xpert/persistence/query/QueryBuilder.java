@@ -178,7 +178,7 @@ public class QueryBuilder {
                         queryString.append("CAST(").append(propertyName).append(" AS date)").append(" ");
                     } else {
                         //member of has a own logic
-                        if (!restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF)) {
+                        if (!restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF) && !restriction.getRestrictionType().equals(RestrictionType.NOT_MEMBER_OF)) {
                             queryString.append(propertyName);
                         }
                     }
@@ -206,7 +206,7 @@ public class QueryBuilder {
                         }
                     } else {
                         //member of has a own logic
-                        if (restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF)) {
+                        if (restriction.getRestrictionType().equals(RestrictionType.MEMBER_OF) || restriction.getRestrictionType().equals(RestrictionType.NOT_MEMBER_OF)) {
                             // ?1 member of property
                             queryString.append("?").append(currentParameter);
                             queryString.append(" ").append(restriction.getRestrictionType().getSymbol()).append(" ");
@@ -859,6 +859,18 @@ public class QueryBuilder {
      */
     public QueryBuilder memberOf(Object value, String property) {
         this.add(new Restriction(property, RestrictionType.MEMBER_OF, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder notMemberOf(Object value, String property) {
+        this.add(new Restriction(property, RestrictionType.NOT_MEMBER_OF, value));
         return this;
     }
 
