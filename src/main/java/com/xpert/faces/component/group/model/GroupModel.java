@@ -13,6 +13,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  *
+ * A java bean to group values from listsed on a property
+ *
  * @author ayslan
  * @param <K> Key Type
  * @param <V> Value Type
@@ -38,6 +40,11 @@ public class GroupModel<K, V> {
         this.itens = new ArrayList<GroupModelItem<K, V>>();
     }
 
+    /**
+     * Returns the itens size
+     *
+     * @return itens size (list.size())
+     */
     public int getItensSize() {
         if (itens != null) {
             return itens.size();
@@ -45,6 +52,11 @@ public class GroupModel<K, V> {
         return 0;
     }
 
+    /**
+     * Returns the size of model
+     *
+     * @return size of model
+     */
     public int getSize() {
         if (value != null) {
             return value.size();
@@ -52,6 +64,10 @@ public class GroupModel<K, V> {
         return 0;
     }
 
+    /**
+     * Group the itens. The grouping is done with java Map, so its important to
+     * have a good "equals" defined ind the bean
+     */
     public void groupItens() {
         if (value != null) {
             //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);

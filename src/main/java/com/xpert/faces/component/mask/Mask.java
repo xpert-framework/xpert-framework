@@ -7,7 +7,8 @@ import javax.faces.application.ResourceDependency;
 import javax.faces.component.UIComponentBase;
 
 /**
- *
+ * This component puts a mask in primefaces p:calendar (in previous version primefaces doesn't has mask on calendar)
+ * 
  * @author ayslan
  */
 @ResourceDependencies({

@@ -2,7 +2,6 @@ package com.xpert.faces.component.inputnumber;
 
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
-import javax.faces.context.FacesContext;
 import javax.faces.convert.NumberConverter;
 import org.primefaces.component.inputtext.InputText;
 

@@ -8,6 +8,7 @@ import javax.faces.render.Renderer;
 import org.primefaces.component.calendar.Calendar;
 
 /**
+ * Renderer to "mask" component
  *
  * @author ayslan
  */

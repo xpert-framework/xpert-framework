@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  *
+ * The itens of a GroupModel
+ *
  * @author ayslan
  * @param <K> Key Type
  * @param <V> Value Type
@@ -28,7 +30,7 @@ public class GroupModelItem<K, V> {
     public void setIndex(int index) {
         this.index = index;
     }
-    
+
     public int getSize() {
         return value.size();
     }

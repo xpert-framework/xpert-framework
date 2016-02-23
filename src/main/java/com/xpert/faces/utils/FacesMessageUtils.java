@@ -5,7 +5,6 @@ import com.xpert.core.exception.StackException;
 import com.xpert.core.exception.UniqueFieldException;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.i18n.I18N;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
