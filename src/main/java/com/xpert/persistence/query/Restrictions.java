@@ -13,6 +13,30 @@ import javax.persistence.TemporalType;
 public class Restrictions extends ArrayList<Restriction> {
 
     /**
+     * Add a RestrictionType.MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions memberOf(Object value, String property) {
+        this.add(new Restriction(property, RestrictionType.MEMBER_OF, value));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_MEMBER_OF (value 'member of' property)
+     *
+     * @param value
+     * @param property
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions notMemberOf(Object value, String property) {
+        this.add(new Restriction(property, RestrictionType.NOT_MEMBER_OF, value));
+        return this;
+    }
+
+    /**
      * Add a restriction
      *
      * @param property
@@ -101,7 +125,7 @@ public class Restrictions extends ArrayList<Restriction> {
         this.add(new Restriction(property, RestrictionType.QUERY_STRING));
         return this;
     }
-    
+
     /**
      * Add a RestrictionType.QUERY_STRING
      *
@@ -110,11 +134,12 @@ public class Restrictions extends ArrayList<Restriction> {
      * @return Current Restrictions with added restriction
      */
     public Restrictions addQueryString(String property, List<QueryParameter> parameters) {
-        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
         restriction.setParameters(parameters);
         this.add(restriction);
         return this;
     }
+
     /**
      * Add a RestrictionType.QUERY_STRING
      *
@@ -123,15 +148,13 @@ public class Restrictions extends ArrayList<Restriction> {
      * @return Current Restrictions with added restriction
      */
     public Restrictions addQueryString(String property, QueryParameter parameter) {
-        Restriction restriction =new Restriction(property, RestrictionType.QUERY_STRING);
+        Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         parameters.add(parameter);
         restriction.setParameters(parameters);
         this.add(restriction);
         return this;
     }
-    
-    
 
     /**
      * Add a RestrictionType.NULL (property 'is null')
@@ -408,7 +431,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a Calendar RestrictionType.EQUALS (property '=' value)
-     * 
+     *
      * @param property
      * @param value
      * @param temporalType
@@ -421,7 +444,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a RestrictionType.NOT_EQUALS (property '!=' value)
-     * 
+     *
      * @param property
      * @param value
      * @return Current Restrictions with added restriction
@@ -433,7 +456,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a Date RestrictionType.NOT_EQUALS (property '!=' value)
-     * 
+     *
      * @param property
      * @param value
      * @param temporalType
@@ -446,7 +469,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a Calendar RestrictionType.NOT_EQUALS (property '!=' value)
-     * 
+     *
      * @param property
      * @param value
      * @param temporalType
@@ -459,7 +482,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a RestrictionType.OR
-     * 
+     *
      * @return Current Restrictions with added restriction
      */
     public Restrictions or() {
@@ -469,7 +492,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a RestrictionType.START_GROUP
-     * 
+     *
      * @return Current Restrictions with added restriction
      */
     public Restrictions startGroup() {
@@ -479,7 +502,7 @@ public class Restrictions extends ArrayList<Restriction> {
 
     /**
      * Add a RestrictionType.END_GROUP
-     * 
+     *
      * @return Current Restrictions with added restriction
      */
     public Restrictions endGroup() {
