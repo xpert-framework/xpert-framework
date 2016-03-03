@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**
+ * A JPQL/HQL based builder. This class is a collection of utility methods to
+ * build JPA query
  *
  * @author ayslan
  */
@@ -46,22 +48,51 @@ public class QueryBuilder {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Defines the "from" clusule
+     *
+     * @param from Class to be used in select
+     * @return Current QueryBuilder
+     */
     public QueryBuilder from(Class from) {
         this.from = from;
         return this;
     }
 
+    /**
+     * Defines the "from" clusule
+     *
+     * @param from Class to be used in select
+     * @param alias An alias for the entity
+     * @return Current QueryBuilder
+     */
     public QueryBuilder from(Class from, String alias) {
         this.from = from;
         this.alias = alias;
         return this;
     }
 
+    /**
+     * Defines the query "order by"
+     *
+     * @param order A String with the order. It can be used multiple fields
+     * "field1, field2" and "asc" and "desc" can be defined "field1 desc,
+     * field2"
+     * @return Current QueryBuilder
+     */
     public QueryBuilder orderBy(String order) {
         this.orderBy = order;
         return this;
     }
 
+    /**
+     * Defines the query "order by"
+     *
+     * @param order A list of string with the order. It can be used multiple
+     * fields "field1, field2" and "asc" and "desc" can be defined "field1 desc,
+     * field2"
+     * @return Current QueryBuilder
+     */
     public QueryBuilder orderBy(List<String> order) {
         if (order != null) {
             StringBuilder builder = new StringBuilder();
@@ -76,16 +107,43 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * Defines if the this builder will be logged
+     *
+     * @return
+     */
     public QueryBuilder debug() {
         this.debug = true;
         return this;
     }
 
+    /**
+     * Defines if the this builder will be logged
+     *
+     * @param debug
+     * @return
+     */
     public QueryBuilder debug(boolean debug) {
         this.debug = debug;
         return this;
     }
 
+    /**
+     * Returns a string based on QueryType.
+     *
+     * <ul>
+     * <li>MAX returns a SELECT MAX(field)</li>
+     * <li>MIN returns a SELECT MIN(field)</li>
+     * <li>AVG returns a SELECT AVG(field)</li>
+     * <li>COUNT returns a SELECT COUNT(field)/COUNT(*)</li>
+     * <li>SELECT type returns "SELECT <code>select</code>" if
+     * <code>select</code> is emptu then returns a empty String</li>
+     * </ul>
+     *
+     * @param type
+     * @param select
+     * @return
+     */
     public static String getQuerySelectClausule(QueryType type, String select) {
 
         if (type == null) {
@@ -121,6 +179,9 @@ public class QueryBuilder {
     }
 
     /**
+     *
+     * Retruns String of the part after "WHERE" from JPQL generated
+     *
      * @param restrictions
      * @return String of the part after "WHERE" from JPQL generated
      */
@@ -450,9 +511,12 @@ public class QueryBuilder {
         return value;
     }
 
+    /**
+     * Creates the JPA Query Object based on current QueryBuilder
+     *
+     * @return
+     */
     public Query createQuery() {
-
-        long begin = System.currentTimeMillis();
 
         String queryString = getQueryString();
 

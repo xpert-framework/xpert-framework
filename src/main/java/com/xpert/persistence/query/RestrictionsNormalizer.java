@@ -16,14 +16,37 @@ import java.util.logging.Logger;
 import javax.persistence.TemporalType;
 
 /**
+ * Class to "normalize" restrictions. The RestrictionType.DATA_TABLE_FILTER is a
+ * especial filter that generate other types, example if a field is
+ * java.lang.Long than generates a RestrictionType.EQUALS
  *
  * @author ayslan
  */
 public class RestrictionsNormalizer {
 
+    /**
+     * Separator to be used in DateFilter is found
+     */
     public static final String DATE_FILTER_INTERVAL_SEPARATOR = " ## ";
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
+    /**
+     * Returns a list of restrictions based on restrictions in parameter. There
+     * a especial filter RestrictionType.DATA_TABLE_FILTER, wich generates other
+     * filters.
+     *
+     * <ul>
+     * <li>Types int, long and short generates RestrictionType.EQUALS.</li>
+     * <li>Types Date and Calendar generates a interval with
+     * RestrictionType.GREATER_EQUALS_THAN and </li>
+     * <li>String and other types generates a RestrictionType.LIKE</li>
+     * </ul>
+     *
+     * @param from
+     * @param restrictions
+     * @param alias
+     * @return
+     */
     public static List<Restriction> getNormalizedRestrictions(Class from, List<Restriction> restrictions, String alias) {
 
         List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
