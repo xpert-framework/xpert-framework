@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EmbeddedId;
@@ -71,6 +72,8 @@ public class EntityUtils {
                 return new BigDecimal(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(String.class)) {
                 return id;
+            } else if (idType.equals(UUID.class)) {
+                return UUID.fromString(id);
             } else {
                 throw new IllegalArgumentException("Type " + idType.getName() + " from entity " + entityClass.getName() + " cannot be converted");
             }
