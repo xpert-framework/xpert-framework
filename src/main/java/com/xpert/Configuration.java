@@ -145,20 +145,29 @@ public class Configuration {
                     if (children.item(temp).getNodeName().equals("auditing")) {
                         Element element = (Element) node;
                         try {
-                            AUDITING_IMPL = Class.forName(getTagValue("auditing-impl", element), true, Thread.currentThread().getContextClassLoader());
-                            logger.log(Level.INFO, "Found AuditingImpl: {0}", AUDITING_IMPL.getName());
+                            String tagValue = getTagValue("auditing-impl", element);
+                            if (tagValue != null && !tagValue.isEmpty()) {
+                                AUDITING_IMPL = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
+                                logger.log(Level.INFO, "Found AuditingImpl: {0}", AUDITING_IMPL.getName());
+                            }
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
                         try {
-                            METADATA_IMPL = Class.forName(getTagValue("metadata-impl", element), true, Thread.currentThread().getContextClassLoader());
-                            logger.log(Level.INFO, "Found MetadataImpl: {0}", METADATA_IMPL.getName());
+                            String tagValue = getTagValue("metadata-impl", element);
+                            if (tagValue != null && !tagValue.isEmpty()) {
+                                METADATA_IMPL = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
+                                logger.log(Level.INFO, "Found MetadataImpl: {0}", METADATA_IMPL.getName());
+                            }
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
                         try {
-                            AUDITING_LISTENER = Class.forName(getTagValue("auditing-listener", element), true, Thread.currentThread().getContextClassLoader());
-                            logger.log(Level.INFO, "Found AuditingListener: {0}", AUDITING_LISTENER.getName());
+                            String tagValue = getTagValue("auditing-listener", element);
+                            if (tagValue != null && !tagValue.isEmpty()) {
+                                AUDITING_LISTENER = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
+                                logger.log(Level.INFO, "Found AuditingListener: {0}", AUDITING_LISTENER.getName());
+                            }
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
