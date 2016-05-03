@@ -13,6 +13,7 @@ import org.primefaces.component.inputtext.InputText;
  */
 @ResourceDependencies({
     @ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
+    @ResourceDependency(library = "xpert", name = "scripts/core.js"),
     @ResourceDependency(library = "xpert", name = "scripts/jquery.price_format.js")
 })
 public class InputNumber extends InputText {
