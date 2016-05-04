@@ -327,7 +327,7 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
-            <description>Type of restriction to be used in restriction. Types can be "eq", "ne", "gt", "lt", "gte", "lte", "like", "notlike", "in", "notin", "null", "notnull", "memberof" and "notmemberof". Default value is "eq". </description>
+            <description>Type of restriction to be used in restriction. Types can be "eq", "ne", "gt", "lt", "gte", "lte", "like", "notlike", "in", "notin", "null", "notnull", "empty", "notempty", "memberof" and "notmemberof". Default value is "eq". </description>
             <name>type</name>
             <required>false</required>
             <type>java.lang.String</type>

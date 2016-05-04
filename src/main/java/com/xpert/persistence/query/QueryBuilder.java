@@ -244,26 +244,31 @@ public class QueryBuilder {
                         }
                     }
                     //if Value is null set default to IS NULL
-                    if (restriction.getValue() == null || restriction.getRestrictionType().equals(RestrictionType.NULL) || restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
+                    if (restriction.getValue() == null || restriction.getRestrictionType().equals(RestrictionType.NULL)
+                            || restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)
+                            || restriction.getRestrictionType().equals(RestrictionType.EMPTY)
+                            || restriction.getRestrictionType().equals(RestrictionType.NOT_EMPTY)) {
                         //  EQUALS null or IS_NULL
                         if (restriction.getRestrictionType().equals(RestrictionType.EQUALS)) {
                             queryString.append(" IS NULL ");
-                        } else if (restriction.getRestrictionType().equals(RestrictionType.NULL)) {
+                        } else if (restriction.getRestrictionType().equals(RestrictionType.NULL) || restriction.getRestrictionType().equals(RestrictionType.EMPTY)) {
                             //if has value and value is false, so negate value 
                             //not NULL == NOT_NULL
+                            queryString.append(" IS ");
                             if (restriction.getValue() != null && restriction.getValue() instanceof Boolean && (Boolean) restriction.getValue() == false) {
-                                queryString.append(" IS NOT NULL ");
-                            } else {
-                                queryString.append(" IS NULL ");
+                                queryString.append("NOT ");
                             }
-                        } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL)) {
+                            queryString.append(restriction.getRestrictionType().name());
+                        } else if (restriction.getRestrictionType().equals(RestrictionType.NOT_NULL) || restriction.getRestrictionType().equals(RestrictionType.NOT_EMPTY)) {
                             //if has value and value is false, so negate value 
                             //not NOT_NULL == NULL
-                            if (restriction.getValue() != null && restriction.getValue() instanceof Boolean && (Boolean) restriction.getValue() == false) {
-                                queryString.append(" IS NULL ");
-                            } else {
-                                queryString.append(" IS NOT NULL ");
+                            queryString.append(" IS ");
+                            //negate
+                            if (!(restriction.getValue() != null && restriction.getValue() instanceof Boolean && (Boolean) restriction.getValue() == false)) {
+                                queryString.append("NOT ");
                             }
+                            //remove not (replacing enum name NOT_NULL = NULL)
+                            queryString.append(restriction.getRestrictionType().name().replace("NOT_", ""));
                         }
                     } else {
                         //member of has a own logic
@@ -899,6 +904,27 @@ public class QueryBuilder {
      */
     public QueryBuilder isNotNull(String property) {
         this.add(new Restriction(property, RestrictionType.NOT_NULL));
+        return this;
+    }
+    /**
+     * Add a RestrictionType.EMPTY (property 'is empty')
+     *
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder isEmpty(String property) {
+        this.add(new Restriction(property, RestrictionType.EMPTY));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_EMPTY (property 'is not empty')
+     *
+     * @param property
+     * @return Current QueryBuilder with added restriction
+     */
+    public QueryBuilder isNotEmpty(String property) {
+        this.add(new Restriction(property, RestrictionType.NOT_EMPTY));
         return this;
     }
 

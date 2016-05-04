@@ -179,6 +179,28 @@ public class Restrictions extends ArrayList<Restriction> {
     }
 
     /**
+     * Add a RestrictionType.EMPTY (property 'is empty')
+     *
+     * @param property
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions isEmpty(String property) {
+        this.add(new Restriction(property, RestrictionType.EMPTY));
+        return this;
+    }
+
+    /**
+     * Add a RestrictionType.NOT_EMPTY (property 'is not empty')
+     *
+     * @param property
+     * @return Current Restrictions with added restriction
+     */
+    public Restrictions isNotEmpty(String property) {
+        this.add(new Restriction(property, RestrictionType.NOT_EMPTY));
+        return this;
+    }
+
+    /**
      * Add a RestrictionType.LIKE (property 'like' value)
      *
      * @param property

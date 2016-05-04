@@ -283,6 +283,27 @@ public class Restriction implements Comparable<Restriction> {
         return new Restriction(property, RestrictionType.NOT_NULL);
 
     }
+    /**
+     * Creates a Restrition of type EMPTY
+     *
+     * @param property
+     * @return
+     */
+    public static Restriction isEmpty(String property) {
+        return new Restriction(property, RestrictionType.EMPTY);
+
+    }
+
+    /**
+     * Creates a Restrition of type NOT_EMPTY
+     *
+     * @param property
+     * @return
+     */
+    public static Restriction isNotEmpty(String property) {
+        return new Restriction(property, RestrictionType.NOT_EMPTY);
+
+    }
 
     /**
      * Creates a Restrition of type LIKE

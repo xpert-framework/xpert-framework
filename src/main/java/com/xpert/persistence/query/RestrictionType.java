@@ -20,6 +20,8 @@ public enum RestrictionType {
     NOT_MEMBER_OF("NOT MEMBER OF", "notmemberof"),
     NULL("IS NULL", "null", true),
     NOT_NULL("IS NOT NULL", "notnull", true),
+    EMPTY("IS EMPTY", "empty", true),
+    NOT_EMPTY("IS NOT EMPTY", "notempty", true),
     DATA_TABLE_FILTER("LIKE"),
     OR("OR", true),
     START_GROUP("(", true),

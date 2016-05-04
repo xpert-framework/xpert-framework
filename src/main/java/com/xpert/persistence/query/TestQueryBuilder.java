@@ -66,16 +66,28 @@ public class TestQueryBuilder {
         Restriction r = new Restriction("code", 1L);
         r.setCastAs("string");
         
+//        QueryBuilder queryBuilder = new QueryBuilder(null)
+//                .from(Object.class, "o")
+//                .memberOf("Joe", "names")
+//                .notMemberOf("Joe", "names")
+//                .add(r)
+//                .innerJoin("outro a")
+//                .debug();
+        
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
-                .memberOf("Joe", "names")
-                .notMemberOf("Joe", "names")
-                .add(r)
-                .innerJoin("outro a")
+                .isNotNull("name")
+                .isNull("name2")
+                .isNotEmpty("name3")
+                .isEmpty("name4")
+                .add("name5", RestrictionType.NULL, false)
+                .add("name6", RestrictionType.EMPTY, false)
+                .add("name7", RestrictionType.NOT_NULL, false)
+                .add("name8", RestrictionType.NOT_EMPTY, false)
                 .debug();
         
         
-        queryBuilder.countDistinct("o");
+        queryBuilder.getResultList();
 
         System.out.println(queryBuilder.getQueryString());
 
