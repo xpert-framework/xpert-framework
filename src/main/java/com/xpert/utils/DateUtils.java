@@ -204,4 +204,15 @@ public class DateUtils {
         return calendar;
     }
 
+    public static boolean isValid(String dateString, String pattern) {
+
+        SimpleDateFormat form = new SimpleDateFormat(pattern);
+        form.setLenient(false);
+        try {
+            form.parse(dateString);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
 }
