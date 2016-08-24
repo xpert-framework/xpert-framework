@@ -280,16 +280,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (lazyCountType.equals(LazyCountType.ALWAYS)
                 || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
-            
-            //create a querybuilder for count
-            QueryBuilder queryBuilderCount = buildQueryBuilder();
 
-            //added distinct verification
-            if (joinBuilder != null && joinBuilder.isDistinct()) {
-                currentRowCount = queryBuilderCount.countDistinct(joinBuilder.getRootAlias()).intValue();
-            } else {
-                currentRowCount = queryBuilderCount.count().intValue();
-            }
+            currentRowCount = getCountAllResults().intValue();
 
             if (debug) {
                 logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
@@ -424,6 +416,24 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     /**
+     * Return the count objects from data base, based on filters from data table
+     *
+     * @return
+     */
+    public Long getCountAllResults() {
+        //create a querybuilder for count
+        QueryBuilder queryBuilderCount = buildQueryBuilder();
+        Long rowCount;
+        //added distinct verification
+        if (joinBuilder != null && joinBuilder.isDistinct()) {
+            rowCount = queryBuilderCount.countDistinct(joinBuilder.getRootAlias());
+        } else {
+            rowCount = queryBuilderCount.count();
+        }
+        return rowCount;
+    }
+
+    /**
      * Return all objects from data base, based on filters from data table
      *
      * @param orderBy
@@ -431,7 +441,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public List getAllResults(String orderBy) {
         return dao.getQueryBuilder()
-                .from(dao.getEntityClass())
+                .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .select(attributes)
                 .add(queryRestrictions)
                 .join(joinBuilder)
@@ -586,6 +596,5 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
-    
 
 }
