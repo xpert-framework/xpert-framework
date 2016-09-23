@@ -56,14 +56,34 @@ public abstract class AbstractBusinessObject<T> {
             UniqueFieldsValidation.validateUniqueFields(uniqueFields, object, getDAO());
         }
     }
+    
+    /**
+     * Method called before save entity
+     * 
+     * @param object
+     */
+    public void preSave(T object){
+        
+    }
+    
+    /**
+     * Method called after save entity
+     * 
+     * @param object
+     */
+    public void postSave(T object){
+        
+    }
 
     /**
      * Saves entity:
      * <ol>
      * <li>calls "validate(object)"</li>
      * <li>calls "validateUniqueFields(object)"</li>
+     * <li>calls "preSave(object)"</li>
      * <li>check if any excpetion occurred</li>
      * <li>if entity id is null then calls "save", if not, calls "merge"</li>
+     * <li>calls "postSave(object)"</li>
      * </ol>
      *
      * @param object
@@ -72,11 +92,13 @@ public abstract class AbstractBusinessObject<T> {
     public void save(T object) throws BusinessException {
         validate(object);
         validateUniqueFields(object);
+        preSave(object);
         if (!EntityUtils.isPersisted(object)) {
             getDAO().save(object, isAudit());
         } else {
             getDAO().merge(object, isAudit());
         }
+        postSave(object);
     }
 
     /**

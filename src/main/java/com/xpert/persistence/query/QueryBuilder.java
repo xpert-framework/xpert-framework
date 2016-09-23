@@ -144,7 +144,7 @@ public class QueryBuilder {
      * @param select
      * @return
      */
-    public static String getQuerySelectClausule(QueryType type, String select) {
+    public String getQuerySelectClausule(QueryType type, String select) {
 
         if (type == null) {
             return "";
@@ -185,7 +185,7 @@ public class QueryBuilder {
      * @param restrictions
      * @return String of the part after "WHERE" from JPQL generated
      */
-    public static String getQueryStringFromRestrictions(List<Restriction> restrictions) {
+    public String getQueryStringFromRestrictions(List<Restriction> restrictions) {
 
         int currentParameter = 1;
         StringBuilder queryString = new StringBuilder();
@@ -312,9 +312,9 @@ public class QueryBuilder {
         }
 
         if (type.equals(QueryType.SELECT) || type.equals(QueryType.COUNT)) {
-            queryString.append(QueryBuilder.getQuerySelectClausule(type, attributes));
+            queryString.append(getQuerySelectClausule(type, attributes));
         } else {
-            queryString.append(QueryBuilder.getQuerySelectClausule(type, attribute));
+            queryString.append(getQuerySelectClausule(type, attribute));
         }
 
         queryString.append("FROM ").append(from.getName()).append(" ");
@@ -336,7 +336,7 @@ public class QueryBuilder {
         }
 
         //restrictions
-        queryString.append(QueryBuilder.getQueryStringFromRestrictions(normalizedRestrictions));
+        queryString.append(getQueryStringFromRestrictions(normalizedRestrictions));
 
         //order by
         if (type.equals(QueryType.SELECT) && orderBy != null && !orderBy.trim().isEmpty()) {

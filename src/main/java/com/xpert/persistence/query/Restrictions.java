@@ -536,7 +536,7 @@ public class Restrictions extends ArrayList<Restriction> {
      * @return current query String from added restrictions
      */
     public String getQueryString() {
-        return QueryBuilder.getQueryStringFromRestrictions(this);
+        return new QueryBuilder(null).getQueryStringFromRestrictions(this);
     }
 
 }
