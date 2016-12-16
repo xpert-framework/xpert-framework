@@ -42,13 +42,11 @@ public class Audit {
         this.entityManager = entityManager;
         this.auditEntityManager = entityManager;
     }
-    
+
     public Audit(EntityManager entityManager, EntityManager auditEntityManager) {
         this.entityManager = entityManager;
         this.auditEntityManager = auditEntityManager;
     }
-    
-    
 
     /**
      * Get the object from database
@@ -361,7 +359,11 @@ public class Audit {
                     } else if (isEntity(method.getReturnType())) {
                         Object newId = EntityUtils.getId(fieldValue);
                         //a proxy doesnt has value changed
-                        if (!(fieldValue instanceof HibernateProxy) || isDelete == true) {
+                        
+                        boolean cannotInitialize = !entityManager.contains(fieldValue);
+                        //System.out.println("--- " + );
+
+                        if (!(fieldValue instanceof HibernateProxy && cannotInitialize) || isDelete == true) {
                             /**
                              * One to One cascade ALL
                              */
@@ -395,7 +397,7 @@ public class Audit {
                             }
                             metadata.setEntity(method.getDeclaringClass().getName());
                             //set id if is numeric
-                            if (newId != null && newId.toString() != null && !newId.toString().isEmpty()  && StringUtils.isNumeric(newId.toString())) {
+                            if (newId != null && newId.toString() != null && !newId.toString().isEmpty() && StringUtils.isNumeric(newId.toString())) {
                                 metadata.setNewIdentifier(Long.valueOf(newId.toString()));
                             }
                             metadata.setNewValue(fieldValue == null ? "" : fieldValue.toString());
