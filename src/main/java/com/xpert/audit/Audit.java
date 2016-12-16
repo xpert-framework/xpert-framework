@@ -358,11 +358,9 @@ public class Audit {
                         metadata.setNewValue(newValue.toString());
                     } else if (isEntity(method.getReturnType())) {
                         Object newId = EntityUtils.getId(fieldValue);
-                        //a proxy doesnt has value changed
-                        
                         boolean cannotInitialize = !entityManager.contains(fieldValue);
-                        //System.out.println("--- " + );
 
+                        //a proxy doesnt has value changed
                         if (!(fieldValue instanceof HibernateProxy && cannotInitialize) || isDelete == true) {
                             /**
                              * One to One cascade ALL
