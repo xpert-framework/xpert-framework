@@ -155,9 +155,16 @@ public class DateFilterRenderer extends Renderer {
         writer.endElement("table");
         writer.startElement("a", component);
         writer.writeAttribute("href", "javascript:void(0)", null);
-        writer.writeAttribute("onclick", "Xpert.clearDateFilter(this);"+ widgetVar + ".filter();", null);
+        writer.writeAttribute("onclick", "Xpert.clearDateFilter(this);" + widgetVar + ".filter();", null);
         writer.write(XpertResourceBundle.get("clear"));
         writer.endElement("a");
+
+        //script to init date filter (corret bugs in primefaces DOM manipulation like reflow)
+        writer.startElement("script", null);
+        writer.writeAttribute("type", "text/javascript", null);
+        writer.write("Xpert.initDateFilter('" + column.getClientId() + "');");
+        writer.endElement("script");
+
         writer.endElement("div");
         //clear parent and prevent to add to tree
         calendarStart.setParent(null);

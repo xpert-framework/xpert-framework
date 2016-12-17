@@ -7,12 +7,12 @@ Xpert = {
         if (onconfirm) {
             onconfirm();
         }
-        
+
         //enable events outside modal
-        $.each($(".faces-modal-messages"), function( key, value ) {
-           $(document).off('focus.' + this.id + ' mousedown.' + this.id + ' mouseup.' + this.id+ ' keydown.' + this.id);
+        $.each($(".faces-modal-messages"), function (key, value) {
+            $(document).off('focus.' + this.id + ' mousedown.' + this.id + ' mouseup.' + this.id + ' keydown.' + this.id);
         });
-        
+
         $('.faces-modal-messages').remove();
         $('div[id*=xpertModalMessages]').remove();
     },
@@ -78,9 +78,18 @@ Xpert = {
 
         return this;
     },
+    initDateFilter: function (element) {
+        var $column = $(Xpert.escapeClientId(element));
+        var $dataTable = $column.closest('.ui-datatable');
+
+        //has reflow datatable
+        if ($dataTable.hasClass("ui-datatable-reflow")) {
+            var $dataFilter = $column.find('.panel-calendar-filter');
+            $dataFilter.appendTo($column);
+        }
+
+    },
     dateFilter: function (element) {
-//        var dateId = Xpert.escapeClientId(element);
-//        var $column = $(dateId).closest('.ui-filter-column');
         var $column = $(Xpert.escapeClientId(element));
         var $inputFilter = $column.find('.ui-column-filter');
 
