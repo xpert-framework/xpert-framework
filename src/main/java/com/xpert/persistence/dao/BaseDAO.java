@@ -3,6 +3,7 @@ package com.xpert.persistence.dao;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.Restriction;
+import com.xpert.persistence.query.Restrictions;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -213,6 +214,10 @@ public interface BaseDAO<T> {
     public Long count(Restriction restriction);
 
     public Long count(String property, Object value);
+    
+    public Long count(List<Restriction> restrictions, Class clazz);
+    
+    public Long count(Restriction restriction, Class clazz);
 
     /**
      * Return a object from database by id
