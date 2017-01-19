@@ -544,6 +544,16 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     public Long count(Class clazz) {
         return count((List) null);
     }
+    
+    @Override
+    public Long count(List<Restriction> restrictions, Class clazz) {
+        return getQueryBuilder().from(clazz).add(restrictions).count();
+    }
+    
+    @Override
+    public Long count(Restriction restriction, Class clazz) {
+        return getQueryBuilder().from(clazz).add(restriction).count();
+    }
 
     @Override
     public <U> U getInitialized(U object) {
