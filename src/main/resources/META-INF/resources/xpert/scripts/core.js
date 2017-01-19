@@ -10,7 +10,10 @@ Xpert = {
 
         //enable events outside modal
         $.each($(".faces-modal-messages"), function (key, value) {
-            $(document).off('focus.' + this.id + ' mousedown.' + this.id + ' mouseup.' + this.id + ' keydown.' + this.id);
+            //verify if method $.off exists (for primefaces legacy)
+            if(typeof $(document).off === "function"){
+                $(document).off('focus.' + this.id + ' mousedown.' + this.id + ' mouseup.' + this.id + ' keydown.' + this.id);
+            }
         });
 
         $('.faces-modal-messages').remove();
