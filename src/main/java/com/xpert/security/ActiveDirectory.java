@@ -103,7 +103,13 @@ public class ActiveDirectory {
 
         //bind by using the specified username/password
         Hashtable props = new Hashtable();
-        String principalName = username + "@" + domainName;
+        String principalName;
+        //if contains @ then dont concatenate
+        if (username.indexOf("@") > 0) {
+            principalName = username;
+        } else {
+            principalName = username + "@" + domainName;
+        }
         props.put(Context.SECURITY_PRINCIPAL, principalName);
         if (password != null) {
             props.put(Context.SECURITY_CREDENTIALS, password);
