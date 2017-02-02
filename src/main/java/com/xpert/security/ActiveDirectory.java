@@ -103,16 +103,19 @@ public class ActiveDirectory {
 
         //bind by using the specified username/password
         Hashtable props = new Hashtable();
-        String principalName;
-        //if contains @ then dont concatenate
-        if (username.indexOf("@") > 0) {
-            principalName = username;
-        } else {
-            principalName = username + "@" + domainName;
-        }
-        props.put(Context.SECURITY_PRINCIPAL, principalName);
-        if (password != null) {
-            props.put(Context.SECURITY_CREDENTIALS, password);
+        //if user is not null
+        if (username != null) {
+            String principalName;
+            //if contains @ then dont concatenate
+            if (username.indexOf("@") > 0) {
+                principalName = username;
+            } else {
+                principalName = username + "@" + domainName;
+            }
+            props.put(Context.SECURITY_PRINCIPAL, principalName);
+            if (password != null) {
+                props.put(Context.SECURITY_CREDENTIALS, password);
+            }
         }
 
         String ldapURL = "ldap://" + ((serverName == null) ? domainName : serverName + "." + domainName) + '/';
