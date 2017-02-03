@@ -106,8 +106,8 @@ public class ActiveDirectory {
         //if user is not null
         if (username != null) {
             String principalName;
-            //if contains @ then dont concatenate
-            if (username.indexOf("@") > 0) {
+            //if contains @ ou uses "uid=" then dont concatenate
+            if (username.indexOf("@") > 0 || username.contains("uid=")) {
                 principalName = username;
             } else {
                 principalName = username + "@" + domainName;
