@@ -42,7 +42,7 @@ public class RestorableFilterRenderer extends Renderer {
                 if (model instanceof LazyDataModelImpl) {
                     ((LazyDataModelImpl) model).setRestorableFilter(true);
                 } else {
-                    throw new FacesException("DataTable " + restorableFilter.getTarget() + " value is a instance of " + LazyDataModelImpl.class.getName());
+                    throw new FacesException("DataTable " + restorableFilter.getTarget() +"(" +model.getClass().getName()+") is not a instance of " + LazyDataModelImpl.class.getName());
                 }
             }
             String separator = String.valueOf(UINamingContainer.getSeparatorChar(context));
