@@ -10,6 +10,7 @@ import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -201,6 +202,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                         }
                         if (e.getValue() instanceof String) {
                             filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, e.getValue()));
+                        } else if (e.getValue() instanceof Object[]) {
+                            //copy Array into List. (Arrays.asList din't work here)
+                            List list = new ArrayList();
+                            for (Object item : (Object[]) e.getValue()) {
+                                list.add(item);
+                            }
+                            filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
                         } else {
                             filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, e.getValue()));
                         }
@@ -212,7 +220,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     @Override
-    public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters) {
+    public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters
+    ) {
         if (isLoadData() == false) {
             setRowCount(0);
             return null;
@@ -433,14 +442,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @return
      */
     public Long getCountAllResults() {
-        
+
         //create a querybuilder for count
         QueryBuilder queryBuilderCount = dao.getQueryBuilder()
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .join(joinBuilder)
                 .add(getCurrentQueryRestrictions())
                 .debug(debug);
-        
+
         Long rowCount;
         //added distinct verification
         if (joinBuilder != null && joinBuilder.isDistinct()) {
@@ -448,7 +457,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         } else {
             rowCount = queryBuilderCount.count();
         }
-        
+
         return rowCount;
     }
 
