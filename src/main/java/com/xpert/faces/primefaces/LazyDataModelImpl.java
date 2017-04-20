@@ -203,14 +203,17 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                         if (e.getValue() instanceof String) {
                             filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, e.getValue()));
                         } else if (e.getValue() instanceof Object[]) {
-                            //copy Array into List. (Arrays.asList din't work here)
-                            List list = new ArrayList();
-                            for (Object item : (Object[]) e.getValue()) {
-                                list.add(item);
+                            if (((Object[]) e.getValue()).length > 0) {
+                                //copy Array into List. (Arrays.asList din't work here)
+                                List list = new ArrayList();
+                                for (Object item : (Object[]) e.getValue()) {
+                                    list.add(item);
+                                }
+                                filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
                             }
-                            filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
                         } else {
                             filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, e.getValue()));
+
                         }
                     }
                 }
