@@ -15,7 +15,7 @@ import java.util.Locale;
 public class UpdateHtmlIndex {
 
     public static void main(String[] args) throws FileNotFoundException {
-        updateIndex("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven");
+        updateIndex("D:\\Desenvolvimento\\xpert-framework\\git\\xpert-framework.github.io\\maven");
     }
 
 //    public static void main2(String[] args) throws FileNotFoundException {
