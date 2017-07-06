@@ -2,6 +2,7 @@ package com.xpert.security;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Properties;
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -93,12 +94,12 @@ public class ActiveDirectory {
      * @param password
      * @param domainName
      * @param serverName
-     * @param props Properties to use in new InitialLdapContext(props, null);
+     * @param properties Properties to use in new InitialLdapContext(props, null);
      * @return
      * @throws javax.naming.CommunicationException
      * @throws javax.naming.AuthenticationException
      */
-    public static LdapContext getConnection(String username, String password, String domainName, String serverName, Hashtable props) throws CommunicationException, AuthenticationException {
+    public static LdapContext getConnection(String username, String password, String domainName, String serverName, Properties properties) throws CommunicationException, AuthenticationException {
 
         if (domainName == null) {
             try {
@@ -119,8 +120,8 @@ public class ActiveDirectory {
         }
 
         //bind by using the specified username/password
-        if (props == null) {
-            props = new Hashtable();
+        if (properties == null) {
+            properties = new Properties();
         }
         //if user is not null
         if (username != null) {
@@ -131,17 +132,17 @@ public class ActiveDirectory {
             } else {
                 principalName = username + "@" + domainName;
             }
-            props.put(Context.SECURITY_PRINCIPAL, principalName);
+            properties.put(Context.SECURITY_PRINCIPAL, principalName);
             if (password != null) {
-                props.put(Context.SECURITY_CREDENTIALS, password);
+                properties.put(Context.SECURITY_CREDENTIALS, password);
             }
         }
 
         String ldapURL = "ldap://" + ((serverName == null) ? domainName : serverName + "." + domainName) + '/';
-        props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        props.put(Context.PROVIDER_URL, ldapURL);
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        properties.put(Context.PROVIDER_URL, ldapURL);
         try {
-            return new InitialLdapContext(props, null);
+            return new InitialLdapContext(properties, null);
         } catch (CommunicationException e) {
             throw new CommunicationException("Failed to connect to " + domainName + ((serverName == null) ? "" : " through " + serverName));
         } catch (AuthenticationException e) {
