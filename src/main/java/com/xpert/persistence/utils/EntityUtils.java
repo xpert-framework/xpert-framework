@@ -16,14 +16,12 @@ import java.util.logging.Logger;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.persister.entity.AbstractEntityPersister;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
@@ -116,7 +114,8 @@ public class EntityUtils {
         return name;
     }
 
-    /**
+    
+     /**
      * Return mapped entities in EntityManager. Classes are get from
      * ClassMetadata in SessionFactory
      *
@@ -124,13 +123,11 @@ public class EntityUtils {
      * @return
      */
     public static List<Class> getMappedEntities(EntityManager entityManager) {
-        SessionFactory sessionFactory = entityManager.unwrap(Session.class).getSessionFactory();
-        Map<String, ClassMetadata> map = (Map<String, ClassMetadata>) sessionFactory.getAllClassMetadata();
-        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionFactory;
+        EntityManagerFactory entityManagerFactory = entityManager.getEntityManagerFactory();
+        Metamodel metamodel = entityManagerFactory.getMetamodel();
         List<Class> classes = new ArrayList<Class>();
-        for (String entityName : map.keySet()) {
-            Class entity = ((AbstractEntityPersister) sessionFactoryImpl.getEntityPersister(entityName)).getConcreteProxyClass();
-            classes.add(entity);
+        for (EntityType entityType : metamodel.getEntities()) {
+            classes.add(entityType.getBindableJavaType());
         }
         return classes;
     }

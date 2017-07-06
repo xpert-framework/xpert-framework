@@ -2,6 +2,7 @@ package com.xpert.maker;
 
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
+import com.xpert.persistence.utils.EntityUtils;
 import freemarker.template.TemplateException;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -12,9 +13,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.persister.entity.AbstractEntityPersister;
 
 /**
  *
@@ -111,12 +109,9 @@ public class PersistenceMappedBean {
     }
 
     public List<Class> getMappedClasses(boolean includeEnum) {
-        SessionFactory sessionFactory = getSessionFactory();
-        Map<String, ClassMetadata> map = (Map<String, ClassMetadata>) sessionFactory.getAllClassMetadata();
-        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionFactory;
+        List<Class> mappedEntities = EntityUtils.getMappedEntities(entityManager);
         List<Class> classes = new ArrayList<Class>();
-        for (String entityName : map.keySet()) {
-            Class entity = ((AbstractEntityPersister) sessionFactoryImpl.getEntityPersister(entityName)).getConcreteProxyClass();
+        for (Class entity : mappedEntities) {
             //do not include Audit classes
             if (!extendsAuditClasses(entity)) {
                 classes.add(entity);
