@@ -82,6 +82,23 @@ public class ActiveDirectory {
      * @throws javax.naming.AuthenticationException
      */
     public static LdapContext getConnection(String username, String password, String domainName, String serverName) throws CommunicationException, AuthenticationException {
+        return getConnection(username, password, domainName, serverName, null);
+    }
+
+    /**
+     * Used to authenticate a user given a username/password and domain name.
+     * Provides an option to identify a specific a Active Directory server.
+     *
+     * @param username
+     * @param password
+     * @param domainName
+     * @param serverName
+     * @param props Properties to use in new InitialLdapContext(props, null);
+     * @return
+     * @throws javax.naming.CommunicationException
+     * @throws javax.naming.AuthenticationException
+     */
+    public static LdapContext getConnection(String username, String password, String domainName, String serverName, Hashtable props) throws CommunicationException, AuthenticationException {
 
         if (domainName == null) {
             try {
@@ -102,7 +119,9 @@ public class ActiveDirectory {
         }
 
         //bind by using the specified username/password
-        Hashtable props = new Hashtable();
+        if (props == null) {
+            props = new Hashtable();
+        }
         //if user is not null
         if (username != null) {
             String principalName;
