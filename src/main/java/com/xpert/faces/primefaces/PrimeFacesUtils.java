@@ -3,7 +3,6 @@ package com.xpert.faces.primefaces;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import javax.faces.FacesException;
 import org.primefaces.context.ApplicationContext;
 import org.primefaces.context.RequestContext;
 
@@ -98,15 +97,15 @@ public class PrimeFacesUtils {
             String buildVersion = (String) methodGetBuildVersion.invoke(config);
             return buildVersion;
         } catch (NoSuchMethodException ex) {
-            throw new FacesException(ex);
+            throw new RuntimeException(ex);
         } catch (SecurityException ex) {
-            throw new FacesException(ex);
+            throw new RuntimeException(ex);
         } catch (IllegalAccessException ex) {
-            throw new FacesException(ex);
+            throw new RuntimeException(ex);
         } catch (IllegalArgumentException ex) {
-            throw new FacesException(ex);
+            throw new RuntimeException(ex);
         } catch (InvocationTargetException ex) {
-            throw new FacesException(ex);
+            throw new RuntimeException(ex);
         }
     }
 
