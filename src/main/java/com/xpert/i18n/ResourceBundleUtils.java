@@ -26,9 +26,8 @@ public class ResourceBundleUtils {
 
     /**
      *
-     * Get the message and format like passed parameters.
-     * Parameters must be in format "{0} {1}".
-     * Example: There is a {0} in object {1}
+     * Get the message and format like passed parameters. Parameters must be in
+     * format "{0} {1}". Example: There is a {0} in object {1}
      *
      * @param key
      * @param bundle
@@ -80,11 +79,9 @@ public class ResourceBundleUtils {
                 resourceBundle = ResourceBundle.getBundle(bundle, PT_BR, classLoader);
             }
 
-            if (resourceBundle == null || !resourceBundle.containsKey(key)) {
-                return key;
+            if (resourceBundle != null && resourceBundle.containsKey(key)) {
+                key = resourceBundle.getString(key);
             }
-
-            key = resourceBundle.getString(key);
 
             if (array != null && array.length > 0) {
                 Matcher matcher = PATTERN_FIND_NUMBER.matcher(key);
@@ -105,25 +102,25 @@ public class ResourceBundleUtils {
 
         return key;
     }
-    
-    public static String getObjectString(Object object){
-        if(object== null){
+
+    public static String getObjectString(Object object) {
+        if (object == null) {
             return "";
         }
-        if(object instanceof String){
-            return (String)object;
+        if (object instanceof String) {
+            return (String) object;
         }
-        if(object instanceof BigDecimal){
-            return NumberUtils.convertToNumber((BigDecimal)object);
+        if (object instanceof BigDecimal) {
+            return NumberUtils.convertToNumber((BigDecimal) object);
         }
-        if(object instanceof Double){
-            return NumberUtils.convertToNumber((Double)object);
+        if (object instanceof Double) {
+            return NumberUtils.convertToNumber((Double) object);
         }
-        if(object instanceof Date){
-            return DateUtils.dateToString((Date)object, I18N.getDatePattern());
+        if (object instanceof Date) {
+            return DateUtils.dateToString((Date) object, I18N.getDatePattern());
         }
-        if(object instanceof Calendar){
-            return DateUtils.dateToString((Calendar)object, I18N.getDatePattern());
+        if (object instanceof Calendar) {
+            return DateUtils.dateToString((Calendar) object, I18N.getDatePattern());
         }
         return object.toString();
     }
