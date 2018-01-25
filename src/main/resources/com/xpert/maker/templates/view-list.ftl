@@ -5,7 +5,7 @@
                  xmlns:p="http://primefaces.org/ui"
                  template="${template}"
                  xmlns:x="http://xpert.com/faces">
-    <ui:param name="title" value="${sharp}{msg['${entity.nameLower}.list']}" />
+    <ui:param name="title" value="${sharp}{${resourceBundle}['${entity.nameLower}.list']}" />
     <ui:define name="body">
         <ui:include src="menu${entity.name}.xhtml" />
         <h:form id="formList${entity.name}">
@@ -126,7 +126,7 @@
             </div>  
         </h:form>
 
-        <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{msg['${entity.nameLower}.detail']}" ${entity.appendTo} 
+        <p:dialog widgetVar="${entity.widgetVarDetailName}" header="${sharp}{${resourceBundle}['${entity.nameLower}.detail']}" ${entity.appendTo} 
                   modal="true" <#if configuration.bootstrapVersion?? >styleClass="uix-dialog-fluid"<#else>height="500" width="800"</#if> >
                   <ui:include src="detail${entity.name}.xhtml" />
         </p:dialog>
