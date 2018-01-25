@@ -39,14 +39,16 @@ public class UniqueFieldsValidation {
             if (uniqueField.getRestrictions() != null && !uniqueField.getRestrictions().isEmpty()) {
                 restrictions.addAll(uniqueField.getRestrictions());
             }
-            for (String fieldName : uniqueField.getConstraints()) {
-                try {
-                    Object value = PropertyUtils.getProperty(object, fieldName);
-                    if (value != null && !value.toString().isEmpty()) {
-                        restrictions.add(new Restriction(fieldName, value));
+            if (uniqueField.getConstraints() != null) {
+                for (String fieldName : uniqueField.getConstraints()) {
+                    try {
+                        Object value = PropertyUtils.getProperty(object, fieldName);
+                        if (value != null && !value.toString().isEmpty()) {
+                            restrictions.add(new Restriction(fieldName, value));
+                        }
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
                     }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
                 }
             }
             if (!restrictions.isEmpty()) {
