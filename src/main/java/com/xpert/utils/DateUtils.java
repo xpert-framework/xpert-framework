@@ -184,7 +184,7 @@ public class DateUtils {
      * @throws java.text.ParseException
      */
     public static Date stringToDate(String dateString, String pattern) throws ParseException {
-        if (dateString == null || dateString.isEmpty()) {
+        if (dateString == null || dateString.trim().isEmpty()) {
             return null;
         }
         SimpleDateFormat format = new SimpleDateFormat(pattern);
@@ -200,7 +200,7 @@ public class DateUtils {
      * @throws java.text.ParseException
      */
     public static Calendar stringToCalendar(String dateString, String pattern) throws ParseException {
-        if (dateString == null || dateString.isEmpty()) {
+        if (dateString == null || dateString.trim().isEmpty()) {
             return null;
         }
         SimpleDateFormat format = new SimpleDateFormat(pattern);
