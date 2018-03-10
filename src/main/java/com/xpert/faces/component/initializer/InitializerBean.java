@@ -119,22 +119,28 @@ public class InitializerBean {
      *
      * @param component Component to get ValueExpression
      * @param context Current FacesCOntext
-     * @param property Property Name to be initialized
+     * @param properties Property Name to be initialized
      * @param entityManager
      */
-    public void initialize(UIComponent component, FacesContext context, String property, EntityManager entityManager) {
-        if (property == null || property.isEmpty()) {
-            property = "value";
+    public void initialize(UIComponent component, FacesContext context, String properties, EntityManager entityManager) {
+        if (properties == null || properties.isEmpty()) {
+            properties = "value";
         }
-        ValueExpression valueExpression = component.getValueExpression(property);
-        initialize(component, context, valueExpression, entityManager);
+        for (String property : properties.split(",")) {
+            if (property != null && !property.isEmpty()) {
+                ValueExpression valueExpression = component.getValueExpression(property.trim());
+                initialize(component, context, valueExpression, entityManager);
+            }
+        }
     }
 
-    /** * 
+    /**
+     * *
      *
      * @param component Component to get ValueExpression
      * @param context Current FacesContext
-     * @param valueExpression If passed ValueExpression will not be used, this value will
+     * @param valueExpression If passed ValueExpression will not be used, this
+     * value will
      * @param entityManager* be initilized
      */
     public void initialize(UIComponent component, FacesContext context, ValueExpression valueExpression, EntityManager entityManager) {
@@ -165,7 +171,7 @@ public class InitializerBean {
     public void setDao(DAO dao) {
         this.dao = dao;
     }
-    
+
     public class ClassIdentifier {
 
         private Object id;
