@@ -286,6 +286,9 @@ public class Audit {
     }
 
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
+        if(object == null){
+            return null;
+        }
         List<Method> methodsGet = getMethods(object);
         List<AbstractMetadata> metadatas = new ArrayList<AbstractMetadata>();
         boolean isDelete = auditing.getAuditingType() != null && auditing.getAuditingType().equals(AuditingType.DELETE);
