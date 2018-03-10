@@ -286,6 +286,7 @@ public class Audit {
     }
 
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
+        //verify null object
         if(object == null){
             return null;
         }
