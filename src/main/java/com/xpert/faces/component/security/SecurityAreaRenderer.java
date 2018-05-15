@@ -22,6 +22,8 @@ public class SecurityAreaRenderer extends Renderer {
                         child.encodeAll(context);
                     }
                 }
+            }else{
+                securityArea.setRendered(false);
             }
 
         }
