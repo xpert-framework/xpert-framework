@@ -689,7 +689,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         if (orderBy == null || orderBy.isEmpty()) {
             try {
-                Method method = entity.getDeclaredMethod("get" + StringUtils.getUpperFirstLetter(fieldName));
+                Method method = entity.getMethod("get" + StringUtils.getUpperFirstLetter(fieldName));
                 OrderBy annotation = method.getAnnotation(OrderBy.class);
                 orderBy = getOrderByFromAnnotaion(annotation, null, method);
             } catch (Exception ex) {
