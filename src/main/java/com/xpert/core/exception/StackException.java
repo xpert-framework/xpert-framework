@@ -1,5 +1,6 @@
 package com.xpert.core.exception;
 
+import com.xpert.i18n.I18N;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +21,14 @@ public class StackException extends Exception {
         super(mensagem);
         this.parameters = parameters;
     }
-    
 
     public StackException() {
     }
 
     /**
      * same as "getParameters"
-     * @return 
+     *
+     * @return
      */
     public Object[] getParametros() {
         return parameters;
@@ -46,9 +47,9 @@ public class StackException extends Exception {
     }
 
     /**
-     * throws a StackException  if getExceptions() is not empty
-     * 
-     * @throws StackException 
+     * throws a StackException if getExceptions() is not empty
+     *
+     * @throws StackException
      */
     public void check() throws StackException {
         if (this.isNotEmpty()) {
@@ -87,9 +88,10 @@ public class StackException extends Exception {
     }
 
     /**
-     * Return messages from StackException. String returned is as concat of getMessage() and getMessage() from each getExceptions()
-     * 
-     * @return 
+     * Return messages from StackException. String returned is as concat of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @return
      */
     public String getStackMessage() {
         StringBuilder stackMessage = new StringBuilder();
@@ -98,7 +100,36 @@ public class StackException extends Exception {
         }
         if (getExceptions() != null) {
             for (StackException se : getExceptions()) {
-                stackMessage.append(se.getMessage()).append("\n");
+                if (se.getMessage() != null) {
+                    stackMessage.append(se.getMessage()).append("\n");
+                }
+            }
+        }
+        return stackMessage.toString();
+    }
+
+    /**
+     * Return messages from StackException. String returned is as concat of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @param i18n if true then user I18N class to resolve messages
+     * @return
+     */
+    public String getStackMessage(boolean i18n) {
+
+        if (i18n == false) {
+            return getStackMessage();
+        }
+
+        StringBuilder stackMessage = new StringBuilder();
+        if (getMessage() != null) {
+            stackMessage.append(I18N.get(getMessage())).append("\n");
+        }
+        if (getExceptions() != null) {
+            for (StackException se : getExceptions()) {
+                if (se.getMessage() != null) {
+                    stackMessage.append(I18N.get(se.getMessage())).append("\n");
+                }
             }
         }
         return stackMessage.toString();
