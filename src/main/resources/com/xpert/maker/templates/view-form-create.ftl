@@ -25,7 +25,7 @@
                 </#if>
                 <#-- Integer/Long -->
                 <#if field.integer == true>
-                <p:inputMask id="${field.label}" mask="9?999999999" placeHolder="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"  />
+                <p:inputMask id="${field.label}" mask="9?999999999" ${configuration.slotCharName}="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}"  />
                 </#if>
                 <#-- Decimal (BigDecimal, Double) -->
                 <#if field.decimal == true>

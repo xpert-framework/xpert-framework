@@ -9,7 +9,7 @@ public enum PrimeFacesVersion {
     
     VERSION_3("Version 3", false, false), 
     VERSION_4("Version 4", true, true),
-    VERSION_5("Version 5", true, true);
+    VERSION_5("Version 5 (or greater)", true, true);
     
     private final String description;
     /**

@@ -37,7 +37,7 @@ public class GroupModel<K, V> {
     public GroupModel(String field, List value) {
         this.groupBy = field;
         this.value = value;
-        this.itens = new ArrayList<GroupModelItem<K, V>>();
+        this.itens = new ArrayList<>();
     }
 
     /**
@@ -71,8 +71,8 @@ public class GroupModel<K, V> {
     public void groupItens() {
         if (value != null) {
             //   System.out.println("Grouping by: " + groupBy + " size: " + value.size() + " list: " + value);
-            Map<Object, GroupModelItem> map = new LinkedHashMap<Object, GroupModelItem>();
-            itens = new ArrayList<GroupModelItem<K, V>>();
+            Map<Object, GroupModelItem> map = new LinkedHashMap<>();
+            itens = new ArrayList<>();
             if (comparator != null) {
                 Collections.sort(value, comparator);
             }
@@ -104,7 +104,7 @@ public class GroupModel<K, V> {
             }
 
         } else {
-            itens = new ArrayList<GroupModelItem<K, V>>();
+            itens = new ArrayList<>();
         }
 
         //order main list

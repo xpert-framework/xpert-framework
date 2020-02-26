@@ -97,7 +97,7 @@ public class SVGReplacedElement implements ITextReplacedElement {
 
             DOMSource source = new DOMSource(doc);
             transformer.transform(source, new StreamResult(sw));
-            
+
             String result = sw.toString();
             result = result.replace("xmlns:ns0=\"http://www.w3.org/2000/svg\"", "").replace("ns0:svg=\"\"", "");
 //            return result;
@@ -129,10 +129,10 @@ public class SVGReplacedElement implements ITextReplacedElement {
         pg.setPaper(pp);
         prm.print(g2d, pg, 0);
         g2d.dispose();
-        
+
         PageBox page = renderingContext.getPage();
-        float x = blockBox.getAbsX() + page.getMarginBorderPadding(renderingContext, CalculatedStyle.LEFT);
-        float y = (page.getBottom() - (blockBox.getAbsY() + cssHeight)) + page.getMarginBorderPadding(
+        float x = (float) blockBox.getAbsX() + page.getMarginBorderPadding(renderingContext, CalculatedStyle.LEFT);
+        float y = (float) (page.getBottom() - (blockBox.getAbsY() + cssHeight)) + page.getMarginBorderPadding(
                 renderingContext, CalculatedStyle.BOTTOM);
         x /= outputDevice.getDotsPerPoint();
         y /= outputDevice.getDotsPerPoint();

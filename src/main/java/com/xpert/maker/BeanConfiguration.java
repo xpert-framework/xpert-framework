@@ -40,7 +40,7 @@ public class BeanConfiguration {
     private boolean maskCalendar;
     //hide id in url
     private boolean hideIdInRequest;
-    
+
     //date pattern to calendar
     private String datePattern;
     //time pattern to calendar
@@ -58,6 +58,18 @@ public class BeanConfiguration {
         this.hideIdInRequest = false;
     }
 
+    /**
+     * Primefaces less than 5 uses "placeHolder" isntead of "slotChar" @return
+     *
+     * @return
+     */
+    public String getSlotCharName() {
+        if (PrimeFacesVersion.VERSION_5.equals(primeFacesVersion)) {
+            return "slotChar";
+        }
+        return "placeHolder";
+    }
+
     public boolean isHideIdInRequest() {
         return hideIdInRequest;
     }
@@ -65,7 +77,7 @@ public class BeanConfiguration {
     public void setHideIdInRequest(boolean hideIdInRequest) {
         this.hideIdInRequest = hideIdInRequest;
     }
-    
+
     public String getResourceBundleLocation() {
         return resourceBundleLocation;
     }
@@ -81,7 +93,7 @@ public class BeanConfiguration {
     public void setResourceBundleGenerated(boolean resourceBundleGenerated) {
         this.resourceBundleGenerated = resourceBundleGenerated;
     }
-    
+
     public boolean isClassManagedBeanGenerated() {
         return classManagedBeanGenerated;
     }
@@ -89,7 +101,7 @@ public class BeanConfiguration {
     public void setClassManagedBeanGenerated(boolean classManagedBeanGenerated) {
         this.classManagedBeanGenerated = classManagedBeanGenerated;
     }
-    
+
     public String getClassManagedBeanLocation() {
         return classManagedBeanLocation;
     }
@@ -97,7 +109,7 @@ public class BeanConfiguration {
     public void setClassManagedBeanLocation(String classManagedBeanLocation) {
         this.classManagedBeanLocation = classManagedBeanLocation;
     }
-    
+
     public String getTimePattern() {
         return timePattern;
     }
@@ -105,7 +117,6 @@ public class BeanConfiguration {
     public void setTimePattern(String timePattern) {
         this.timePattern = timePattern;
     }
-    
 
     public boolean isMaskCalendar() {
         return maskCalendar;
@@ -130,7 +141,7 @@ public class BeanConfiguration {
     public void setGeneratesSecurityArea(boolean generatesSecurityArea) {
         this.generatesSecurityArea = generatesSecurityArea;
     }
-    
+
     public boolean isUseCDIBeans() {
         return useCDIBeans;
     }
@@ -146,7 +157,6 @@ public class BeanConfiguration {
     public void setBootstrapVersion(BootstrapVersion bootstrapVersion) {
         this.bootstrapVersion = bootstrapVersion;
     }
-    
 
     public PrimeFacesVersion getPrimeFacesVersion() {
         return primeFacesVersion;

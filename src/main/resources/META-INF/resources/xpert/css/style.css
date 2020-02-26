@@ -68,7 +68,8 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .uix-select-menupanel .ui-inputfield{width: 100% !important}
 .uix-select-menu .ui-inputfield.ui-selectlistbox-filter{width: 100%}
 .uix-select-menu .ui-chkbox-box{margin-right: 5px;}
-
+.uix-export-submenu {background-color: #ebebeb; width: 100% !important;}
+.uix-export-submenu .ui-menuitem-text{color: #000 !important;}
 
 
 

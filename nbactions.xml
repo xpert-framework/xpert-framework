@@ -10,4 +10,16 @@
                 <goal>deploy</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-sonar-local</actionName>
+            <displayName>sonar-local</displayName>
+            <goals>
+                <goal>sonar:sonar</goal>
+            </goals>
+            <properties>
+                <sonar.projectKey>xpert-framework</sonar.projectKey>
+                <sonar.host.url>http://localhost:9000</sonar.host.url>
+                <sonar.login>5988d0c8a032b27da60571be053750772d00db48</sonar.login>
+            </properties>
+        </action>
     </actions>

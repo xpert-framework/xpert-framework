@@ -142,7 +142,7 @@ public class RestrictionTagHandler extends TagHandler {
             Map<String, Object> requestMap = faceletContext.getFacesContext().getExternalContext().getRequestMap();
             List<RestrictionComponent> currentRestrictions = (List<RestrictionComponent>) requestMap.get(RestrictionCollector.RESTRICTIONS);
             if (currentRestrictions == null) {
-                currentRestrictions = new ArrayList<RestrictionComponent>();
+                currentRestrictions = new ArrayList<>();
             }
             currentRestrictions.add(restrictionComponent);
             //add to requestmap

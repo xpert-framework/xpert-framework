@@ -31,7 +31,7 @@ public class AuditDAO<T> extends BaseDAOImpl<T> {
     @Override
     public EntityManager getEntityManager() {
         if (entityManager == null) {
-            if (Configuration.AUDIT_ENTITY_MANAGER_FACTORY != null) {
+            if (Configuration.getAuditEntityManagerFactoryClass() != null) {
                 entityManager = Configuration.getAuditEntityManager();
             } else {
                 entityManager = Configuration.getEntityManager();

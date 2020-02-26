@@ -24,6 +24,7 @@ public class DateFilterRenderer extends Renderer {
 
     @Override
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+        //The default implamentation does nothing
     }
 
     @Override
@@ -186,12 +187,12 @@ public class DateFilterRenderer extends Renderer {
     public ClientBehavior createClientBehavior(String scriptOnStart) {
         ClientBehavior clientBehavior = null;
 
-        if (AJAX_BEHAVIOR_CLASS == null) {
+        if (ajaxBehaviorClass == null) {
             try {
-                AJAX_BEHAVIOR_CLASS = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_3_AND_4);
+                ajaxBehaviorClass = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_3_AND_4);
             } catch (ClassNotFoundException ex) {
                 try {
-                    AJAX_BEHAVIOR_CLASS = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_5);
+                    ajaxBehaviorClass = Class.forName(AJAX_BEHAVIOR_CLASS_PRIMEFACES_5);
                 } catch (ClassNotFoundException ex1) {
                     throw new RuntimeException(ex1);
                 }
@@ -199,11 +200,11 @@ public class DateFilterRenderer extends Renderer {
         }
 
         try {
-            if (SET_ON_START_METHOD == null) {
-                SET_ON_START_METHOD = AJAX_BEHAVIOR_CLASS.getMethod(SET_ON_START_METHOD_NAME, String.class);
+            if (setOnStartMethod == null) {
+                setOnStartMethod = ajaxBehaviorClass.getMethod(SET_ON_START_METHOD_NAME, String.class);
             }
-            clientBehavior = (ClientBehavior) AJAX_BEHAVIOR_CLASS.newInstance();
-            SET_ON_START_METHOD.invoke(clientBehavior, scriptOnStart);
+            clientBehavior = (ClientBehavior) ajaxBehaviorClass.newInstance();
+            setOnStartMethod.invoke(clientBehavior, scriptOnStart);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -218,7 +219,7 @@ public class DateFilterRenderer extends Renderer {
     public static final String AJAX_BEHAVIOR_CLASS_PRIMEFACES_3_AND_4 = "org.primefaces.component.behavior.ajax.AjaxBehavior";
     public static final String AJAX_BEHAVIOR_CLASS_PRIMEFACES_5 = "org.primefaces.behavior.ajax.AjaxBehavior";
     public static final String SET_ON_START_METHOD_NAME = "setOnstart";
-    public static Method SET_ON_START_METHOD = null;
-    public static Class AJAX_BEHAVIOR_CLASS = null;
+    private static Method setOnStartMethod = null;
+    private static Class ajaxBehaviorClass = null;
 
 }

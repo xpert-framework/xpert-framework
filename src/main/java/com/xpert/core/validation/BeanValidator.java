@@ -36,7 +36,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
 
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(BeanValidator.class.getName());
-    private static final List<Class> VALIDATION_TYPES = new ArrayList<Class>();
+    private static final List<Class> VALIDATION_TYPES = new ArrayList<>();
 
     private static final String CPF_CONSTRAINT_CLASS = "org.hibernate.validator.constraints.br.CPF";
     private static final String CNPJ_CONSTRAINT_CLASS = "org.hibernate.validator.constraints.br.CNPJ";
@@ -89,7 +89,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
         } catch (ValidatorException ex) {
 
             ValueReference valueReference = getValueReference(context, component);
-            List<FacesMessage> messages = new ArrayList<FacesMessage>();
+            List<FacesMessage> messages = new ArrayList<>();
 
             if (ex.getFacesMessages() == null || !ex.getFacesMessages().contains(ex.getFacesMessage())) {
                 messages.add(ex.getFacesMessage());

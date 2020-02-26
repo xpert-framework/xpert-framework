@@ -56,29 +56,28 @@ public class ClassEnumerator {
         String resPath = resource.getPath();
         String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
         log("Reading JAR file: '" + jarPath + "'");
-        JarFile jarFile;
-        try {
-            jarFile = new JarFile(jarPath);
+        try (JarFile jarFile = new JarFile(jarPath)) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String entryName = entry.getName();
+                String className = null;
+                if (entryName.endsWith(".class") && entryName.startsWith(relPath) && entryName.length() > (relPath.length() + "/".length())) {
+                    className = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
+                }
+                log("JarEntry '" + entryName + "'  =>  class '" + className + "'");
+                if (className != null) {
+                    classes.add(loadClass(className));
+                }
+            }
+
         } catch (IOException e) {
             throw new RuntimeException("Unexpected IOException reading JAR File '" + jarPath + "'", e);
-        }
-        Enumeration<JarEntry> entries = jarFile.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            String entryName = entry.getName();
-            String className = null;
-            if (entryName.endsWith(".class") && entryName.startsWith(relPath) && entryName.length() > (relPath.length() + "/".length())) {
-                className = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
-            }
-            log("JarEntry '" + entryName + "'  =>  class '" + className + "'");
-            if (className != null) {
-                classes.add(loadClass(className));
-            }
         }
     }
 
     public static ArrayList<Class<?>> getClassesForPackage(String pkgname) {
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        ArrayList<Class<?>> classes = new ArrayList<>();
 
         String relPath = pkgname.replace('.', '/');
 

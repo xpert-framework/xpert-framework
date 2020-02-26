@@ -1,11 +1,11 @@
 package com.xpert.faces.behavior;
 
 import com.xpert.i18n.XpertResourceBundle;
-import com.xpert.utils.StringEscapeUtils;
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.behavior.ClientBehaviorBase;
 import javax.faces.component.behavior.ClientBehaviorContext;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  *

@@ -76,7 +76,7 @@ public class MultiPageMessagesSupport implements PhaseListener
     @SuppressWarnings("unchecked")
     private int saveMessages(final FacesContext facesContext)
     {
-        List<FacesMessage> messages = new ArrayList<FacesMessage>();
+        List<FacesMessage> messages = new ArrayList<>();
         for (Iterator<FacesMessage> iter = facesContext.getMessages(null); iter.hasNext();)
         {
             messages.add(iter.next());

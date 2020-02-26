@@ -1,6 +1,7 @@
 package com.xpert.maker;
 
 import com.xpert.maker.model.ViewEntity;
+import com.xpert.utils.StringUtils;
 
 /**
  *
@@ -21,11 +22,7 @@ public class Bean {
     }
     
     public String getNameLower() {
-        String name = getName();
-        if (name != null && name.length() > 2) {
-            return name.substring(0, 2).toLowerCase() + "" + name.substring(2, name.length());
-        }
-        return "";
+        return StringUtils.getLowerFirstLetter(getName());
     }
 
     public ViewEntity getViewEntity() {

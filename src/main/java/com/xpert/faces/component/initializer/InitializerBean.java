@@ -26,7 +26,7 @@ public class InitializerBean {
 
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(InitializerBean.class.getName());
-    private Map<ClassIdentifier, Object> cache = new HashMap<ClassIdentifier, Object>();
+    private Map<ClassIdentifier, Object> cache = new HashMap<>();
     private DAO dao;
     private EntityManager entityManager;
 
@@ -109,6 +109,9 @@ public class InitializerBean {
             }
             Object initialized = dao.getInitialized(value);
             if (value instanceof HibernateProxy) {
+                if (lazyInitializer == null) {
+                    lazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
+                }
                 cache.put(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()), initialized);
             }
             FacesUtils.setValueEl(expression, initialized);

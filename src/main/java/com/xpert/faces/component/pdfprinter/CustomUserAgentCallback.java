@@ -20,7 +20,7 @@ public class CustomUserAgentCallback extends ITextUserAgent  {
 
     private static final Logger logger = Logger.getLogger(CustomUserAgentCallback.class.getName());
 
-    private static final Map<String, byte[]> CACHE = new HashMap<String, byte[]>();
+    private static final Map<String, byte[]> CACHE = new HashMap<>();
 
     private boolean loadFromCache = true;
     private boolean replaceHttps = true;

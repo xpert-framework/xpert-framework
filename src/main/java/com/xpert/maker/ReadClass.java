@@ -1,12 +1,13 @@
 package com.xpert.maker;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -15,6 +16,10 @@ import java.util.zip.ZipInputStream;
  * @author ayslan
  */
 public class ReadClass {
+
+    private ReadClass() {
+    }
+    private static final Logger logger = Logger.getLogger(ReadClass.class.getName());
 
     /**
      * Scans all classes accessible from the context class loader which belong
@@ -28,25 +33,24 @@ public class ReadClass {
     public static Class[] getClasses(String path) {
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-          //  String path = packageName.replace('.', '/');
             Enumeration<URL> resources = classLoader.getResources(path);
-            List<String> dirs = new ArrayList<String>();
+            List<String> dirs = new ArrayList<>();
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 dirs.add(resource.getFile());
             }
-            TreeSet<String> classes = new TreeSet<String>();
+            TreeSet<String> classes = new TreeSet<>();
             for (String directory : dirs) {
                 classes.addAll(findClasses(directory, path));
             }
-            ArrayList<Class> classList = new ArrayList<Class>();
+            ArrayList<Class> classList = new ArrayList<>();
             for (String clazz : classes) {
                 classList.add(Class.forName(clazz));
             }
             return classList.toArray(new Class[classes.size()]);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, path, ex);
+            return new Class[]{};
         }
     }
 
@@ -62,16 +66,17 @@ public class ReadClass {
      * @throws ClassNotFoundException
      */
     private static TreeSet<String> findClasses(String directory, String packageName) throws Exception {
-        TreeSet<String> classes = new TreeSet<String>();
+        TreeSet<String> classes = new TreeSet<>();
         if (directory.startsWith("file:") && directory.contains("!")) {
             String[] split = directory.split("!");
             URL jar = new URL(split[0]);
-            ZipInputStream zip = new ZipInputStream(jar.openStream());
-            ZipEntry entry = null;
-            while ((entry = zip.getNextEntry()) != null) {
-                if (entry.getName().endsWith(".class")) {
-                    String className = entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
-                    classes.add(className);
+            try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
+                ZipEntry entry = null;
+                while ((entry = zip.getNextEntry()) != null) {
+                    if (entry.getName().endsWith(".class")) {
+                        String className = entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
+                        classes.add(className);
+                    }
                 }
             }
         }

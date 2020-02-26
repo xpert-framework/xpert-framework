@@ -3,8 +3,8 @@ package com.xpert.faces.primefaces;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.primefaces.context.ApplicationContext;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeRequestContext;
 
 /**
  * Util class to Primefaces
@@ -37,28 +37,81 @@ public class PrimeFacesUtils {
     public static void closeDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
             dialog = normalizeWidgetVar(dialog);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute(dialog + ".hide()");
+            executeScript(dialog + ".hide()");
         }
     }
 
     public static void showDialog(String dialog) {
         if (dialog != null && !dialog.trim().isEmpty()) {
             dialog = normalizeWidgetVar(dialog);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute(dialog + ".show()");
+            executeScript(dialog + ".show()");
         }
     }
 
     public static void update(String... targets) {
-        RequestContext context = RequestContext.getCurrentInstance();
-        if (context != null) {
+
+        if (isUseRequestContext()) {
             for (String string : targets) {
-                context.update(string);
+                invokeMethodRequestContext("update", String.class, string);
             }
+        } else {
+            PrimeFaces.current().ajax().update(targets);
         }
     }
+
+    /**
+     * Returns the legacy
+     * org.primefaces.context.RequestContext.getCurrentInstance() (used in
+     * primefaces 4,5 and 6)
+     *
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     */
+    private static Object getRequestContextInstance() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException, NoSuchMethodException {
+        //Simulate RequestContext.getCurrentInstance().execute() or RequestContext.getCurrentInstance().update(String...)
+        Class requestContextClass = Class.forName("org.primefaces.context.RequestContext");
+        //acess getCurrentInstance()
+        Method methodGetCurrentInstance = requestContextClass.getDeclaredMethod("getCurrentInstance");
+        return methodGetCurrentInstance.invoke(null);
+    }
+
+    private static void invokeMethodRequestContext(String methodName, Class methodSignature, Object arguments) {
+        try {
+            Object requestContext = getRequestContextInstance();
+            Method methodExecute = requestContext.getClass().getDeclaredMethod(methodName, methodSignature);
+            methodExecute.invoke(requestContext, arguments);
+        } catch (NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static void executeScript(String script) {
+        if (isUseRequestContext()) {
+            invokeMethodRequestContext("execute", String.class, script);
+        } else {
+            PrimeFaces.current().executeScript(script);
+        }
+    }
+
     private static Boolean IS_VERSION_3;
+    /*
+    Primefaces versions greater or equeals 6.x deprecated RequestContext;
+     */
+    private static Boolean USE_REQUEST_CONTEXT;
 
     public static boolean isVersion4() {
         if (isVersion3()) {
@@ -66,6 +119,28 @@ public class PrimeFacesUtils {
         }
 
         return getPrimefacesBuildVersion().startsWith("4");
+    }
+
+    /**
+     * For lagacy primafaces the correct use is:
+     * RequestContext.getRequestContext(); from 6 is Primefaces.current()
+     *
+     * @return
+     */
+    public static boolean isUseRequestContext() {
+        if (USE_REQUEST_CONTEXT != null) {
+            return USE_REQUEST_CONTEXT;
+        } else {
+            try {
+                Class.forName("org.primefaces.context.RequestContext");
+                USE_REQUEST_CONTEXT = true;
+            } catch (ClassNotFoundException ex) {
+                USE_REQUEST_CONTEXT = false;
+            }
+
+        }
+        return USE_REQUEST_CONTEXT;
+
     }
 
     /**
@@ -86,26 +161,38 @@ public class PrimeFacesUtils {
      * @return
      */
     public static String getPrimefacesBuildVersion() {
-        ApplicationContext context = RequestContext.getCurrentInstance().getApplicationContext();
-        try {
-            
-            //acess getConfig()
-            Method methodGetConfig = context.getClass().getDeclaredMethod("getConfig");
-            Object config = methodGetConfig.invoke(context);
-            //acess getBuildVersion()
-            Method methodGetBuildVersion = config.getClass().getDeclaredMethod("getBuildVersion");
-            String buildVersion = (String) methodGetBuildVersion.invoke(config);
-            return buildVersion;
-        } catch (NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new RuntimeException(ex);
+
+        if (isUseRequestContext()) {
+
+            try {
+                Object requestContext = getRequestContextInstance();
+                //acess getApplicationContext()
+                Method methodGetApplicationContext= requestContext.getClass().getDeclaredMethod("getApplicationContext");
+                Object applicationContext = methodGetApplicationContext.invoke(requestContext);
+                //acess getConfig()
+                Method methodGetConfig = applicationContext.getClass().getDeclaredMethod("getConfig");
+                Object config = methodGetConfig.invoke(applicationContext);
+                //acess getBuildVersion()
+                Method methodGetBuildVersion = config.getClass().getDeclaredMethod("getBuildVersion");
+                String buildVersion = (String) methodGetBuildVersion.invoke(config);
+
+                return buildVersion;
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            } catch (SecurityException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalArgumentException ex) {
+                throw new RuntimeException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            //for primefaces > 6
+            return PrimeRequestContext.getCurrentInstance().getApplicationContext().getEnvironment().getBuildVersion();
         }
     }
 
@@ -141,11 +228,6 @@ public class PrimeFacesUtils {
      */
     @Deprecated
     public static void addPartialUpdateTarget(String... targets) {
-        RequestContext context = RequestContext.getCurrentInstance();
-        if (context != null) {
-            for (String string : targets) {
-                context.update(string);
-            }
-        }
+        update(targets);
     }
 }

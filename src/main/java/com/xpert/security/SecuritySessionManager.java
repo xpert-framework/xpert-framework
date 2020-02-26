@@ -57,7 +57,7 @@ public class SecuritySessionManager {
         /**
          * Put keys and urls in a Map to optmize perfomance
          */
-        Map<String, Role> rolesMap = new HashMap<String, Role>();
+        Map<String, Role> rolesMap = new HashMap<>();
         for (Role role : roles) {
             if (role.getKey() != null) {
                 for (String string : role.getKey().split(",")) {
@@ -65,7 +65,7 @@ public class SecuritySessionManager {
                 }
             }
         }
-        Map<String, String> urlsMap = new HashMap<String, String>();
+        Map<String, Role> urlsMap = new HashMap<>();
         for (Role role : roles) {
             if (role.getUrl() != null && !role.getUrl().isEmpty()) {
                 for (String url : role.getUrl().split(",")) {
@@ -76,7 +76,7 @@ public class SecuritySessionManager {
                     } else {
                         urlFormated = url.trim();
                     }
-                    urlsMap.put(urlFormated, urlFormated);
+                    urlsMap.put(urlFormated, role);
                 }
             }
         }
@@ -180,6 +180,37 @@ public class SecuritySessionManager {
         }
         return null;
     }
+    /**
+     * Same as getRoleByUrl(String url, ServletRequest request) but uses FacesContext
+     *
+     * @param url
+     * @return
+     */
+    public static Role getRoleByUrl(String url) {
+        return getRoleByUrl(url, (ServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+    }
+
+    /**
+     * Get role from user by URL. The url can be separeted with commas, so the first
+     * result is retrieved
+     *
+     * @param url
+     * @param request
+     * @return
+     */
+    public static Role getRoleByUrl(String url, ServletRequest request) {
+        Map<String, Role> rolesMap = (Map<String, Role>) ((HttpServletRequest) request).getSession().getAttribute(Constants.USER_ROLES_URL_MAP);
+        if (url != null && !url.trim().isEmpty() && rolesMap != null) {
+            String[] keys = url.split(",");
+            for (String c : keys) {
+                Role role = rolesMap.get(c.trim());
+                if (role != null) {
+                    return role;
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Returns the roles in current session
@@ -192,12 +223,78 @@ public class SecuritySessionManager {
     }
 
     /**
-     * Returns the roles in current session (form FacesContext)
+     * Returns the roles in current session (from FacesContext)
      *
      * @param context
      * @return
      */
     public static List<Role> getRoles(FacesContext context) {
         return (List<Role>) context.getExternalContext().getSessionMap().get(Constants.USER_ROLES);
+    }
+
+    /**
+     * Returns the roles in current session (from FacesContext)
+     *
+     * @return
+     */
+    public static List<Role> getRoles() {
+        return (List<Role>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(Constants.USER_ROLES);
+    }
+
+    /**
+     * Returns the roles in current session.
+     *
+     * @param request
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesMap(ServletRequest request) {
+        return (Map<String, Role>) ((HttpServletRequest) request).getSession().getAttribute(Constants.USER_ROLES_KEY_MAP);
+    }
+
+    /**
+     * Returns the roles in current session (from FacesContext)
+     *
+     * @param context
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesMap(FacesContext context) {
+        return (Map<String, Role>) context.getExternalContext().getSessionMap().get(Constants.USER_ROLES_KEY_MAP);
+    }
+
+    /**
+     * Returns the roles in current session (from FacesContext)
+     *
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesMap() {
+        return (Map<String, Role>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(Constants.USER_ROLES_KEY_MAP);
+    }
+    /**
+     * Returns the roles in current session.
+     *
+     * @param request
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesUrlMap(ServletRequest request) {
+        return (Map<String, Role>) ((HttpServletRequest) request).getSession().getAttribute(Constants.USER_ROLES_URL_MAP);
+    }
+
+    /**
+     * Returns the roles in current session (from FacesContext)
+     *
+     * @param context
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesUrlMap(FacesContext context) {
+        return (Map<String, Role>) context.getExternalContext().getSessionMap().get(Constants.USER_ROLES_URL_MAP);
+    }
+
+    /**
+     * Returns the roles in current session (from FacesContext)
+     *
+     * @return a Map (key, role)
+     */
+    public static Map<String, Role> getRolesUrlMap() {
+        return (Map<String, Role>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(Constants.USER_ROLES_URL_MAP);
     }
 }

@@ -16,7 +16,7 @@ public class Mod11 {
      */
     public static String getDV(String number) {
 
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for (int i = number.length() - 1, j = 2; i >= 0; i--) {
             list.add(j * Integer.parseInt(number.substring(i, i + 1)));
             if (j == 9) {

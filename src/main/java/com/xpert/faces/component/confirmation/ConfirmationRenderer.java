@@ -2,12 +2,12 @@ package com.xpert.faces.component.confirmation;
 
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.i18n.XpertResourceBundle;
-import com.xpert.utils.StringEscapeUtils;
 import java.io.IOException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  *

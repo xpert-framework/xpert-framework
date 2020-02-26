@@ -35,12 +35,13 @@ public class QueryBuilder {
     private Class from;
     private String alias;
     private final JoinBuilder joins = new JoinBuilder();
-    private final List<Restriction> restrictions = new ArrayList<Restriction>();
-    private List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
+    private final List<Restriction> restrictions = new ArrayList<>();
+    private List<Restriction> normalizedRestrictions = new ArrayList<>();
     private QueryType type;
     private final EntityManager entityManager;
     private Integer maxResults;
     private Integer firstResult;
+    private List<QueryParameter> parameters = new ArrayList<>();
     private boolean debug;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
@@ -348,11 +349,11 @@ public class QueryBuilder {
 
     public List<QueryParameter> getQueryParameters() {
         int position = 1;
-        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        List<QueryParameter> queryParameters = new ArrayList<>();
         for (Restriction re : normalizedRestrictions) {
             //add custom parameters
             if (re.getParameters() != null) {
-                parameters.addAll(re.getParameters());
+                queryParameters.addAll(re.getParameters());
             }
             if (re.getRestrictionType().isIgnoreParameter()) {
                 continue;
@@ -374,11 +375,17 @@ public class QueryBuilder {
                         parameter = new QueryParameter(position, re.getValue());
                     }
                 }
-                parameters.add(parameter);
+                queryParameters.add(parameter);
                 position++;
             }
         }
-        return parameters;
+
+        //add Paramters
+        if (this.parameters != null && !this.parameters.isEmpty()) {
+            queryParameters.addAll(parameters);
+        }
+
+        return queryParameters;
     }
 
     public QueryBuilder selectDistinct(String attributes) {
@@ -878,7 +885,7 @@ public class QueryBuilder {
      */
     public QueryBuilder addQueryString(String property, QueryParameter parameter) {
         Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
-        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        List<QueryParameter> parameters = new ArrayList<>();
         parameters.add(parameter);
         restriction.setParameters(parameters);
         this.add(restriction);
@@ -906,6 +913,7 @@ public class QueryBuilder {
         this.add(new Restriction(property, RestrictionType.NOT_NULL));
         return this;
     }
+
     /**
      * Add a RestrictionType.EMPTY (property 'is empty')
      *
@@ -1335,6 +1343,20 @@ public class QueryBuilder {
      */
     public QueryBuilder endGroup() {
         this.add(new Restriction(RestrictionType.END_GROUP));
+        return this;
+    }
+
+    public QueryBuilder addParameter(QueryParameter parameter) {
+        if (parameter != null) {
+            this.parameters.add(parameter);
+        }
+        return this;
+    }
+
+    public QueryBuilder addParameters(List<QueryParameter> parameters) {
+        if (parameters != null) {
+            this.parameters.addAll(parameters);
+        }
         return this;
     }
 

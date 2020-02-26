@@ -59,14 +59,14 @@ public class StackException extends Exception {
 
     public void add(String mensagem, Object... parametros) {
         if (exceptions == null) {
-            exceptions = new ArrayList<StackException>();
+            exceptions = new ArrayList<>();
         }
         exceptions.add(new StackException(mensagem, parametros));
     }
 
     public void add(StackException ex) {
         if (exceptions == null) {
-            exceptions = new ArrayList<StackException>();
+            exceptions = new ArrayList<>();
         }
         if (ex.getExceptions() == null || ex.getExceptions().isEmpty()) {
             exceptions.add(ex);

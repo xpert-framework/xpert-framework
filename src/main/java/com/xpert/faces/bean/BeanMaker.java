@@ -32,7 +32,7 @@ public class BeanMaker implements Serializable {
     private List<MappedBean> mappedBeans;
     private List<Class> selectedClasses;
     private List<Class> classes;
-    private List<String> nameSelectedClasses = new ArrayList<String>();
+    private List<String> nameSelectedClasses = new ArrayList<>();
     private PersistenceMappedBean persistenceMappedBean;
     private BeanConfiguration configuration = new BeanConfiguration();
     private String author;
@@ -50,7 +50,7 @@ public class BeanMaker implements Serializable {
     }
 
     public void make() {
-        selectedClasses = new ArrayList<Class>();
+        selectedClasses = new ArrayList<>();
         for (String className : nameSelectedClasses) {
             try {
                 selectedClasses.add(Class.forName(className, true, Thread.currentThread().getContextClassLoader()));
@@ -93,8 +93,8 @@ public class BeanMaker implements Serializable {
     }
 
     public void reset() {
-        nameSelectedClasses = new ArrayList<String>();
-        mappedBeans = new ArrayList<MappedBean>();
+        nameSelectedClasses = new ArrayList<>();
+        mappedBeans = new ArrayList<>();
     }
     
     public PrimeFacesVersion[] getPrimeFacesVersions(){

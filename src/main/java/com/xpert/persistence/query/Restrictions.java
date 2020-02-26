@@ -149,7 +149,7 @@ public class Restrictions extends ArrayList<Restriction> {
      */
     public Restrictions addQueryString(String property, QueryParameter parameter) {
         Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
-        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        List<QueryParameter> parameters = new ArrayList<>();
         parameters.add(parameter);
         restriction.setParameters(parameters);
         this.add(restriction);

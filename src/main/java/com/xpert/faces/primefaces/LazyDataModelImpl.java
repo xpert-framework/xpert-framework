@@ -1,16 +1,17 @@
 package com.xpert.faces.primefaces;
 
+import com.xpert.faces.bean.Xpert;
 import com.xpert.faces.component.restorablefilter.RestorableFilter;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.QueryBuilder;
+import com.xpert.persistence.query.QueryParameter;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,8 +30,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
     private boolean debug = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
-    private static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
-    private static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
+
     private BaseDAO<T> dao;
     private String defaultOrder;
     private String currentOrderBy;
@@ -49,6 +49,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private boolean loadData = true;
     private boolean restorableFilter = false;
     private Map currentFilters;
+    private List<QueryParameter> parameters = new ArrayList<>();
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -158,8 +159,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             orderBy = defaultOrder;
         } else {
             OrderByHandler orderByHandler = getOrderByHandler();
+            String orderByFromHandler = null;
             if (orderByHandler != null) {
-                orderBy = orderByHandler.getOrderBy(orderBy);
+                orderByFromHandler = orderByHandler.getOrderBy(orderBy);
+            }
+            if (orderByHandler != null && orderByFromHandler != null && !orderByFromHandler.isEmpty()) {
+                orderBy = orderByFromHandler;
             } else {
                 if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
                     orderBy = joinBuilder.getRootAlias() + "." + orderBy;
@@ -179,7 +184,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
 
-        List<Restriction> filterRestrictions = new ArrayList<Restriction>();
+        List<Restriction> filterRestrictions = new ArrayList<>();
 
         if (filters != null && !filters.isEmpty()) {
             for (Entry e : ((Map<String, Object>) filters).entrySet()) {
@@ -271,6 +276,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         List<T> dados = queryBuilder
+                .addParameters(parameters)
                 .orderBy(orderBy)
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
@@ -315,7 +321,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     public List<Restriction> getCurrentQueryRestrictions() {
-        List<Restriction> currentQueryRestrictions = new ArrayList<Restriction>();
+        List<Restriction> currentQueryRestrictions = new ArrayList<>();
 
         if (restrictions != null && !restrictions.isEmpty()) {
             currentQueryRestrictions.addAll(restrictions);
@@ -415,9 +421,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public String getPaginatorTemplate() {
         if (isLazyCountTypeNone()) {
-            return UNKNOW_COUNT_PAGINATOR_TEMPLATE;
+            return Xpert.UNKNOW_COUNT_PAGINATOR_TEMPLATE;
         }
-        return DEFAULT_PAGINATOR_TEMPLATE;
+        return Xpert.DEFAULT_PAGINATOR_TEMPLATE;
     }
 
     public boolean isLazyCountTypeNone() {
@@ -434,9 +440,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public String getCurrentPageReportTemplate() {
         if (isLazyCountTypeNone()) {
-            return XpertResourceBundle.get("page") + " {currentPage} ";
+            return new Xpert().getUnknowCountCurrentPageReportTemplate();
         }
-        return "{totalRecords} " + XpertResourceBundle.get("records") + " (" + XpertResourceBundle.get("page") + " {currentPage} " + XpertResourceBundle.get("of") + " {totalPages})";
+        return new Xpert().getDefaultCurrentPageReportTemplate();
     }
 
     /**
@@ -475,6 +481,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .select(attributes)
                 .add(getCurrentQueryRestrictions())
+                .addParameters(parameters)
                 .join(joinBuilder)
                 .orderBy(orderBy)
                 .debug(debug)
@@ -494,6 +501,26 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             setPageSize(1);
         }
         super.setRowIndex(rowIndex);
+    }
+
+    public void addParameter(QueryParameter parameter) {
+        if (parameter != null) {
+            this.parameters.add(parameter);
+        }
+    }
+
+    public void addParameters(List<QueryParameter> parameters) {
+        if (parameters != null) {
+            this.parameters.addAll(parameters);
+        }
+    }
+
+    public List<QueryParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<QueryParameter> parameters) {
+        this.parameters = parameters;
     }
 
     public BaseDAO<T> getDao() {

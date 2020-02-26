@@ -35,13 +35,13 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     private Class entityClass;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
-    private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<ClassField, String>();
+    private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<>();
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public BaseDAOImpl() {
         try {
             Type genericSuperclass = getClass().getGenericSuperclass();
-            if (genericSuperclass != null && genericSuperclass instanceof ParameterizedType) {
+            if (genericSuperclass instanceof ParameterizedType) {
                 Type[] arguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
                 if (arguments != null && arguments.length > 0) {
                     Object object = arguments[0];
@@ -71,9 +71,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     @Override
-    public abstract EntityManager getEntityManager();
-
-    @Override
     public Connection getConnection() throws SQLException {
         SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) getSession().getSessionFactory();
         return sessionFactoryImpl.getConnectionProvider().getConnection();
@@ -100,7 +97,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     private Audit getNewAudit() {
-        if (Configuration.AUDIT_ENTITY_MANAGER_FACTORY != null) {
+        if (Configuration.getAuditEntityManagerFactoryClass() != null) {
             return new Audit(getEntityManager(), Configuration.getAuditEntityManager());
         } else {
             return new Audit(getEntityManager());
@@ -159,7 +156,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public void saveOrMerge(T object, boolean audit) {
         boolean persisted = EntityUtils.isPersisted(object);
-        if (persisted == false) {
+        if (!persisted) {
             getEntityManager().persist(object);
             if (audit) {
                 getNewAudit().insert(object);
@@ -184,7 +181,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             getNewAudit().update(object);
         }
 
-        object = (T) getEntityManager().merge(object);
+        object = getEntityManager().merge(object);
 
         if (!persisted && audit) {
             getNewAudit().insert(object);
@@ -544,12 +541,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     public Long count(Class clazz) {
         return count((List) null);
     }
-    
+
     @Override
     public Long count(List<Restriction> restrictions, Class clazz) {
         return getQueryBuilder().from(clazz).add(restrictions).count();
     }
-    
+
     @Override
     public Long count(Restriction restriction, Class clazz) {
         return getQueryBuilder().from(clazz).add(restriction).count();
@@ -596,6 +593,11 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
                             collection.addAll((PersistentSet) object);
                             return (U) collection;
                         }
+                    }
+
+                    //if collections is null create generic case
+                    if (collection == null) {
+                        collection = new ArrayList();
                     }
 
                     String fieldName = role.substring(role.lastIndexOf(".") + 1, role.length());
@@ -681,8 +683,10 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
         try {
             Field field = getDeclaredField(entity, fieldName);
-            OrderBy annotation = field.getAnnotation(OrderBy.class);
-            orderBy = getOrderByFromAnnotaion(annotation, field, null);
+            if (field != null) {
+                OrderBy annotation = field.getAnnotation(OrderBy.class);
+                orderBy = getOrderByFromAnnotaion(annotation, field, null);
+            }
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -690,8 +694,10 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         if (orderBy == null || orderBy.isEmpty()) {
             try {
                 Method method = entity.getMethod("get" + StringUtils.getUpperFirstLetter(fieldName));
-                OrderBy annotation = method.getAnnotation(OrderBy.class);
-                orderBy = getOrderByFromAnnotaion(annotation, null, method);
+                if (method != null) {
+                    OrderBy annotation = method.getAnnotation(OrderBy.class);
+                    orderBy = getOrderByFromAnnotaion(annotation, null, method);
+                }
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
@@ -749,7 +755,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     private List<Restriction> getRestrictionsFromMap(Map<String, Object> args) {
-        List<Restriction> restrictions = new ArrayList<Restriction>();
+        List<Restriction> restrictions = new ArrayList<>();
         for (Entry e : args.entrySet()) {
             restrictions.add(new Restriction(e.getKey().toString(), e.getValue()));
         }
@@ -759,7 +765,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     private List<Restriction> getRestrictions(Restriction restriction) {
         List<Restriction> restrictions = null;
         if (restriction != null) {
-            restrictions = new ArrayList<Restriction>();
+            restrictions = new ArrayList<>();
             restrictions.add(restriction);
         }
         return restrictions;

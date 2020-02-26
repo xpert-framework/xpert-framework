@@ -31,13 +31,13 @@ public class DetailAuditBean {
 
     public void load() {
         if (beanModel != null) {
-            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", getRestrictions(), baseDAO);
+            auditings = new LazyDataModelImpl<>("eventDate DESC", getRestrictions(), baseDAO);
         }
     }
 
     private List<Restriction> getRestrictions() {
 
-        List<Restriction> restrictions = new ArrayList<Restriction>();
+        List<Restriction> restrictions = new ArrayList<>();
         //Long doesnt need conversion
         if (beanModel.getId() instanceof Long) {
             restrictions.add(new Restriction("identifier", beanModel.getId()));

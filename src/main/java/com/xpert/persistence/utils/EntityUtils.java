@@ -32,25 +32,24 @@ import org.hibernate.proxy.HibernateProxy;
 public class EntityUtils {
 
     private static final Logger logger = Logger.getLogger(EntityUtils.class.getName());
-    private static final Map<Class, String> ID_NAME_MAP = new HashMap<Class, String>();
-    private static final Map<Class, AccessibleObject> ID_ACCESSIBLE_MAP = new HashMap<Class, AccessibleObject>();
-    private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<Class, Class>();
+    private static final Map<Class, String> ID_NAME_MAP = new HashMap<>();
+    private static final Map<Class, AccessibleObject> ID_ACCESSIBLE_MAP = new HashMap<>();
+    private static final Map<Class, Class> ID_TYPE_MAP = new HashMap<>();
 
     /**
      * Convert a string to a mapped id type.
-     * 
+     *
      * Example:
      * <pre>
      * <code>
      * &#064;Id
      * private Integer id;
      * </code>
-     * </pre>
-     * With string "10" returns a Integer value 10 
-     * 
+     * </pre> With string "10" returns a Integer value 10
+     *
      * @param id
      * @param entityClass
-     * @return 
+     * @return
      */
     public static Object getIdFromString(String id, Class entityClass) {
         if (id == null || id.isEmpty()) {
@@ -58,7 +57,9 @@ public class EntityUtils {
         }
         try {
             Class idType = EntityUtils.getIdType(entityClass);
-            if (idType.equals(Long.class) || idType.equals(long.class)) {
+            if (idType == null) {
+                throw new IllegalArgumentException("Id not found in entity " + entityClass.getName());
+            } else if (idType.equals(Long.class) || idType.equals(long.class)) {
                 return Long.parseLong(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
                 return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(id));
@@ -114,8 +115,7 @@ public class EntityUtils {
         return name;
     }
 
-    
-     /**
+    /**
      * Return mapped entities in EntityManager. Classes are get from
      * ClassMetadata in SessionFactory
      *
@@ -125,7 +125,7 @@ public class EntityUtils {
     public static List<Class> getMappedEntities(EntityManager entityManager) {
         EntityManagerFactory entityManagerFactory = entityManager.getEntityManagerFactory();
         Metamodel metamodel = entityManagerFactory.getMetamodel();
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         for (EntityType entityType : metamodel.getEntities()) {
             classes.add(entityType.getBindableJavaType());
         }

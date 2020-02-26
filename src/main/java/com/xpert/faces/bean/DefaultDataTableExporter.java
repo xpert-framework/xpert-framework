@@ -40,12 +40,15 @@ public class DefaultDataTableExporter {
     }
 
     public void postProcessorPDF(Object document) throws IOException, BadElementException, DocumentException {
+        //The default implamentation does nothing
     }
 
     public void preProcessorExcel(Object document) throws IOException, BadElementException, DocumentException {
+        //The default implamentation does nothing
     }
 
     public void postProcessorExcel(Object document) throws IOException, BadElementException, DocumentException {
+        //The default implamentation does nothing
     }
 
 }

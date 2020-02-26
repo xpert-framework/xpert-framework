@@ -9,6 +9,7 @@ import java.util.List;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
+import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
@@ -33,6 +34,9 @@ import javax.servlet.http.HttpSession;
  * @author ayslan
  */
 public class FacesUtils {
+
+    private FacesUtils() {
+    }
 
     /**
      * Verify if FacesContext has message using getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty()
@@ -82,7 +86,7 @@ public class FacesUtils {
             try {
                 component.encodeAll(context);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new FacesException(ex);
             }
         } finally {
             if (originalWriter != null) {
@@ -113,7 +117,11 @@ public class FacesUtils {
      */
     public static String getParameter(String parameterName) {
         HttpServletRequest request = getRequest();
-        return request.getParameter(parameterName);
+        if (request != null) {
+            return request.getParameter(parameterName);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -188,7 +196,7 @@ public class FacesUtils {
             externalContext.redirect(externalContext.getRequestContextPath() + url);
             context.responseComplete();
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new FacesException(ex);
         }
     }
 
@@ -268,6 +276,7 @@ public class FacesUtils {
     public static void addCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
+        cookie.setHttpOnly(false);
         cookie.setMaxAge(2592000);
         // NOTE: If cookie version is set to 1, cookie values will be quoted.
         cookie.setVersion(0);
@@ -276,17 +285,23 @@ public class FacesUtils {
     }
 
     public static String getBrowser() {
-        return getRequest().getHeader("User-Agent");
+        HttpServletRequest request = getRequest();
+        if (request != null) {
+            return request.getHeader("User-Agent");
+        }
+        return null;
     }
 
     public static Cookie getCookie(String cookieName) {
         HttpServletRequest request = getRequest();
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                Cookie cookie = cookies[i];
-                if (cookieName.equals(cookie.getName())) {
-                    return cookie;
+        if (request != null) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (int i = 0; i < cookies.length; i++) {
+                    Cookie cookie = cookies[i];
+                    if (cookieName.equals(cookie.getName())) {
+                        return cookie;
+                    }
                 }
             }
         }
@@ -402,7 +417,7 @@ public class FacesUtils {
             response.setContentLength(bytes.length);
             response.getOutputStream().write(bytes);
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new FacesException(ex);
         }
     }
 
@@ -448,7 +463,7 @@ public class FacesUtils {
             }
             buffer.flush();
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new FacesException(ex);
         }
         return buffer.toByteArray();
     }

@@ -6,6 +6,7 @@ import com.xpert.audit.model.AuditingType;
 import com.xpert.Configuration;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.utils.EntityUtils;
+import com.xpert.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.persistence.*;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
@@ -31,9 +33,9 @@ public class Audit {
 
     private static final Logger logger = Logger.getLogger(Audit.class.getName());
     private static final String[] EXCLUDED_FIELDS = {"notifyAll", "notify", "getClass", "wait", "hashCode", "toString", "equals"};
-    private static final Map<Class, String> MAPPED_NAME = new HashMap<Class, String>();
-    private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<Class, List<Method>>();
-    private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<Method, Boolean>();
+    private static final Map<Class, String> MAPPED_NAME = new HashMap<>();
+    private static final Map<Class, List<Method>> MAPPED_METHODS = new HashMap<>();
+    private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<>();
     private final EntityManager entityManager;
     private final EntityManager auditEntityManager;
     private final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -287,11 +289,11 @@ public class Audit {
 
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
         //verify null object
-        if(object == null){
+        if (object == null) {
             return null;
         }
         List<Method> methodsGet = getMethods(object);
-        List<AbstractMetadata> metadatas = new ArrayList<AbstractMetadata>();
+        List<AbstractMetadata> metadatas = new ArrayList<>();
         boolean isDelete = auditing.getAuditingType() != null && auditing.getAuditingType().equals(AuditingType.DELETE);
         for (Method method : methodsGet) {
             try {
@@ -327,7 +329,10 @@ public class Audit {
                             }
                         } else {
                             StringBuilder oldValue = new StringBuilder();
-                            if ((!(collectionNew instanceof PersistentBag) && !(collectionNew instanceof PersistentCollection)) || isDelete == true) {
+
+                            boolean collectionInitialized = Hibernate.isInitialized(collectionNew);
+
+                            if (collectionInitialized || (!(collectionNew instanceof PersistentBag) && !(collectionNew instanceof PersistentCollection)) || isDelete == true) {
                                 //diferent size, then add to metadata
                                 if (collectionNew != null && collectionOld != null && collectionNew.size() != collectionOld.size()) {
                                     addMetadata = true;
@@ -425,7 +430,7 @@ public class Audit {
                             }
                         }
                     }
-                    metadata.setField(getMethodName(method));
+                    metadata.setField(ReflectionUtils.getMethodName(method));
                     metadata.setAuditing(auditing);
                     if (addMetadata) {
                         //verify size of metadata
@@ -499,7 +504,7 @@ public class Audit {
         }
         OneToOne oneToOne = method.getAnnotation(OneToOne.class);
         if (oneToOne == null) {
-            Field field = getDeclaredField(method.getDeclaringClass(), getMethodName(method));
+            Field field = getDeclaredField(method.getDeclaringClass(), ReflectionUtils.getMethodName(method));
             if (field != null) {
                 oneToOne = field.getAnnotation(OneToOne.class);
             }
@@ -538,7 +543,7 @@ public class Audit {
             return methodGet;
         }
 
-        methodGet = new ArrayList<Method>();
+        methodGet = new ArrayList<>();
         Method methods[] = entityClass.getMethods();
 
         List exclude = Arrays.asList(EXCLUDED_FIELDS);
@@ -553,7 +558,7 @@ public class Audit {
                     if (methods[j] != null && !methods[j].isAnnotationPresent(Transient.class)
                             && !methods[j].isAnnotationPresent(NotAudited.class)
                             && !methods[j].isAnnotationPresent(Id.class) && !exclude.contains(methods[j].getName())) {
-                        fieldName = getMethodName(methods[j]);
+                        fieldName = ReflectionUtils.getMethodName(methods[j]);
                     }
                     if (fieldName != null && !fieldName.equals("")) {
                         try {
@@ -577,14 +582,7 @@ public class Audit {
         return methodGet;
     }
 
-    private String getMethodName(Method method) {
-        if (method.getName().startsWith("is")) {
-            return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
-        } else if (method.getName().startsWith("get")) {
-            return method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4);
-        }
-        return null;
-    }
+  
 
     private Field getDeclaredField(Class clazz, String fieldName) throws Exception {
         Field field = clazz.getDeclaredField(fieldName);
