@@ -17,14 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 public class LocaleBean implements Serializable {
 
     private Locale locale;
-    private List<Locale> locales = new ArrayList<Locale>();
+    private List<Locale> locales = new ArrayList<>();
 
     public LocaleBean() {
         locale = FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
         if (locale == null) {
             locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
         }
-        locales = new ArrayList<Locale>();
+        locales = new ArrayList<>();
         Iterator<Locale> it = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
         while (it.hasNext()) {
             locales.add(it.next());

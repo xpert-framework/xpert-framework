@@ -57,7 +57,7 @@ public class SecuritySessionManager {
         /**
          * Put keys and urls in a Map to optmize perfomance
          */
-        Map<String, Role> rolesMap = new HashMap<String, Role>();
+        Map<String, Role> rolesMap = new HashMap<>();
         for (Role role : roles) {
             if (role.getKey() != null) {
                 for (String string : role.getKey().split(",")) {
@@ -65,7 +65,7 @@ public class SecuritySessionManager {
                 }
             }
         }
-        Map<String, String> urlsMap = new HashMap<String, String>();
+        Map<String, String> urlsMap = new HashMap<>();
         for (Role role : roles) {
             if (role.getUrl() != null && !role.getUrl().isEmpty()) {
                 for (String url : role.getUrl().split(",")) {

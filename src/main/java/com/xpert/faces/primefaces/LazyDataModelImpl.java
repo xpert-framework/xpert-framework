@@ -179,7 +179,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
 
-        List<Restriction> filterRestrictions = new ArrayList<Restriction>();
+        List<Restriction> filterRestrictions = new ArrayList<>();
 
         if (filters != null && !filters.isEmpty()) {
             for (Entry e : ((Map<String, Object>) filters).entrySet()) {
@@ -315,7 +315,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     public List<Restriction> getCurrentQueryRestrictions() {
-        List<Restriction> currentQueryRestrictions = new ArrayList<Restriction>();
+        List<Restriction> currentQueryRestrictions = new ArrayList<>();
 
         if (restrictions != null && !restrictions.isEmpty()) {
             currentQueryRestrictions.addAll(restrictions);

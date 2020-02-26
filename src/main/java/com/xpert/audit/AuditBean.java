@@ -20,14 +20,14 @@ public class AuditBean implements Serializable{
 
     private static final Logger logger = Logger.getLogger(AuditBean.class.getName());
     private Object object;
-    private Map<BeanModel, DetailAuditBean> beans = new HashMap<BeanModel, DetailAuditBean>();
+    private Map<BeanModel, DetailAuditBean> beans = new HashMap<>();
     private BaseDAO baseDAO;
     private BeanModel lastBean;
     private DetailAuditBean lastModel;
 
     @PostConstruct
     public void init() {
-        baseDAO = new AuditDAO(Configuration.AUDITING_IMPL);
+        baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
     }
     
     public boolean isPrimeFaces3(){

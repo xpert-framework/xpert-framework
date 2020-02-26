@@ -18,17 +18,17 @@ public class I18N {
     private static final Logger logger = Logger.getLogger(I18N.class.getName());
 
     public static String get(String key) {
-        if (Configuration.BUNDLE == null) {
+        if (Configuration.getBundleName() == null) {
             return key;
         }
-        return ResourceBundleUtils.get(key, Configuration.BUNDLE, Thread.currentThread().getContextClassLoader(), (Object[]) null);
+        return ResourceBundleUtils.get(key, Configuration.getBundleName(), Thread.currentThread().getContextClassLoader(), (Object[]) null);
     }
     
     public static String get(String key, Object... parameters) {
-        if (Configuration.BUNDLE == null) {
+        if (Configuration.getBundleName() == null) {
             return key;
         }
-        return ResourceBundleUtils.get(key, Configuration.BUNDLE, Thread.currentThread().getContextClassLoader(), parameters);
+        return ResourceBundleUtils.get(key, Configuration.getBundleName(), Thread.currentThread().getContextClassLoader(), parameters);
     }
 
     public static String getDatePattern() {

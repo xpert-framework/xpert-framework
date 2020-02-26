@@ -15,6 +15,7 @@ import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ import javax.faces.context.FacesContext;
 public abstract class AbstractBaseBean<T> {
 
     private static final Logger logger = Logger.getLogger(AbstractBaseBean.class.getName());
-    private static final String ID = "id";
+    private static final String ID_PARAMETER = "id";
     private Object id;
     private String outcome;
     private String dialog;
@@ -73,12 +74,10 @@ public abstract class AbstractBaseBean<T> {
     }
 
     public AbstractBaseBean() {
-        if (getClass().getGenericSuperclass() != null && !getClass().getGenericSuperclass().equals(Object.class)) {
-            if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-                if (parameterizedType != null && parameterizedType.getActualTypeArguments() != null && parameterizedType.getActualTypeArguments().length > 0) {
-                    entityClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
-                }
+        if (getClass().getGenericSuperclass() != null && !getClass().getGenericSuperclass().equals(Object.class) && getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+            if (parameterizedType != null && parameterizedType.getActualTypeArguments() != null && parameterizedType.getActualTypeArguments().length > 0) {
+                entityClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
             }
         }
         if (isLoadEntityOnPostConstruct()) {
@@ -118,10 +117,10 @@ public abstract class AbstractBaseBean<T> {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
         requestMap.put(ENTITY_REQUEST_TO_LOAD, entity);
-        String outcome = getOutcome();
-        if (outcome != null && !outcome.isEmpty()) {
+        String navigation = getOutcome();
+        if (navigation != null && !navigation.isEmpty()) {
             NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
-            navigationHandler.handleNavigation(facesContext, null, outcome);
+            navigationHandler.handleNavigation(facesContext, null, navigation);
         }
     }
 
@@ -160,12 +159,12 @@ public abstract class AbstractBaseBean<T> {
      * @return A instance of id passed in parameter
      */
     private Object getIdFromParameter() {
-        String parameter = FacesUtils.getParameter(ID);
+        String parameter = FacesUtils.getParameter(ID_PARAMETER);
         if (parameter == null || parameter.isEmpty()) {
             return null;
         }
         try {
-           return EntityUtils.getIdFromString(parameter, entityClass);
+            return EntityUtils.getIdFromString(parameter, entityClass);
         } catch (NumberFormatException ex) {
             return null;
         }
@@ -205,7 +204,8 @@ public abstract class AbstractBaseBean<T> {
      * LazyDataModel
      */
     public List<Restriction> getDataModelRestrictions() {
-        return null;
+        //return a empty list
+        return new ArrayList<>();
     }
 
     /**
@@ -250,7 +250,7 @@ public abstract class AbstractBaseBean<T> {
      * Creates a LazyDataModelImpl to entity
      */
     public void createDataModel() {
-        dataModel = new LazyDataModelImpl<T>(getDataModelOrder(), getDAO());
+        dataModel = new LazyDataModelImpl<>(getDataModelOrder(), getDAO());
         dataModel.setRestrictions(getDataModelRestrictions());
         OrderByHandler orderByHandler = getOrderByHandler();
         if (orderByHandler != null) {
@@ -321,7 +321,7 @@ public abstract class AbstractBaseBean<T> {
 
     public T findById(Object id) {
         if (id != null) {
-            Object object = (T) getDAO().find(id);
+            Object object = getDAO().find(id);
             if (object != null) {
                 return (T) object;
             }

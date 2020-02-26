@@ -35,8 +35,8 @@ public class QueryBuilder {
     private Class from;
     private String alias;
     private final JoinBuilder joins = new JoinBuilder();
-    private final List<Restriction> restrictions = new ArrayList<Restriction>();
-    private List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
+    private final List<Restriction> restrictions = new ArrayList<>();
+    private List<Restriction> normalizedRestrictions = new ArrayList<>();
     private QueryType type;
     private final EntityManager entityManager;
     private Integer maxResults;
@@ -348,7 +348,7 @@ public class QueryBuilder {
 
     public List<QueryParameter> getQueryParameters() {
         int position = 1;
-        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        List<QueryParameter> parameters = new ArrayList<>();
         for (Restriction re : normalizedRestrictions) {
             //add custom parameters
             if (re.getParameters() != null) {
@@ -878,7 +878,7 @@ public class QueryBuilder {
      */
     public QueryBuilder addQueryString(String property, QueryParameter parameter) {
         Restriction restriction = new Restriction(property, RestrictionType.QUERY_STRING);
-        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        List<QueryParameter> parameters = new ArrayList<>();
         parameters.add(parameter);
         restriction.setParameters(parameters);
         this.add(restriction);

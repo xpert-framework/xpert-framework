@@ -9,7 +9,8 @@ import javax.faces.component.html.HtmlPanelGroup;
  * @author ayslan
  */
 @ResourceDependencies({
-    @ResourceDependency(library = "xpert", name = "css/style.css"),
+    @ResourceDependency(library = "xpert", name = "css/style.css")
+    ,
     @ResourceDependency(library = "xpert", name = "scripts/core.js")
 })
 public class DateFilter extends HtmlPanelGroup {
@@ -20,6 +21,7 @@ public class DateFilter extends HtmlPanelGroup {
     private Object calendarEndValue;
 
     public DateFilter() {
+        //The default constructor does nothing
     }
 
     public boolean isAdded() {

@@ -38,7 +38,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     private static final Logger logger = Logger.getLogger(MakerSwingFrame.class.getName());
     private static final Color BLUE = new Color(66, 139, 202);
     private BeanConfiguration beanConfiguration;
-    private ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+    private ArrayList<Class<?>> classes = new ArrayList<>();
     private File lastFile;
 
     public Class getClassManagedBean() {
@@ -262,7 +262,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     public void searchClasses() {
         try {
             ArrayList<Class<?>> allClasses = ClassEnumerator.getClassesForPackage(textPackageName.getText());
-            classes = new ArrayList<Class<?>>();
+            classes = new ArrayList<>();
             for (Class entity : allClasses) {
                 if (!entity.isEnum() && !entity.isInterface()) {
                     classes.add(entity);
@@ -342,7 +342,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
             return;
         }
 
-        List<Class> classesList = new ArrayList<Class>();
+        List<Class> classesList = new ArrayList<>();
         for (Object object : selectedClasses) {
             classesList.add((Class) object);
         }
@@ -2173,7 +2173,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
     private void buttonSelectClassMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectClassMBActionPerformed
         JFileChooser chooser = new JFileChooser();
-        if (textClassMB != null && textClassMB.getText() != null && !textClassMB.getText().isEmpty() && new File(textClassMB.getText()).exists()) {
+        if (textClassMB.getText() != null && !textClassMB.getText().isEmpty() && new File(textClassMB.getText()).exists()) {
             chooser.setCurrentDirectory(new File(textClassMB.getText()));
         } else {
             chooser.setCurrentDirectory(new java.io.File("."));
@@ -2198,8 +2198,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
 
     private void buttonSelectMessageBundleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectMessageBundleActionPerformed
         JFileChooser chooser = new JFileChooser();
-        if (textResourceBundleLocation != null && textResourceBundleLocation.getText() != null
-                && !textResourceBundleLocation.getText().isEmpty() && new File(textResourceBundleLocation.getText()).exists()) {
+        if (textResourceBundleLocation.getText() != null && !textResourceBundleLocation.getText().isEmpty() && new File(textResourceBundleLocation.getText()).exists()) {
             chooser.setCurrentDirectory(new File(textResourceBundleLocation.getText()));
         } else {
             chooser.setCurrentDirectory(new java.io.File("."));

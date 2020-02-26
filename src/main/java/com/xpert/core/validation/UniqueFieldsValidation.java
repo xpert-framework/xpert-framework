@@ -35,7 +35,7 @@ public class UniqueFieldsValidation {
         UniqueFieldException exception = new UniqueFieldException();
 
         for (UniqueField uniqueField : uniqueFields) {
-            List<Restriction> restrictions = new ArrayList<Restriction>();
+            List<Restriction> restrictions = new ArrayList<>();
             if (uniqueField.getRestrictions() != null && !uniqueField.getRestrictions().isEmpty()) {
                 restrictions.addAll(uniqueField.getRestrictions());
             }

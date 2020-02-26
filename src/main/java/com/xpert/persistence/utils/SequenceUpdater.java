@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.sql.DataSource;
 
 /**
@@ -35,34 +36,28 @@ public abstract class SequenceUpdater {
         }
 
         final List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
-        Connection connection = null;
         try {
             if (getDataSource() != null) {
-                connection = getDataSource().getConnection();
-            }
-            SequenceGenerator sequenceGenerator = null;
-            for (Class clazz : classes) {
-                String schema = null;
-                sequenceGenerator = getSequenceGenerator(clazz);
-                if (sequenceGenerator != null) {
-                    logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
-                    try {
-                        createSequence(connection, schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
-                    } catch (Exception ex) {
-                        logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
+                try (Connection connection = getDataSource().getConnection()) {
+                    SequenceGenerator sequenceGenerator = null;
+                    for (Class clazz : classes) {
+                        String schema = null;
+                        sequenceGenerator = getSequenceGenerator(clazz);
+                        if (sequenceGenerator != null) {
+                            logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
+                            try {
+                                createSequence(connection, schema, sequenceGenerator.sequenceName(), sequenceGenerator.initialValue(), sequenceGenerator.allocationSize());
+                            } catch (Exception ex) {
+                                logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
+                            }
+                        }
                     }
                 }
+            } else {
+                logger.log(Level.SEVERE, "Datasource is null");
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
-        } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
         }
 
     }
@@ -95,38 +90,36 @@ public abstract class SequenceUpdater {
 
         List<Class> classes = EntityUtils.getMappedEntities(getEntityManager());
         SequenceGenerator sequenceGenerator = null;
-        Connection connection = null;
         try {
             if (getDataSource() != null) {
-                connection = getDataSource().getConnection();
-            }
-            for (Class clazz : classes) {
-                String schema = null;
-                sequenceGenerator = getSequenceGenerator(clazz);
-                if (sequenceGenerator != null) {
-                    try {
-                        logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
-                        Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
-                        if (schema != null && !schema.isEmpty()) {
-                            changeCurrentValue(connection, schema + "." + sequenceGenerator.sequenceName(), maxId);
-                        } else {
-                            changeCurrentValue(connection, sequenceGenerator.sequenceName(), maxId);
+                try (Connection connection = getDataSource().getConnection()) {
+                    for (Class clazz : classes) {
+                        String schema = null;
+                        Table table = (Table) clazz.getAnnotation(Table.class);
+                        if (table != null) {
+                            schema = table.schema();
                         }
-                    } catch (Exception ex) {
-                        logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
+                        sequenceGenerator = getSequenceGenerator(clazz);
+                        if (sequenceGenerator != null) {
+                            try {
+                                logger.log(Level.INFO, "Mapping sequence {0}", sequenceGenerator.sequenceName());
+                                Long maxId = getMaxId(sequenceGenerator.sequenceName(), clazz);
+                                if (schema != null && !schema.isEmpty()) {
+                                    changeCurrentValue(connection, schema + "." + sequenceGenerator.sequenceName(), maxId);
+                                } else {
+                                    changeCurrentValue(connection, sequenceGenerator.sequenceName(), maxId);
+                                }
+                            } catch (Exception ex) {
+                                logger.log(Level.SEVERE, "Erro in sequence " + sequenceGenerator.sequenceName(), ex);
+                            }
+                        }
                     }
                 }
+            } else {
+                logger.log(Level.SEVERE, "Datasource is null");
             }
         } catch (SQLException ex) {
             throw new RuntimeException("Erro updating sequence " + sequenceGenerator.sequenceName(), ex);
-        } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
         }
     }
 

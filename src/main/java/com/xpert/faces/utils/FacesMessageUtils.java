@@ -140,7 +140,7 @@ public class FacesMessageUtils {
 
     public static void getMessage(FacesContext facesContext, FacesMessage.Severity severity, String summary, boolean i18n, Object... parameters) {
 
-        if (Configuration.BUNDLE != null && i18n) {
+        if (Configuration.getBundleName() != null && i18n) {
             if (parameters != null && parameters.length > 0) {
                 summary = I18N.get(summary, parameters);
             } else {

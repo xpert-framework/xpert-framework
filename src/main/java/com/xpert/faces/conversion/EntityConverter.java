@@ -26,8 +26,8 @@ public class EntityConverter implements Converter {
 
     private static final Logger logger = Logger.getLogger(EntityConverter.class.getName());
     private static final String ID_PREFIX = "entityConverter_";
-    private static final Map<Class, Field> FIELDS_CACHE = new HashMap<Class, Field>();
-    private static final Map<Class, Method> METHOD_CACHE = new HashMap<Class, Method>();
+    private static final Map<Class, Field> FIELDS_CACHE = new HashMap<>();
+    private static final Map<Class, Method> METHOD_CACHE = new HashMap<>();
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,

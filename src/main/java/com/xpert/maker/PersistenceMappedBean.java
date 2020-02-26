@@ -28,7 +28,7 @@ public class PersistenceMappedBean {
     }
 
     public List<MappedBean> getMappedBeans(List<Class> classes, BeanConfiguration beanConfiguration) {
-        List<MappedBean> mappedBeans = new ArrayList<MappedBean>();
+        List<MappedBean> mappedBeans = new ArrayList<>();
         if (beanConfiguration != null) {
             if (beanConfiguration.getManagedBeanSuffix() == null || beanConfiguration.getManagedBeanSuffix().isEmpty()) {
                 beanConfiguration.setManagedBeanSuffix(BeanCreator.SUFFIX_MANAGED_BEAN);
@@ -110,7 +110,7 @@ public class PersistenceMappedBean {
 
     public List<Class> getMappedClasses(boolean includeEnum) {
         List<Class> mappedEntities = EntityUtils.getMappedEntities(entityManager);
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         for (Class entity : mappedEntities) {
             //do not include Audit classes
             if (!extendsAuditClasses(entity)) {

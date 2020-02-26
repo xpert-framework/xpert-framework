@@ -19,7 +19,7 @@ public class AuditContext {
     private static final String INSTANCE_KEY = AuditContext.class.getName();
 
     private boolean active = false;
-    private final Map<Object, AbstractAuditing> auditValues = new HashMap<Object, AbstractAuditing>();
+    private final Map<Object, AbstractAuditing> auditValues = new HashMap<>();
 
     private AuditContext() {
 

@@ -34,7 +34,7 @@ public class AuditDeleteBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        baseDAO = new AuditDAO(Configuration.AUDITING_IMPL);
+        baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
     }
 
     public boolean isPrimeFaces3() {
@@ -48,20 +48,20 @@ public class AuditDeleteBean implements Serializable {
 
     public void load() {
         if (entity != null) {
-            List<Restriction> restrictions = new ArrayList<Restriction>();
+            List<Restriction> restrictions = new ArrayList<>();
             restrictions.add(new Restriction("entity", Audit.getEntityName(entity)));
             restrictions.add(new Restriction("auditingType", AuditingType.DELETE));
-            auditings = new LazyDataModelImpl<AbstractAuditing>("eventDate DESC", restrictions, baseDAO);
+            auditings = new LazyDataModelImpl<>("eventDate DESC", restrictions, baseDAO);
         }
     }
 
     public List<AbstractAuditing> getInsertsAndUpdates(AbstractAuditing deleteAuditing) {
 
-        List<AuditingType> insertUpdateTypes = new ArrayList<AuditingType>();
+        List<AuditingType> insertUpdateTypes = new ArrayList<>();
         insertUpdateTypes.add(AuditingType.INSERT);
         insertUpdateTypes.add(AuditingType.UPDATE);
 
-        List<Restriction> restrictions = new ArrayList<Restriction>();
+        List<Restriction> restrictions = new ArrayList<>();
         restrictions.add(new Restriction("identifier", deleteAuditing.getIdentifier()));
         restrictions.add(new Restriction("entity", deleteAuditing.getEntity()));
         restrictions.add(new Restriction("auditingType", RestrictionType.IN, insertUpdateTypes));

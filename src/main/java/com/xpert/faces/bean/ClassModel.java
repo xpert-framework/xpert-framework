@@ -34,7 +34,7 @@ public class ClassModel {
     
     public ClassModel(String itemLabel, Restriction restriction, String order) {
         this.order = order;
-        this.restrictions = new ArrayList<Restriction>();
+        this.restrictions = new ArrayList<>();
         this.restrictions.add(restriction);
         this.itemLabel = itemLabel;
     }

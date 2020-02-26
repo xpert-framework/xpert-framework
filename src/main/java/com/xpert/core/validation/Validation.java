@@ -62,10 +62,10 @@ public class Validation {
             d2 = d2 + (12 - nCount) * digitoCPF;
         }
 
-        // Primeiro resto da divis�o por 11.
+        // Primeiro resto da divisao por 11.
         resto = (d1 % 11);
 
-        // Se o resultado for 0 ou 1 o digito � 0 caso contr�rio o digito � 11 menos o resultado anterior.
+        // Se o resultado for 0 ou 1 o digito eh 0 caso contrario o digito eh 11 menos o resultado anterior.
         if (resto < 2) {
             digito1 = 0;
         } else {
@@ -74,17 +74,17 @@ public class Validation {
 
         d2 += 2 * digito1;
 
-        // Segundo resto da divis�o por 11.
+        // Segundo resto da divisao por 11.
         resto = (d2 % 11);
 
-        // Se o resultado for 0 ou 1 o digito � 0 caso contr�rio o digito � 11 menos o resultado anterior.
+        // Se o resultado for 0 ou 1 o digito o0 caso contrario o digito eh 11 menos o resultado anterior.
         if (resto < 2) {
             digito2 = 0;
         } else {
             digito2 = 11 - resto;
         }
 
-        // Digito verificador do CPF que est� sendo validado.
+        // Digito verificador do CPF que esta sendo validado.
         String nDigVerific = cpf.substring(cpf.length() - 2, cpf.length());
 
         // Concatenando o primeiro resto com o segundo.

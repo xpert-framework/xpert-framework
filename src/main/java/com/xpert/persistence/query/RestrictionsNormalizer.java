@@ -49,11 +49,11 @@ public class RestrictionsNormalizer {
      */
     public static List<Restriction> getNormalizedRestrictions(Class from, List<Restriction> restrictions, String alias) {
 
-        List<Restriction> normalizedRestrictions = new ArrayList<Restriction>();
+        List<Restriction> normalizedRestrictions = new ArrayList<>();
         //normalize result
         for (Restriction originalRestriction : restrictions) {
             boolean ignoreRestriction = false;
-            List<Restriction> moreRestrictions = new ArrayList<Restriction>();
+            List<Restriction> moreRestrictions = new ArrayList<>();
 
             //copy and create a new restriction
             Restriction restriction = new Restriction();

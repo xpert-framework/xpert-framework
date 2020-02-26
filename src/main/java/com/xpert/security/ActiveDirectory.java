@@ -205,7 +205,7 @@ public class ActiveDirectory {
      */
     public static User[] getUsers(LdapContext context) throws NamingException {
 
-        java.util.ArrayList<User> users = new java.util.ArrayList<User>();
+        java.util.ArrayList<User> users = new java.util.ArrayList<>();
         String authenticatedUser = (String) context.getEnvironment().get(Context.SECURITY_PRINCIPAL);
         if (authenticatedUser.contains("@")) {
             String domainName = authenticatedUser.substring(authenticatedUser.indexOf("@") + 1);

@@ -17,7 +17,7 @@ import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
  */
 public class ChainingReplacedElementFactory implements ReplacedElementFactory {
     private List<ReplacedElementFactory> replacedElementFactories 
-            = new ArrayList<ReplacedElementFactory>();
+            = new ArrayList<>();
 
     public void addReplacedElementFactory(ReplacedElementFactory replacedElementFactory) {
         replacedElementFactories.add(0, replacedElementFactory);

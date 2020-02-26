@@ -38,13 +38,15 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class BeanCreator {
 
+    private BeanCreator() {
+    }
+
     private static final Logger logger = Logger.getLogger(BeanCreator.class.getName());
     private static final Configuration CONFIG = new Configuration();
     private static final String AUTHOR = "#Author";
     private static final String GET_PREFIX = "get";
     public static final String DEFAULT_RESOURCE_BUNDLE = "msg";
     public static final String DEFAULT_TEMPLATE = "/template/mainTemplate.xhtml";
-    private static final int DEFAULT_SIZE = 70;
     private static final int DEFAULT_MAX_LENGTH = 255;
     private static final int SIZE_ANNOTATION_MAX_DEFAULT = 2147483647;
     private static final String[] LOCALES_MAKER = {"pt_BR", "en", "es"};
@@ -59,7 +61,12 @@ public class BeanCreator {
     public static final String PREFFIX_VIEW_LIST = "list";
     public static final String PREFFIX_VIEW_MENU = "menu";
     public static final String PREFFIX_VIEW_DETAIL = "detail";
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final String JAVA_EXTENSION = ".java";
+    public static final String XHTML_EXTENSION = ".xhtml";
+
+    public static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    }
 
     static {
         try {
@@ -73,7 +80,6 @@ public class BeanCreator {
         ViewEntity viewEntity = createViewEntity(bean.getEntity(), configuration);
         bean.setViewEntity(viewEntity);
         String templatePath = bean.getBeanType().getTemplate();
-        //logger.log(Level.INFO, "Creating template {0}", new Object[]{templatePath});
 
         if (bean.getBeanType().isView()) {
             if (bean.getBeanType().isBootstrapDependend() && configuration.getBootstrapVersion() != null) {
@@ -113,7 +119,7 @@ public class BeanCreator {
     }
 
     public static List<ViewField> getViewFields(ViewEntity viewEntity, List<Field> fields, String entityType) {
-        List<ViewField> viewFields = new ArrayList<ViewField>();
+        List<ViewField> viewFields = new ArrayList<>();
         for (Field field : fields) {
 
             //recursive call to getViewFields id exists EmbeddedId or Embeddable
@@ -190,14 +196,12 @@ public class BeanCreator {
                 viewField.setRequired(true);
             }
             viewField.setLazy(isLazy(field));
-            if (field.getType().equals(Collection.class) || field.getType().equals(List.class) || field.getType().equals(Set.class)) {
-                if (field.getGenericType() instanceof ParameterizedType) {
-                    ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-                    if (parameterizedType.getActualTypeArguments().length > 0) {
-                        if (parameterizedType.getActualTypeArguments()[0] instanceof Class<?>) {
-                            Class<?> listType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-                            viewField.setTypeName(listType.getSimpleName());
-                        }
+            if (field.getType().equals(Collection.class) || field.getType().equals(List.class) || field.getType().equals(Set.class) && field.getGenericType() instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+                if (parameterizedType.getActualTypeArguments().length > 0) {
+                    if (parameterizedType.getActualTypeArguments()[0] instanceof Class<?>) {
+                        Class<?> listType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                        viewField.setTypeName(listType.getSimpleName());
                     }
                 }
             } else {
@@ -223,7 +227,7 @@ public class BeanCreator {
     }
 
     public static List<Field> getDeclaredFields(Class clazz) {
-        List<Field> fields = new ArrayList<Field>();
+        List<Field> fields = new ArrayList<>();
         for (Field field : clazz.getDeclaredFields()) {
             fields.add(field);
         }
@@ -237,7 +241,7 @@ public class BeanCreator {
     }
 
     public static Collection<Class> getReferencedClasses(List<Class> classes) {
-        Set<Class> references = new HashSet<Class>();
+        Set<Class> references = new HashSet<>();
 
         for (Class clazz : classes) {
             for (Field field : getDeclaredFields(clazz)) {
@@ -262,7 +266,7 @@ public class BeanCreator {
 
     public static Set<Class> getClassesForClassBean(List<Class> classes) {
         //set to evict duplicates
-        Set<Class> allClasses = new HashSet<Class>();
+        Set<Class> allClasses = new HashSet<>();
         if (classes != null) {
             allClasses.addAll(classes);
             allClasses.addAll(getReferencedClasses(classes));
@@ -286,9 +290,7 @@ public class BeanCreator {
             writer.close();
 
             return writer.toString();
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (TemplateException ex) {
+        } catch (IOException | TemplateException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
         return "";
@@ -317,9 +319,7 @@ public class BeanCreator {
             writer.flush();
             writer.close();
             return writer.toString();
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (TemplateException ex) {
+        } catch (IOException | TemplateException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
 
@@ -422,11 +422,7 @@ public class BeanCreator {
                 annotation = method.getAnnotation(OneToOne.class);
             }
         }
-        if (annotation != null && ((OneToOne) annotation).fetch() != null && ((OneToOne) annotation).fetch().equals(FetchType.LAZY)) {
-            return true;
-        }
-
-        return false;
+        return annotation != null && ((OneToOne) annotation).fetch() != null && ((OneToOne) annotation).fetch().equals(FetchType.LAZY);
     }
 
     public static String getI18N(List<MappedBean> mappedBeans) {
@@ -450,14 +446,11 @@ public class BeanCreator {
         //create file
         File file = new File(location + File.separator + fileName);
         if (!file.exists()) {
-            FileOutputStream outputStream;
-            try {
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
                 log(logBuilder, "Writing file: " + fileName + " on dir: " + file.getAbsolutePath());
-                outputStream = new FileOutputStream(file);
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-                writer.write(content);
-                writer.close();
-                outputStream.close();
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+                    writer.write(content);
+                }
             } catch (IOException ex) {
                 log(logBuilder, "IOException: " + ex.getMessage() + ". More details see java log.");
                 logger.log(Level.SEVERE, null, ex);
@@ -469,7 +462,7 @@ public class BeanCreator {
 
     public static void log(StringBuilder logBuilder, String message) {
         if (logBuilder != null) {
-            logBuilder.append(SIMPLE_DATE_FORMAT.format(new Date())).append(" ").append(message).append(getLineSeparator());
+            logBuilder.append(getDateFormat().format(new Date())).append(" ").append(message).append(getLineSeparator());
         }
     }
 
@@ -495,37 +488,37 @@ public class BeanCreator {
 
             //ManagedBean
             if (configuration.getManagedBeanLocation() != null) {
-                writeFile(configuration.getManagedBeanLocation(), classSimpleName + getManagedBeanSuffix(configuration) + ".java", mappedBean.getManagedBean(), logBuilder);
+                writeFile(configuration.getManagedBeanLocation(), classSimpleName + getManagedBeanSuffix(configuration) + JAVA_EXTENSION, mappedBean.getManagedBean(), logBuilder);
             }
             //BusinessObject
             if (configuration.getBusinessObjectLocation() != null) {
-                writeFile(configuration.getBusinessObjectLocation(), classSimpleName + getBusinessObjectSuffix(configuration) + ".java", mappedBean.getBusinnesObject(), logBuilder);
+                writeFile(configuration.getBusinessObjectLocation(), classSimpleName + getBusinessObjectSuffix(configuration) + JAVA_EXTENSION, mappedBean.getBusinnesObject(), logBuilder);
 
             }
             //DAO
             if (configuration.getDaoLocation() != null) {
-                writeFile(configuration.getDaoLocation(), classSimpleName + SUFFIX_DAO + ".java", mappedBean.getDao(), logBuilder);
+                writeFile(configuration.getDaoLocation(), classSimpleName + SUFFIX_DAO + JAVA_EXTENSION, mappedBean.getDao(), logBuilder);
 
             }
             //DAOImpl
             if (configuration.getDaoImplLocation() != null) {
-                writeFile(configuration.getDaoImplLocation(), classSimpleName + SUFFIX_DAO_IMPL + ".java", mappedBean.getDaoImpl(), logBuilder);
+                writeFile(configuration.getDaoImplLocation(), classSimpleName + SUFFIX_DAO_IMPL + JAVA_EXTENSION, mappedBean.getDaoImpl(), logBuilder);
             }
 
             //Views
             if (configuration.getViewLocation() != null && !configuration.getViewLocation().trim().isEmpty()) {
                 //View Create
-                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_CREATE + classSimpleName + ".xhtml", mappedBean.getCreateView(), logBuilder);
+                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_CREATE + classSimpleName + XHTML_EXTENSION, mappedBean.getCreateView(), logBuilder);
                 //View Form Create
-                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_FORM_CREATE + classSimpleName + ".xhtml", mappedBean.getFormCreateView(), logBuilder);
+                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_FORM_CREATE + classSimpleName + XHTML_EXTENSION, mappedBean.getFormCreateView(), logBuilder);
                 //View Menu
-                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_MENU + classSimpleName + ".xhtml", mappedBean.getMenu(), logBuilder);
+                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_MENU + classSimpleName + XHTML_EXTENSION, mappedBean.getMenu(), logBuilder);
 
                 //View List
-                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_LIST + classSimpleName + ".xhtml", mappedBean.getListView(), logBuilder);
+                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_LIST + classSimpleName + XHTML_EXTENSION, mappedBean.getListView(), logBuilder);
 
                 //View Detail
-                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_DETAIL + classSimpleName + ".xhtml", mappedBean.getDetail(), logBuilder);
+                writeFile(configuration.getViewLocation() + File.separator + nameLower, PREFFIX_VIEW_DETAIL + classSimpleName + XHTML_EXTENSION, mappedBean.getDetail(), logBuilder);
             }
         }
 
@@ -661,31 +654,31 @@ public class BeanCreator {
             String classSimpleName = mappedBean.getEntityClass().getSimpleName();
             String nameLower = getNameLower(mappedBean.getEntityClass());
             //Managed bean
-            putEntry(out, "mb/" + classSimpleName + getManagedBeanSuffix(configuration) + ".java", mappedBean.getManagedBean());
+            putEntry(out, "mb/" + classSimpleName + getManagedBeanSuffix(configuration) + JAVA_EXTENSION, mappedBean.getManagedBean());
             //BO
-            putEntry(out, "bo/" + classSimpleName + getBusinessObjectSuffix(configuration) + ".java", mappedBean.getBusinnesObject());
+            putEntry(out, "bo/" + classSimpleName + getBusinessObjectSuffix(configuration) + JAVA_EXTENSION, mappedBean.getBusinnesObject());
             //DAO
-            putEntry(out, "dao/" + classSimpleName + SUFFIX_DAO + ".java", mappedBean.getDao());
+            putEntry(out, "dao/" + classSimpleName + SUFFIX_DAO + JAVA_EXTENSION, mappedBean.getDao());
             //DAO Impl
-            putEntry(out, "dao/impl/" + classSimpleName + SUFFIX_DAO_IMPL + ".java", mappedBean.getDaoImpl());
+            putEntry(out, "dao/impl/" + classSimpleName + SUFFIX_DAO_IMPL + JAVA_EXTENSION, mappedBean.getDaoImpl());
             //create
-            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_CREATE + classSimpleName + ".xhtml", mappedBean.getCreateView());
+            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_CREATE + classSimpleName + XHTML_EXTENSION, mappedBean.getCreateView());
             //form
-            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_FORM_CREATE + classSimpleName + ".xhtml", mappedBean.getFormCreateView());
+            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_FORM_CREATE + classSimpleName + XHTML_EXTENSION, mappedBean.getFormCreateView());
             //list
-            putEntry(out, getUrlForList(nameLower, classSimpleName, configuration) + ".xhtml", mappedBean.getListView());
+            putEntry(out, getUrlForList(nameLower, classSimpleName, configuration) + XHTML_EXTENSION, mappedBean.getListView());
             //detail
-            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_DETAIL + classSimpleName + ".xhtml", mappedBean.getDetail());
+            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_DETAIL + classSimpleName + XHTML_EXTENSION, mappedBean.getDetail());
             //menu
-            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_MENU + classSimpleName + ".xhtml", mappedBean.getMenu());
+            putEntry(out, viewPath + nameLower + "/" + PREFFIX_VIEW_MENU + classSimpleName + XHTML_EXTENSION, mappedBean.getMenu());
 
         }
         //template
         putEntry(out, getViewTemplatePath(configuration), viewTemplate);
         //menubar
-        putEntry(out, "menu.xhtml", getMenubar(mappedBeans, getResourceBundle(configuration.getResourceBundle()), configuration));
+        putEntry(out, "menu.xhtml", getMenubar(mappedBeans, getResourceBundle(configuration), configuration));
         //class bean
-        putEntry(out, "mb/Class" + configuration.getManagedBeanSuffix() + ".java", classBean);
+        putEntry(out, "mb/Class" + getManagedBeanSuffix(configuration) + ".java", classBean);
         //i18n
         for (String locale : LOCALES_MAKER) {
             putEntry(out, "messages_" + locale + ".properties", i18n);
@@ -716,11 +709,11 @@ public class BeanCreator {
         return getViewPath(configuration) + nameLower + "/" + PREFFIX_VIEW_LIST + classSimpleName;
     }
 
-    private static String getResourceBundle(String resourceBundle) {
-        if (resourceBundle == null || resourceBundle.trim().isEmpty()) {
+    private static String getResourceBundle(BeanConfiguration configuration) {
+        if (configuration == null || configuration.getResourceBundle() == null || configuration.getResourceBundle().trim().isEmpty()) {
             return DEFAULT_RESOURCE_BUNDLE;
         }
-        return resourceBundle;
+        return configuration.getResourceBundle();
     }
 
     public static String getMenubar(List<MappedBean> mappedBeans, String resourceBundle, BeanConfiguration configuration) {
@@ -732,7 +725,7 @@ public class BeanCreator {
             Template template = BeanCreator.getTemplate("menubar.ftl");
             StringWriter writer = new StringWriter();
             Map attributes = new HashMap();
-            List<MenuModel> menus = new ArrayList<MenuModel>();
+            List<MenuModel> menus = new ArrayList<>();
             for (MappedBean mappedBean : mappedBeans) {
                 String nameLower = StringUtils.getLowerFirstLetter(mappedBean.getEntityClass().getSimpleName());
                 menus.add(new MenuModel("#{" + resourceBundle + "['menu." + nameLower + "']}",
@@ -770,7 +763,7 @@ public class BeanCreator {
     }
 
     public static String getViewTemplatePath(BeanConfiguration configuration) {
-        if (configuration.getTemplate() != null && !configuration.getTemplate().isEmpty()) {
+        if (configuration != null && configuration.getTemplate() != null && !configuration.getTemplate().isEmpty()) {
             return configuration.getTemplate().startsWith("/") ? configuration.getTemplate().substring(1, configuration.getTemplate().length()) : configuration.getTemplate();
         } else {
             return DEFAULT_TEMPLATE;
@@ -790,7 +783,7 @@ public class BeanCreator {
     }
 
     public static List<Field> getFields(Class entity) {
-        List<Field> fields = new ArrayList<Field>();
+        List<Field> fields = new ArrayList<>();
         for (Field field : entity.getDeclaredFields()) {
             if (isSerialVersionUID(field)) {
                 continue;

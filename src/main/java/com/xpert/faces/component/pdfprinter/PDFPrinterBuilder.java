@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +25,7 @@ import org.xml.sax.SAXException;
  */
 public class PDFPrinterBuilder {
 
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
     private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());
 
@@ -125,6 +126,7 @@ public class PDFPrinterBuilder {
 
     public Document getDocument(String content) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException {
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         documentBuilderFactory.setNamespaceAware(false);
         documentBuilderFactory.setValidating(false);
         documentBuilderFactory.setFeature("http://xml.org/sax/features/namespaces", false);

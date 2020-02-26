@@ -39,7 +39,7 @@ public abstract class FindAllBean {
      * @return
      */
     public abstract Map<Class, ClassModel> getClassModel();
-    private Map<Class, List> values = new HashMap<Class, List>();
+    private final Map<Class, List> values = new HashMap<>();
     private boolean reload = false;
     private BaseDAO baseDAO;
 

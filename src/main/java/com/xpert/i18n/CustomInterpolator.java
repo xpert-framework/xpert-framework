@@ -25,7 +25,7 @@ public class CustomInterpolator implements MessageInterpolator {
     protected static String replaceParameters(String message, MessageInterpolator.Context context) {
 
         Matcher matcher = PATTERN.matcher(message);
-        List<String> messageAttributes = new ArrayList<String>();
+        List<String> messageAttributes = new ArrayList<>();
 
         while (matcher.find()) {
             messageAttributes.add(matcher.group());

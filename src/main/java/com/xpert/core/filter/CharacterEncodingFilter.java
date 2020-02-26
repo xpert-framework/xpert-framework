@@ -36,5 +36,6 @@ public class CharacterEncodingFilter implements Filter {
 
     @Override
     public void destroy() {
+        //DO nothing
     }
 }
