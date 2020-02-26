@@ -166,9 +166,12 @@ public class PrimeFacesUtils {
 
             try {
                 Object requestContext = getRequestContextInstance();
+                //acess getApplicationContext()
+                Method methodGetApplicationContext= requestContext.getClass().getDeclaredMethod("getApplicationContext");
+                Object applicationContext = methodGetApplicationContext.invoke(requestContext);
                 //acess getConfig()
-                Method methodGetConfig = requestContext.getClass().getDeclaredMethod("getConfig");
-                Object config = methodGetConfig.invoke(requestContext);
+                Method methodGetConfig = applicationContext.getClass().getDeclaredMethod("getConfig");
+                Object config = methodGetConfig.invoke(applicationContext);
                 //acess getBuildVersion()
                 Method methodGetBuildVersion = config.getClass().getDeclaredMethod("getBuildVersion");
                 String buildVersion = (String) methodGetBuildVersion.invoke(config);
