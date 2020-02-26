@@ -1,6 +1,8 @@
 package com.xpert.faces.component.security;
 
+import com.xpert.security.SecuritySessionManager;
 import javax.faces.component.UIComponentBase;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -31,6 +33,20 @@ public class SecurityArea extends UIComponentBase {
     @Override
     public String getFamily() {
         return COMPONENT_FAMILY;
+    }
+
+    @Override
+    public void processDecodes(FacesContext context) {
+        if (!isRendered()) {
+            return;
+        }
+        if (hasRole(context)) {
+            super.processDecodes(context);
+        }
+    }
+    
+    public boolean hasRole(FacesContext context){
+        return SecuritySessionManager.hasRole(getRolesAllowed(), context);
     }
 
     public String getRolesAllowed() {

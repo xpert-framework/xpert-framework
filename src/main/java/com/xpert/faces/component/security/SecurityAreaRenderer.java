@@ -15,17 +15,12 @@ public class SecurityAreaRenderer extends Renderer {
     @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         SecurityArea securityArea = (SecurityArea) component;
-        if (securityArea.isRendered() && securityArea.getChildCount() > 0) {
-            if (SecuritySessionManager.hasRole(securityArea.getRolesAllowed(), context)) {
-                for (UIComponent child : securityArea.getChildren()) {
-                    if (child.isRendered()) {
-                        child.encodeAll(context);
-                    }
+        if (securityArea.isRendered() && securityArea.getChildCount() > 0 && securityArea.hasRole(context)) {
+            for (UIComponent child : securityArea.getChildren()) {
+                if (child.isRendered()) {
+                    child.encodeAll(context);
                 }
-            }else{
-                securityArea.setRendered(false);
             }
-
         }
     }
 
