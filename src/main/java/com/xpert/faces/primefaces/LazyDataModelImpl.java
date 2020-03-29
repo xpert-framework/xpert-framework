@@ -5,6 +5,7 @@ import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.QueryBuilder;
+import com.xpert.persistence.query.QueryParameter;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
@@ -49,6 +50,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private boolean loadData = true;
     private boolean restorableFilter = false;
     private Map currentFilters;
+    private List<QueryParameter> parameters = new ArrayList<>();
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -271,6 +273,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         List<T> dados = queryBuilder
+                .addParameters(parameters)
                 .orderBy(orderBy)
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
@@ -475,6 +478,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .select(attributes)
                 .add(getCurrentQueryRestrictions())
+                .addParameters(parameters)
                 .join(joinBuilder)
                 .orderBy(orderBy)
                 .debug(debug)
@@ -494,6 +498,26 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             setPageSize(1);
         }
         super.setRowIndex(rowIndex);
+    }
+
+    public void addParameter(QueryParameter parameter) {
+        if (parameter != null) {
+            this.parameters.add(parameter);
+        }
+    }
+
+    public void addParameters(List<QueryParameter> parameters) {
+        if (parameters != null) {
+            this.parameters.addAll(parameters);
+        }
+    }
+
+    public List<QueryParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<QueryParameter> parameters) {
+        this.parameters = parameters;
     }
 
     public BaseDAO<T> getDao() {
