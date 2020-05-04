@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.persistence.*;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
@@ -287,7 +288,7 @@ public class Audit {
 
     public List<AbstractMetadata> getMetadata(Object object, Object persisted, AbstractAuditing auditing) throws Exception {
         //verify null object
-        if(object == null){
+        if (object == null) {
             return null;
         }
         List<Method> methodsGet = getMethods(object);
@@ -327,7 +328,10 @@ public class Audit {
                             }
                         } else {
                             StringBuilder oldValue = new StringBuilder();
-                            if ((!(collectionNew instanceof PersistentBag) && !(collectionNew instanceof PersistentCollection)) || isDelete == true) {
+
+                            boolean collectionInitialized = Hibernate.isInitialized(collectionNew);
+
+                            if (collectionInitialized || (!(collectionNew instanceof PersistentBag) && !(collectionNew instanceof PersistentCollection)) || isDelete == true) {
                                 //diferent size, then add to metadata
                                 if (collectionNew != null && collectionOld != null && collectionNew.size() != collectionOld.size()) {
                                     addMetadata = true;

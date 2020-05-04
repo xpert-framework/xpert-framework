@@ -1,5 +1,6 @@
 package com.xpert.faces.primefaces;
 
+import com.xpert.faces.bean.Xpert;
 import com.xpert.faces.component.restorablefilter.RestorableFilter;
 import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
@@ -11,7 +12,6 @@ import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,8 +30,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
     private boolean debug = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
-    private static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
-    private static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
+   
     private BaseDAO<T> dao;
     private String defaultOrder;
     private String currentOrderBy;
@@ -418,9 +417,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public String getPaginatorTemplate() {
         if (isLazyCountTypeNone()) {
-            return UNKNOW_COUNT_PAGINATOR_TEMPLATE;
+            return Xpert.UNKNOW_COUNT_PAGINATOR_TEMPLATE;
         }
-        return DEFAULT_PAGINATOR_TEMPLATE;
+        return Xpert.DEFAULT_PAGINATOR_TEMPLATE;
     }
 
     public boolean isLazyCountTypeNone() {
@@ -437,9 +436,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      */
     public String getCurrentPageReportTemplate() {
         if (isLazyCountTypeNone()) {
-            return XpertResourceBundle.get("page") + " {currentPage} ";
+            return new Xpert().getUnknowCountCurrentPageReportTemplate();
         }
-        return "{totalRecords} " + XpertResourceBundle.get("records") + " (" + XpertResourceBundle.get("page") + " {currentPage} " + XpertResourceBundle.get("of") + " {totalPages})";
+        return new Xpert().getDefaultCurrentPageReportTemplate();
     }
 
     /**
