@@ -15,7 +15,7 @@
         <cc:attribute name="collapsed" type="java.lang.Boolean" default="true" />
         <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
         <cc:attribute name="panelStyleClass" type="java.lang.String"  />
-        <cc:attribute name="buttonIcon" type="java.lang.String" default="ui-icon-plus" />
+        <cc:attribute name="buttonIcon" type="java.lang.String" default="#{icons.audit}" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -55,7 +55,7 @@
                                         <p:column style="width: 20px;">
                                             <button type="button" title="#{xmsg.detail}" onclick="Xpert.detailAuditTable(this);"
                                                     class="button-detail-audit ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" >
-                                                <span class="ui-button-icon-left ui-icon ui-icon-plus"></span>
+                                                <span class="ui-button-icon-left ui-icon #{icons.plus}"></span>
                                                 <span class="ui-button-text">ui-button</span>
                                             </button>
                                         </p:column>
@@ -110,7 +110,7 @@
                                             <p:column style="width: 20px;">
                                                 <button type="button" title="#{xmsg.detail}" onclick="Xpert.detailAuditTable(this);"
                                                         class="button-detail-audit ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" >
-                                                    <span class="ui-button-icon-left ui-icon ui-icon-plus"></span>
+                                                    <span class="ui-button-icon-left ui-icon #{icons.plus}"></span>
                                                     <span class="ui-button-text">ui-button</span>
                                                 </button>
                                             </p:column>
@@ -163,7 +163,7 @@
                                             <p:column style="width: 20px;">
                                                 <button type="button" title="#{xmsg.detail}" onclick="Xpert.detailAuditTable(this);"
                                                         class="button-detail-audit ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" >
-                                                    <span class="ui-button-icon-left ui-icon ui-icon-plus"></span>
+                                                    <span class="ui-button-icon-left ui-icon #{icons.plus}"></span>
                                                     <span class="ui-button-text">ui-button</span>
                                                 </button>
                                             </p:column>

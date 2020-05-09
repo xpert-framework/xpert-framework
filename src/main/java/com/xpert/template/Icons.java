@@ -21,6 +21,9 @@ public class Icons extends HashMap<String, String> {
     public Icons primeFaces() {
 
         this.audit("pi pi-plus")
+                .refresh("pi pi-refresh")
+                .close("pi pi-times")
+                .plus("pi pi-plus")
                 .create("pi pi-plus")
                 .delete("pi pi-trash")
                 .detail("pi pi-search-plus")
@@ -39,6 +42,9 @@ public class Icons extends HashMap<String, String> {
     public final Icons jqueryUi() {
 
         this.audit("ui-icon-plus")
+                .refresh("pi pi-refresh")
+                .close("pi pi-close")
+                .plus("ui-icon-plus")
                 .create("ui-icon-plus")
                 .delete("ui-icon-trash")
                 .detail("ui-icon-zoomin")
@@ -57,6 +63,9 @@ public class Icons extends HashMap<String, String> {
     public Icons fontAwesome() {
 
         this.audit("fas fa-plus")
+                .refresh("pi pi-refresh")
+                .close("pi pi-times")
+                .plus("fas fa-plus")
                 .create("fas fa-plus")
                 .delete("fa fa-trash")
                 .detail("fas fa-search-plus")
@@ -64,6 +73,39 @@ public class Icons extends HashMap<String, String> {
                 .exportOptions("fas fa-chevron-down")
                 .search("fas fa-search");
 
+        return this;
+    }
+
+    /**
+     * Configure "close" icon
+     *
+     * @param close
+     * @return
+     */
+    public Icons close(String close) {
+        this.put("close", close);
+        return this;
+    }
+
+    /**
+     * Configure "refresh" icon
+     *
+     * @param refresh
+     * @return
+     */
+    public Icons refresh(String refresh) {
+        this.put("refresh", refresh);
+        return this;
+    }
+
+    /**
+     * Configure "plus" icon
+     *
+     * @param plus
+     * @return
+     */
+    public Icons plus(String plus) {
+        this.put("plus", plus);
         return this;
     }
 
@@ -200,6 +242,15 @@ public class Icons extends HashMap<String, String> {
      */
     public String getSearch() {
         return get("search");
+    }
+
+    /**
+     * Return "plus" icon
+     *
+     * @return
+     */
+    public String getPlus() {
+        return get("plus");
     }
 
 }
