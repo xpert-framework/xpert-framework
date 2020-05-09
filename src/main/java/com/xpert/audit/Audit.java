@@ -6,6 +6,7 @@ import com.xpert.audit.model.AuditingType;
 import com.xpert.Configuration;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.utils.EntityUtils;
+import com.xpert.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -429,7 +430,7 @@ public class Audit {
                             }
                         }
                     }
-                    metadata.setField(getMethodName(method));
+                    metadata.setField(ReflectionUtils.getMethodName(method));
                     metadata.setAuditing(auditing);
                     if (addMetadata) {
                         //verify size of metadata
@@ -503,7 +504,7 @@ public class Audit {
         }
         OneToOne oneToOne = method.getAnnotation(OneToOne.class);
         if (oneToOne == null) {
-            Field field = getDeclaredField(method.getDeclaringClass(), getMethodName(method));
+            Field field = getDeclaredField(method.getDeclaringClass(), ReflectionUtils.getMethodName(method));
             if (field != null) {
                 oneToOne = field.getAnnotation(OneToOne.class);
             }
@@ -557,7 +558,7 @@ public class Audit {
                     if (methods[j] != null && !methods[j].isAnnotationPresent(Transient.class)
                             && !methods[j].isAnnotationPresent(NotAudited.class)
                             && !methods[j].isAnnotationPresent(Id.class) && !exclude.contains(methods[j].getName())) {
-                        fieldName = getMethodName(methods[j]);
+                        fieldName = ReflectionUtils.getMethodName(methods[j]);
                     }
                     if (fieldName != null && !fieldName.equals("")) {
                         try {
@@ -581,14 +582,7 @@ public class Audit {
         return methodGet;
     }
 
-    private String getMethodName(Method method) {
-        if (method.getName().startsWith("is")) {
-            return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
-        } else if (method.getName().startsWith("get")) {
-            return method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4);
-        }
-        return null;
-    }
+  
 
     private Field getDeclaredField(Class clazz, String fieldName) throws Exception {
         Field field = clazz.getDeclaredField(fieldName);

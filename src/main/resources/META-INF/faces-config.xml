@@ -123,6 +123,11 @@
         <managed-bean-class>com.xpert.faces.bean.DefaultDataTableExporter</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean eager="true">
+        <managed-bean-name>icons</managed-bean-name>
+        <managed-bean-class>com.xpert.template.Icons</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
     
     <behavior>
         <behavior-id>xpert.faces.DownloadBehavior</behavior-id>

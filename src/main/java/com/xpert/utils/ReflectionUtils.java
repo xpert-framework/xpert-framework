@@ -2,6 +2,9 @@ package com.xpert.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,6 +114,36 @@ public class ReflectionUtils {
     }
 
     /**
+     * Return all Declared fields from class and superclass
+     *
+     * @param type
+     * @return
+     */
+    public static List<Field> getDeclaredFields(Class type) {
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        if (type.getSuperclass() != null && !type.getSuperclass().equals(Object.class)) {
+            fields.addAll(getDeclaredFields(type.getSuperclass()));
+        }
+        return fields;
+    }
+
+    /**
+     * Return all Declared Methods from class and superclass
+     *
+     * @param type
+     * @return
+     */
+    public static List<Method> getDeclaredMethods(Class type) {
+        List<Method> methods = new ArrayList<>();
+        methods.addAll(Arrays.asList(type.getDeclaredMethods()));
+        if (type.getSuperclass() != null && !type.getSuperclass().equals(Object.class)) {
+            methods.addAll(getDeclaredMethods(type.getSuperclass()));
+        }
+        return methods;
+    }
+
+    /**
      * get a declared field from class or super classes
      *
      * @param clazz
@@ -129,5 +162,21 @@ public class ReflectionUtils {
         }
 
         return field;
+    }
+    
+
+    /**
+     * Return method field name
+     *
+     * @param method
+     * @return
+     */
+    public static String getMethodName(Method method) {
+        if (method.getName().startsWith("is")) {
+            return method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3);
+        } else if (method.getName().startsWith("get")) {
+            return method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4);
+        }
+        return null;
     }
 }
