@@ -65,33 +65,33 @@
                     <f:facet name="header">
                         <h:outputText value="${sharp}{xmsg['actions']}"/>
                     </f:facet>
-                    <p:commandButton oncomplete="${entity.widgetVarDetail}.show();"  icon="ui-icon-zoomin" 
+                    <p:commandButton oncomplete="${entity.widgetVarDetail}.show();"  icon="${sharp}{icons.detail}" 
                                      process="@form" update=":formDetail${entity.name}" title="${sharp}{xmsg['detail']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                     </p:commandButton>
                     <#if entity.embeddedId == false && configuration.hideIdInRequest == false >
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
-                        <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
+                        <p:button icon="${sharp}{icons.edit}" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
                             <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                         </p:button>
                     </x:securityArea>
                     <#else>
-                    <p:button icon="ui-icon-pencil" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
+                    <p:button icon="${sharp}{icons.edit}" outcome="create${entity.name}" title="${sharp}{xmsg['edit']}">
                         <f:param name="id" value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" />
                     </p:button>
                     </#if>
                     <#else>
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.create">
-                        <p:commandButton icon="ui-icon-pencil"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
+                        <p:commandButton icon="${sharp}{icons.edit}"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
                                          ajax="false" title="${sharp}{xmsg['edit']}" >
                             <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                             <f:setPropertyActionListener value="create${entity.name}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.outcome}" />
                         </p:commandButton>
                     </x:securityArea>
                     <#else>
-                    <p:commandButton icon="ui-icon-pencil"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
+                    <p:commandButton icon="${sharp}{icons.edit}"  action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.putEntityInRequest}"
                                      ajax="false" title="${sharp}{xmsg['edit']}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}" />
                         <f:setPropertyActionListener value="create${entity.name}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.outcome}" />
@@ -100,14 +100,14 @@
                     </#if>
                     <#if configuration.generatesSecurityArea == true >
                     <x:securityArea rolesAllowed="${entity.nameLower}.delete">
-                        <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
+                        <p:commandButton icon="${sharp}{icons.delete}" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                          action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                             <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
                             <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                         </p:commandButton>
                     </x:securityArea>
                     <#else>
-                    <p:commandButton icon="ui-icon-trash" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
+                    <p:commandButton icon="${sharp}{icons.delete}" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                      action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
                         <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
