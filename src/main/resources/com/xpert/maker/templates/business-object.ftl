@@ -3,6 +3,7 @@ package ${configuration.businessObject};
 import com.xpert.core.crud.AbstractBusinessObject;
 import ${configuration.dao}.${name}DAO;
 import com.xpert.core.validation.UniqueField;
+import com.xpert.core.validation.UniqueFields;
 import com.xpert.core.exception.BusinessException;
 import java.util.List;
 import javax.ejb.EJB;
@@ -26,7 +27,7 @@ public class ${name}${configuration.businessObjectSuffix} extends AbstractBusine
 
     @Override
     public List<UniqueField> getUniqueFields() {
-        return null;
+        return UniqueFields.from(${name}.class);
     }
 
     @Override

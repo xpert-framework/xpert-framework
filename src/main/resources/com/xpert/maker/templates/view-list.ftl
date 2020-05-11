@@ -20,6 +20,7 @@
                          paginatorTemplate="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel.paginatorTemplate}"
                          value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.dataModel}" lazy="true" >
                 <p:column styleClass="uix-datatable-index">
+                    <f:facet name="header">-</f:facet>
                     <h:outputText value="${sharp}{index+1}"/>
                 </p:column>
                 <#list entity.fields as field>

@@ -11,7 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,14 +26,11 @@ import javax.persistence.UniqueConstraint;
  */
 public class UniqueFields extends ArrayList<UniqueField> {
 
-    public static void main(String[] args) {
-        System.out.println(ReflectionUtils.getDeclaredFields(UniqueFields.class));
-    }
+    private static final Logger LOG = Logger.getLogger(UniqueFields.class.getName());
 
     private static final Map<Class, Set<String[]>> UNIQUE_CONSTRAINT_CACHE = new HashMap<>();
 
     public static UniqueFields from(Class entity) {
-
         Set<String[]> cache = UNIQUE_CONSTRAINT_CACHE.get(entity);
         if (cache != null) {
             return from(cache);
@@ -47,26 +49,85 @@ public class UniqueFields extends ArrayList<UniqueField> {
             }
         }
 
+        Map<String, String> fieldColumn = new HashMap<>();
+
         //2 - search for fields
         List<Field> fields = ReflectionUtils.getDeclaredFields(entity);
         for (Field field : fields) {
+            //@Column
             Column column = field.getAnnotation(Column.class);
-            if (column != null && column.unique()) {
-                setUniques.add(new String[]{field.getName()});
+            if (column != null) {
+                fieldColumn.put(column.name(), field.getName());
+                if (column.unique()) {
+                    setUniques.add(new String[]{field.getName()});
+                }
+            }
+            //@JoinColumn
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (joinColumn != null) {
+                fieldColumn.put(joinColumn.name(), field.getName());
+                if (joinColumn.unique()) {
+                    setUniques.add(new String[]{field.getName()});
+                }
+            }
+            //When @ManyToOne and @OneToOne and @JoinColumn is not found, assume "field_id"
+            if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
+                if (joinColumn == null) {
+                    fieldColumn.put(field.getName().toLowerCase() + "_id", field.getName());
+                }
             }
         }
 
         //3 - search for methods
         List<Method> methods = ReflectionUtils.getDeclaredMethods(entity);
         for (Method method : methods) {
+            //@Column
             Column column = method.getAnnotation(Column.class);
-            if (column != null && column.unique()) {
-                setUniques.add(new String[]{ReflectionUtils.getMethodName(method)});
+            String fieldName = ReflectionUtils.getMethodName(method);
+            if (column != null) {
+                fieldColumn.put(column.name(), fieldName);
+                if (column.unique()) {
+                    setUniques.add(new String[]{fieldName});
+                }
+            }
+            //@JoinColumn
+            JoinColumn joinColumn = method.getAnnotation(JoinColumn.class);
+            if (joinColumn != null) {
+                fieldColumn.put(joinColumn.name(), fieldName);
+                if (joinColumn.unique()) {
+                    setUniques.add(new String[]{fieldName});
+                }
+            }
+            //When @ManyToOne and @OneToOne and @JoinColumn is not found, assume "field_id"
+            if (method.isAnnotationPresent(ManyToOne.class) || method.isAnnotationPresent(OneToOne.class)) {
+                if (joinColumn == null) {
+                    fieldColumn.put(fieldName.toLowerCase() + "_id", fieldName);
+                }
             }
         }
+
+        //verify if all fields exists in entity
+        //if field is not found then get by @Colunm
+        for (String[] fieldsName : setUniques) {
+            for (int i = 0; i < fieldsName.length; i++) {
+                Field field = ReflectionUtils.getDeclaredField(entity, fieldsName[i]);
+                if (field == null) {
+                    String fieldByColumnName = fieldColumn.get(fieldsName[i]);
+                    if (fieldByColumnName != null) {
+                        fieldsName[i] = fieldByColumnName;
+                    } else {
+                        LOG.log(Level.WARNING, "Field {0} is not found on class {1} and its used in @UniqueConstraint/@Colunm(unique=true)/@JoinColunm(unique=true). This field will be not used to validade data",
+                                new Object[]{fieldsName[i], entity.getName()});
+                        fieldsName[i] = null;
+                    }
+                }
+            }
+
+        }
+
         //update cache
         UNIQUE_CONSTRAINT_CACHE.put(entity, setUniques);
-        
+
         return from(setUniques);
     }
 

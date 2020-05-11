@@ -34,7 +34,7 @@
                          <#-- Integer/Long -->
                          <#if field.integer == true>
                          <h:outputLabel for="${field.label}" value="<#if field.required == true>* </#if>${sharp}{${resourceBundle}['${entity.nameLower}.${field.label}']}:" />
-                         <p:inputMask id="${field.label}" mask="9?999999999" placeHolder="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="form-control" />
+                         <p:inputMask id="${field.label}" mask="9?999999999" ${configuration.slotCharName}="" value="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity.${field.name}}" styleClass="form-control" />
                          </#if>
                          <#-- Decimal (BigDecimal, Double) -->
                          <#if field.decimal == true>

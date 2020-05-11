@@ -29,7 +29,10 @@ public class Icons extends HashMap<String, String> {
                 .detail("pi pi-search-plus")
                 .edit("pi pi-pencil")
                 .exportOptions("pi pi-chevron-down")
-                .search("pi pi-search");
+                .search("pi pi-search")
+                .excel("pi pi-file-excel")
+                .csv("pi pi-file")
+                .pdf("pi pi-file-pdf");
 
         return this;
     }
@@ -42,15 +45,18 @@ public class Icons extends HashMap<String, String> {
     public final Icons jqueryUi() {
 
         this.audit("ui-icon-plus")
-                .refresh("pi pi-refresh")
-                .close("pi pi-close")
+                .refresh("ui-icon-refresh")
+                .close("ui-icon-close")
                 .plus("ui-icon-plus")
                 .create("ui-icon-plus")
                 .delete("ui-icon-trash")
                 .detail("ui-icon-zoomin")
                 .edit("ui-icon-pencil")
                 .exportOptions("ui-icon-arrowthickstop-1-s")
-                .search("ui-icon-search");
+                .search("ui-icon-search")
+                .excel("ui-icon-triangle-1-e")
+                .csv("ui-icon-triangle-1-e")
+                .pdf("ui-icon-triangle-1-e");
 
         return this;
     }
@@ -70,8 +76,11 @@ public class Icons extends HashMap<String, String> {
                 .delete("fa fa-trash")
                 .detail("fas fa-search-plus")
                 .edit("fas fa-edit")
-                .exportOptions("fas fa-chevron-down")
-                .search("fas fa-search");
+                .exportOptions("fas fa-file-export")
+                .search("fas fa-search")
+                .excel("fas fa-file-excel")
+                .csv("fas fa-file-csv")
+                .pdf("fas fa-file-pdf");
 
         return this;
     }
@@ -187,6 +196,39 @@ public class Icons extends HashMap<String, String> {
     }
 
     /**
+     * Configure "excel" icon
+     *
+     * @param excel
+     * @return
+     */
+    public Icons excel(String excel) {
+        this.put("excel", excel);
+        return this;
+    }
+
+    /**
+     * Configure "csv" icon
+     *
+     * @param csv
+     * @return
+     */
+    public Icons csv(String csv) {
+        this.put("csv", csv);
+        return this;
+    }
+
+    /**
+     * Configure "exportOptions" icon
+     *
+     * @param exportOptions
+     * @return
+     */
+    public Icons pdf(String pdf) {
+        this.put("pdf", pdf);
+        return this;
+    }
+
+    /**
      * Return "audit" icon
      *
      * @return
@@ -251,6 +293,33 @@ public class Icons extends HashMap<String, String> {
      */
     public String getPlus() {
         return get("plus");
+    }
+
+    /**
+     * Return "excel" icon
+     *
+     * @return
+     */
+    public String getExcel() {
+        return get("excel");
+    }
+
+    /**
+     * Return "csv" icon
+     *
+     * @return
+     */
+    public String getCsv() {
+        return get("csv");
+    }
+
+    /**
+     * Return "pdf" icon
+     *
+     * @return
+     */
+    public String getPdf() {
+        return get("pdf");
     }
 
 }
