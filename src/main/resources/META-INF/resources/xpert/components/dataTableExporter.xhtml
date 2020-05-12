@@ -19,10 +19,9 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <span id="#{cc.attrs.clientId}" class="uix-table-export">
-
-            <p:menuButton title="#{xmsg['export']}"  value="#{xmsg['export']}" id="buttonExport" >
-                <p:menuitem value="#{xmsg['currentPage']}" url="#" disabled="true"  />
-                <p:separator />
+            <p:menuButton title="#{xmsg['export']}"  value="#{xmsg['export']}" id="buttonExport">
+                <p:menuitem value="#{xmsg['currentPage']}" url="#" styleClass="uix-export-submenu" />
+                <p:separator/>
                 <p:menuitem value="Excel" immediate="true" ajax="false" icon="#{icons.excel}">
                     <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
                                  skipComponents="javax.faces.component.UIPanel"/>
@@ -37,9 +36,8 @@
                 <p:menuitem value="CSV" immediate="true" ajax="false" icon="#{icons.csv}">
                     <p:dataExporter pageOnly="true" type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                 </p:menuitem>
-                <p:separator />
-                <p:menuitem value="#{xmsg['allPages']}" url="#" disabled="true" />
-                <p:separator />
+                <p:menuitem value="#{xmsg['allPages']}" url="#" styleClass="uix-export-submenu" />
+                <p:separator/>
                 <p:menuitem value="Excel" immediate="true" ajax="false"  icon="#{icons.excel}">
                     <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
                                   skipComponents="javax.faces.component.UIPanel"/>
@@ -54,9 +52,7 @@
                 <p:menuitem value="CSV" immediate="true" ajax="false" icon="#{icons.csv}">
                     <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                 </p:menuitem>
-
             </p:menuButton>
         </span>
-
     </cc:implementation>
 </html>
