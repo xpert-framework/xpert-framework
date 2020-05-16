@@ -30,7 +30,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
     private boolean debug = false;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
-   
+
     private BaseDAO<T> dao;
     private String defaultOrder;
     private String currentOrderBy;
@@ -159,8 +159,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             orderBy = defaultOrder;
         } else {
             OrderByHandler orderByHandler = getOrderByHandler();
+            String orderByFromHandler = null;
             if (orderByHandler != null) {
-                orderBy = orderByHandler.getOrderBy(orderBy);
+                orderByFromHandler = orderByHandler.getOrderBy(orderBy);
+            }
+            if (orderByHandler != null && orderByFromHandler != null && !orderByFromHandler.isEmpty()) {
+                orderBy = orderByFromHandler;
             } else {
                 if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
                     orderBy = joinBuilder.getRootAlias() + "." + orderBy;
