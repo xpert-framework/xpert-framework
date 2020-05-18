@@ -38,7 +38,7 @@
                         <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.for)}" />
                     </h:panelGroup>
 
-                    <h:panelGroup styleClass="panel-detail-auditing #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}" >
+                    <h:panelGroup styleClass="panel-detail-auditing #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}" layout="block">
                         <p:accordionPanel id="accordionDetail" >
                             <p:tab title="#{xmsg.auditingDetail}">
                                 <ui:param name="xpertAuditingDetail" value="#{auditBean.getDetailAuditBean(cc.attrs.for)}"/>
