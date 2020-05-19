@@ -13,6 +13,9 @@ public class Aggregate {
     public static String count(String field) {
         return "COUNT(" + field + ")";
     }
+    public static String countDistinct(String field) {
+        return "COUNT(DISTINCT " + field + ")";
+    }
 
     public static String max(String field) {
         return "MAX(" + field + ")";

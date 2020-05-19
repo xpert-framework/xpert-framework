@@ -48,18 +48,18 @@ public class QueryBuilderUtils {
 
         if (type.equals(QueryType.COUNT)) {
             if (select != null && !select.trim().isEmpty()) {
-                queryString.append("SELECT ").append(count(select));
+                queryString.append("SELECT ").append(count(select)).append(" ");
             } else {
-                queryString.append("SELECT ").append(count("*"));
+                queryString.append("SELECT ").append(count("*")).append(" ");
             }
         } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT ").append(max(select));
+            queryString.append("SELECT ").append(max(select)).append(" ");
         } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT ").append(min(select));
+            queryString.append("SELECT ").append(min(select)).append(" ");
         } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT ").append(sum(select));
+            queryString.append("SELECT ").append(sum(select)).append(" ");
         } else if (type.equals(QueryType.AVG)) {
-            queryString.append("SELECT ").append(avg(select));
+            queryString.append("SELECT ").append(avg(select)).append(" ");
         } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
             queryString.append("SELECT ").append(select).append(" ");
             if (aggregate != null && !aggregate.isEmpty()) {

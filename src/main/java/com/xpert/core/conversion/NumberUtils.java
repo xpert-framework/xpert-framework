@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.util.Collection;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Utility class to manipulate Number.
@@ -86,6 +87,16 @@ public class NumberUtils {
 
         BigDecimal total = BigDecimal.ZERO;
         if (objects == null || objects.isEmpty()) {
+            return total;
+        }
+
+        //verify if is a Array
+        //array position
+        if (StringUtils.isNumeric(field)) {
+            Integer index = Integer.parseInt(field);
+            for (Object[] o : (Collection<Object[]>) objects) {
+                total = total.add(convertToBigDecimal(o[index]));
+            }
             return total;
         }
 
