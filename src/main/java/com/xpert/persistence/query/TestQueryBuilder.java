@@ -1,5 +1,8 @@
 package com.xpert.persistence.query;
 
+import static com.xpert.persistence.query.Aggregate.*;
+import static com.xpert.persistence.query.Restriction.*;
+
 /**
  *
  * @author ayslan
@@ -7,6 +10,7 @@ package com.xpert.persistence.query;
 public class TestQueryBuilder {
 
     public static void printQueryString(Restrictions restrictions) {
+
         QueryBuilder builder = new QueryBuilder(null);
         builder.from(Class.class);
         builder.add(restrictions);
@@ -15,7 +19,31 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryParameters());
     }
 
-    public static void main1(String[] args) {
+    public static void main(String[] args) {
+        QueryBuilder queryBuilder = new QueryBuilder(null);
+        queryBuilder
+                .by("data", "usuario.nome")
+                .aggregate(sum("total"), count("*"))
+                .from(Object.class, "o")
+                .having(greaterThan(count("*"), 0))
+                .having(greaterThan(sum("total"), 100));
+
+        System.out.println(queryBuilder.getQueryString());
+        System.out.println(queryBuilder.getQueryParameters());
+    }
+
+    public static void main55(String[] args) {
+        QueryBuilder queryBuilder = new QueryBuilder(null);
+        queryBuilder.select("data", "usuario.nome", "COUNT(*)")
+                .from(QueryBuilder.class)
+                .groupBy("data", "usuario.nome")
+                .having(Restriction.greaterThan("COUNT(*)", 0))
+                .orderBy("data", "usuario.nome");
+        System.out.println(queryBuilder.getQueryString());
+        System.out.println(queryBuilder.getQueryParameters());
+    }
+
+    public static void main33(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
                 .like("nome1", "TESTE")
@@ -39,7 +67,6 @@ public class TestQueryBuilder {
 //        baseDAO.setEntityClass(String.class);
 //
 //        baseDAO.listAttributes("campo", "valor", "teste, outro, mais");
-
     }
 
     public static void main5(String[] args) {
@@ -61,11 +88,12 @@ public class TestQueryBuilder {
         System.out.println(queryBuilder.getQueryString());
 
     }
-    public static void main(String[] args) {
+
+    public static void main6(String[] args) {
 
         Restriction r = new Restriction("code", 1L);
         r.setCastAs("string");
-        
+
 //        QueryBuilder queryBuilder = new QueryBuilder(null)
 //                .from(Object.class, "o")
 //                .memberOf("Joe", "names")
@@ -73,7 +101,6 @@ public class TestQueryBuilder {
 //                .add(r)
 //                .innerJoin("outro a")
 //                .debug();
-        
         QueryBuilder queryBuilder = new QueryBuilder(null)
                 .from(Object.class, "o")
                 .isNotNull("name")
@@ -85,8 +112,7 @@ public class TestQueryBuilder {
                 .add("name7", RestrictionType.NOT_NULL, false)
                 .add("name8", RestrictionType.NOT_EMPTY, false)
                 .debug();
-        
-        
+
         queryBuilder.getResultList();
 
         System.out.println(queryBuilder.getQueryString());

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A JPQL/HQL based builder. This class is a collection of utility methods to
@@ -27,7 +29,9 @@ import org.apache.commons.beanutils.PropertyUtils;
 public class QueryBuilder {
 
     private String orderBy;
+    private String groupBy;
     private String attributes;
+    private String aggregate;
     /**
      * to be used in SUM, MAX, MIN, COUNT
      */
@@ -36,7 +40,9 @@ public class QueryBuilder {
     private String alias;
     private final JoinBuilder joins = new JoinBuilder();
     private final List<Restriction> restrictions = new ArrayList<>();
+    private final List<Restriction> having = new ArrayList<>();
     private List<Restriction> normalizedRestrictions = new ArrayList<>();
+    private List<Restriction> normalizedHaving = new ArrayList<>();
     private QueryType type;
     private final EntityManager entityManager;
     private Integer maxResults;
@@ -81,8 +87,47 @@ public class QueryBuilder {
      * field2"
      * @return Current QueryBuilder
      */
-    public QueryBuilder orderBy(String order) {
-        this.orderBy = order;
+    public QueryBuilder orderBy(String... order) {
+        if (order == null) {
+            this.orderBy = null;
+        } else {
+            this.orderBy = StringUtils.join(order, ", ");
+        }
+        return this;
+    }
+
+    /**
+     * Set groupBy , attributes and orderBy to make a clenar query
+     *
+     * @param by
+     * @return
+     */
+    public QueryBuilder by(String... by) {
+        if (by == null) {
+            this.groupBy = null;
+            this.attributes = null;
+            this.orderBy = null;
+        } else {
+            this.groupBy = StringUtils.join(by, ", ");
+            this.attributes = StringUtils.join(by, ", ");
+            this.orderBy = StringUtils.join(by, ", ");
+        }
+        return this;
+    }
+
+    /**
+     * Defines the query "order by"
+     *
+     * @param group A String with the grou by clause. It can be used multiple
+     * fields field2"
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder groupBy(String... group) {
+        if (group == null) {
+            this.groupBy = null;
+        } else {
+            this.groupBy = StringUtils.join(group, ", ");
+        }
         return this;
     }
 
@@ -94,17 +139,54 @@ public class QueryBuilder {
      * field2"
      * @return Current QueryBuilder
      */
-    public QueryBuilder orderBy(List<String> order) {
-        if (order != null) {
-            StringBuilder builder = new StringBuilder();
-            for (String s : order) {
-                if (builder.length() > 0) {
-                    builder.append(",");
-                }
-                builder.append(s);
-            }
-            this.orderBy = builder.toString();
+    public QueryBuilder orderBy(Collection<String> order) {
+        if (order == null) {
+            this.orderBy = null;
+        } else {
+            this.orderBy = StringUtils.join(order, ", ");
         }
+        return this;
+    }
+
+    /**
+     * Defines the query "order by"
+     *
+     * @param group A String with the grou by clause. It can be used multiple
+     * fields field2"
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder groupBy(Collection<String> group) {
+        if (group == null) {
+            this.groupBy = null;
+        } else {
+            this.groupBy = StringUtils.join(group, ", ");
+        }
+        return this;
+    }
+
+    /**
+     * Add restrictions to HAVING CLAUSE
+     *
+     * @param restriction
+     * @return
+     */
+    public QueryBuilder having(Restriction restriction) {
+        if (restriction != null) {
+            this.having.add(restriction);
+        }
+        return this;
+    }
+
+    /**
+     * Add restrictions to HAVING CLAUSE
+     *
+     * @param property
+     * @param restrictionType
+     * @param value
+     * @return
+     */
+    public QueryBuilder having(String property, RestrictionType restrictionType, Object value) {
+        this.having.add(new Restriction(property, restrictionType, value));
         return this;
     }
 
@@ -129,54 +211,9 @@ public class QueryBuilder {
         return this;
     }
 
-    /**
-     * Returns a string based on QueryType.
-     *
-     * <ul>
-     * <li>MAX returns a SELECT MAX(field)</li>
-     * <li>MIN returns a SELECT MIN(field)</li>
-     * <li>AVG returns a SELECT AVG(field)</li>
-     * <li>COUNT returns a SELECT COUNT(field)/COUNT(*)</li>
-     * <li>SELECT type returns "SELECT <code>select</code>" if
-     * <code>select</code> is emptu then returns a empty String</li>
-     * </ul>
-     *
-     * @param type
-     * @param select
-     * @return
-     */
-    public String getQuerySelectClausule(QueryType type, String select) {
-
-        if (type == null) {
-            return "";
-        }
-
-        StringBuilder queryString = new StringBuilder();
-
-        if (type.equals(QueryType.COUNT)) {
-            if (select != null && !select.trim().isEmpty()) {
-                queryString.append("SELECT COUNT(").append(select).append(") ");
-            } else {
-                queryString.append("SELECT COUNT(*) ");
-            }
-        } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT MAX(").append(select).append(") ");
-        } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT MIN(").append(select).append(") ");
-        } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT SUM(").append(select).append(") ");
-        } else if (type.equals(QueryType.AVG)) {
-            queryString.append("SELECT AVG(").append(select).append(") ");
-        } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
-            queryString.append("SELECT ").append(select).append(" ");
-        }
-
-        return queryString.toString();
-
-    }
-
     private void loadNormalizedRestrictions() {
         normalizedRestrictions = RestrictionsNormalizer.getNormalizedRestrictions(from, restrictions, alias);
+        normalizedHaving = RestrictionsNormalizer.getNormalizedRestrictions(from, having, null);
     }
 
     /**
@@ -313,9 +350,9 @@ public class QueryBuilder {
         }
 
         if (type.equals(QueryType.SELECT) || type.equals(QueryType.COUNT)) {
-            queryString.append(getQuerySelectClausule(type, attributes));
+            queryString.append(QueryBuilderUtils.getQuerySelectClausule(type, attributes, aggregate));
         } else {
-            queryString.append(getQuerySelectClausule(type, attribute));
+            queryString.append(QueryBuilderUtils.getQuerySelectClausule(type, attribute, aggregate));
         }
 
         queryString.append("FROM ").append(from.getName()).append(" ");
@@ -325,7 +362,7 @@ public class QueryBuilder {
         }
 
         if (joins != null && joins.size() > 0) {
-            queryString.append(joins.getJoinString(type)).append(" ");
+            queryString.append(joins.getJoinString(type));
         }
 
         //normalize
@@ -333,52 +370,39 @@ public class QueryBuilder {
 
         //where clausule
         if (normalizedRestrictions != null && !normalizedRestrictions.isEmpty()) {
-            queryString.append("WHERE ");
+            queryString.append(" WHERE ");
         }
-
         //restrictions
         queryString.append(getQueryStringFromRestrictions(normalizedRestrictions));
 
+        //having clause
+        if (normalizedHaving != null && !normalizedHaving.isEmpty()) {
+            queryString.append(" HAVING ");
+        }
+        //restrictions having
+        queryString.append(getQueryStringFromRestrictions(normalizedHaving));
+
+        //group by
+        if (groupBy != null && !groupBy.trim().isEmpty()) {
+            queryString.append(" GROUP BY ").append(groupBy);
+        }
+
         //order by
         if (type.equals(QueryType.SELECT) && orderBy != null && !orderBy.trim().isEmpty()) {
-            queryString.append(" ORDER BY ").append(orderBy).toString();
+            queryString.append(" ORDER BY ").append(orderBy);
         }
 
         return queryString.toString();
     }
 
     public List<QueryParameter> getQueryParameters() {
-        int position = 1;
+
         List<QueryParameter> queryParameters = new ArrayList<>();
-        for (Restriction re : normalizedRestrictions) {
-            //add custom parameters
-            if (re.getParameters() != null) {
-                queryParameters.addAll(re.getParameters());
-            }
-            if (re.getRestrictionType().isIgnoreParameter()) {
-                continue;
-            }
-            if (re.getValue() != null) {
-                QueryParameter parameter = null;
-                if (re.getRestrictionType().equals(RestrictionType.LIKE)) {
-                    if (re.getLikeType() == null || re.getLikeType().equals(LikeType.BOTH)) {
-                        parameter = new QueryParameter(position, "%" + re.getValue() + "%");
-                    } else if (re.getLikeType().equals(LikeType.BEGIN)) {
-                        parameter = new QueryParameter(position, re.getValue() + "%");
-                    } else if (re.getLikeType().equals(LikeType.END)) {
-                        parameter = new QueryParameter(position, "%" + re.getValue());
-                    }
-                } else {
-                    if (re.getTemporalType() != null && (re.getValue() instanceof Date || re.getValue() instanceof Calendar)) {
-                        parameter = new QueryParameter(position, re.getValue(), re.getTemporalType());
-                    } else {
-                        parameter = new QueryParameter(position, re.getValue());
-                    }
-                }
-                queryParameters.add(parameter);
-                position++;
-            }
-        }
+
+        //WHERE
+        queryParameters.addAll(QueryBuilderUtils.getQueryParameters(this.normalizedRestrictions));
+        //HAVING
+        queryParameters.addAll(QueryBuilderUtils.getQueryParameters(this.normalizedHaving));
 
         //add Paramters
         if (this.parameters != null && !this.parameters.isEmpty()) {
@@ -393,8 +417,21 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder select(String attributes) {
-        this.attributes = attributes;
+    public QueryBuilder select(String... attributes) {
+        if (attributes == null) {
+            this.attributes = null;
+        } else {
+            this.attributes = StringUtils.join(attributes, ", ");
+        }
+        return this;
+    }
+
+    public QueryBuilder aggregate(String... aggregate) {
+        if (aggregate == null) {
+            this.aggregate = null;
+        } else {
+            this.aggregate = StringUtils.join(aggregate, ", ");
+        }
         return this;
     }
 
@@ -630,62 +667,9 @@ public class QueryBuilder {
         type = QueryType.SELECT;
         List list = this.createQuery().getResultList();
         if (list != null && attributes != null && !attributes.trim().isEmpty() && expectedType != null) {
-            return getNormalizedResultList(attributes, list, expectedType);
+            return QueryBuilderUtils.getNormalizedResultList(attributes, list, expectedType);
         }
         return list;
-    }
-
-    /**
-     * @param <T> Result Type
-     * @param attributes Attributes to select
-     * @param resultList The Query Result List
-     * @param clazz The expected type in result
-     * @return
-     */
-    public static <T> List<T> getNormalizedResultList(String attributes, List resultList, Class<T> clazz) {
-        if (attributes != null && attributes.split(",").length > 0) {
-            List result = new ArrayList();
-            String[] fields = attributes.split(",");
-            for (Object object : resultList) {
-                try {
-                    Object entity = clazz.newInstance();
-                    for (int i = 0; i < fields.length; i++) {
-                        String property = fields[i].trim().replaceAll("/s", "");
-                        initializeCascade(property, entity);
-                        if (object instanceof Object[]) {
-                            PropertyUtils.setProperty(entity, property, ((Object[]) object)[i]);
-                        } else {
-                            PropertyUtils.setProperty(entity, property, object);
-                        }
-                    }
-                    result.add(entity);
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            return result;
-        }
-        return resultList;
-    }
-
-    public static void initializeCascade(String property, Object bean) {
-        int index = property.indexOf(".");
-        if (index > -1) {
-            try {
-                String field = property.substring(0, property.indexOf("."));
-                Object propertyToInitialize = PropertyUtils.getProperty(bean, field);
-                if (propertyToInitialize == null) {
-                    propertyToInitialize = PropertyUtils.getPropertyDescriptor(bean, field).getPropertyType().newInstance();
-                    PropertyUtils.setProperty(bean, field, propertyToInitialize);
-                }
-                String afterField = property.substring(index + 1, property.length());
-                if (afterField != null && afterField.indexOf(".") > -1) {
-                    initializeCascade(afterField, propertyToInitialize);
-                }
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     public static Query createNativeQueryFromFile(EntityManager entityManager, String queryPath, Class daoClass) {
@@ -699,7 +683,7 @@ public class QueryBuilder {
             throw new QueryFileNotFoundException("Query File not found: " + queryPath + " in package: " + daoClass.getPackage());
         }
         try {
-            String queryString = readInputStreamAsString(inputStream);
+            String queryString = QueryBuilderUtils.readInputStreamAsString(inputStream);
             if (resultClass != null) {
                 return entityManager.createNativeQuery(queryString, resultClass);
             } else {
@@ -709,22 +693,6 @@ public class QueryBuilder {
             throw new RuntimeException(ex);
         }
 
-    }
-
-    public static String readInputStreamAsString(InputStream inputStream)
-            throws IOException {
-
-        BufferedInputStream bis = new BufferedInputStream(inputStream);
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        int result = bis.read();
-        while (result != -1) {
-            byte b = (byte) result;
-            buf.write(b);
-            result = bis.read();
-        }
-        bis.close();
-        buf.close();
-        return buf.toString();
     }
 
     public List<Restriction> getNormalizedRestrictions() {
