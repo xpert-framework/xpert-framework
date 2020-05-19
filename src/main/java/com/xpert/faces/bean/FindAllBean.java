@@ -143,15 +143,22 @@ public abstract class FindAllBean {
     }
 
     public SelectItem[] getSelect(Class clazz) {
+        return getSelect(clazz, true);
+    }
+
+    public SelectItem[] getSelect(Class clazz, boolean emptyOption) {
 
         List objects = get(clazz);
         ClassModel classModel = getClassModel().get(clazz);
-        SelectItem[] options = new SelectItem[objects.size() + 1];
+        SelectItem[] options = new SelectItem[objects.size() + (emptyOption ? 1 : 0)];
 
-        Integer count = 1;
+        Integer count = 0;
         boolean isEnum = clazz.isEnum();
         try {
-            options[0] = new SelectItem("", "");
+            if (emptyOption) {
+                options[count] = new SelectItem("", "");
+                count++;
+            }
             for (Object bean : objects) {
                 String itemLabel = getItemLabel(classModel, bean);
                 if (!isEnum) {

@@ -45,6 +45,7 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .faces-modal-messages{max-height: 90%; max-width: 90%; overflow-y: auto !important;}
 .uix-table-actions{text-align: right;  margin-bottom: 3px; margin-top: 3px;}
 .uix-audit-delete{text-align: center; margin-top: 10px;}
+.panel-detail-auditing{margin-top: 10px;}
 .uix-confirm-dialog{max-width: 90%; max-height: 90%;}
 .uix-confirm-dialog .ui-dialog-content{max-height: 80% !important;}
 .uix-confirm-dialog .dialog-confirm-message{max-height: 300px;}

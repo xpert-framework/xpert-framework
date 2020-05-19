@@ -70,9 +70,7 @@ public class QueryParameter {
 
     @Override
     public String toString() {
-        return "QueryParameter{" + "position=" + position + ", value=" + value + ", temporalType=" + temporalType + '}';
+        return "QueryParameter{" + "position=" + position + ", property=" + property + ", value=" + value + ", temporalType=" + temporalType + '}';
     }
-    
-    
-    
+
 }
