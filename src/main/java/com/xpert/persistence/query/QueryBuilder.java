@@ -97,7 +97,7 @@ public class QueryBuilder {
     }
 
     /**
-     * Set groupBy , attributes and orderBy to make a clenar query
+     * Set groupBy , attributes and orderBy to make a cleaner query
      *
      * @param by
      * @return
