@@ -1,6 +1,6 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Aggregate.*;
+import static com.xpert.persistence.query.Sql.*;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,10 +60,22 @@ public class QueryBuilderUtils {
             queryString.append("SELECT ").append(sum(select)).append(" ");
         } else if (type.equals(QueryType.AVG)) {
             queryString.append("SELECT ").append(avg(select)).append(" ");
-        } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
-            queryString.append("SELECT ").append(select).append(" ");
+        } else if (type.equals(QueryType.SELECT)) {
+
+            boolean hasSelect = select != null && !select.isEmpty();
+            boolean hasAggregate = aggregate != null && !aggregate.isEmpty();
+
+            if (hasSelect || hasAggregate) {
+                queryString.append("SELECT ");
+            }
+            if (hasSelect) {
+                queryString.append(select).append(" ");
+            }
+            if (hasSelect && hasAggregate) {
+                queryString.append(", ");
+            }
             if (aggregate != null && !aggregate.isEmpty()) {
-                queryString.append(", ").append(aggregate).append(" ");
+                queryString.append(aggregate).append(" ");
             }
         }
 

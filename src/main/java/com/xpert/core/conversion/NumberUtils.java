@@ -141,10 +141,19 @@ public class NumberUtils {
         if (field != null && !field.trim().isEmpty()) {
             for (Object o : objects) {
                 Object value = null;
-                try {
-                    value = PropertyUtils.getProperty(o, field);
-                } catch (NestedNullException ex) {
-                    //nested null, do nothing
+
+                //verify if is a Array
+                //array position
+                if (StringUtils.isNumeric(field)) {
+                    Integer index = Integer.parseInt(field);
+                    value = ((Object[]) o)[index];
+                } else {
+
+                    try {
+                        value = PropertyUtils.getProperty(o, field);
+                    } catch (NestedNullException ex) {
+                        //nested null, do nothing
+                    }
                 }
                 if (value != null) {
                     count++;
@@ -156,7 +165,7 @@ public class NumberUtils {
         if (count == 0) {
             return BigDecimal.ZERO;
         }
-
+        
         return total.divide(new BigDecimal(count), 2, RoundingMode.HALF_UP);
 
     }

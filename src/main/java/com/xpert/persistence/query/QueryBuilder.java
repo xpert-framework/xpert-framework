@@ -1,8 +1,7 @@
 package com.xpert.persistence.query;
 
 import com.xpert.persistence.exception.QueryFileNotFoundException;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+import com.xpert.persistence.utils.EntityUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -26,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author ayslan
  */
-public class QueryBuilder {
+public class QueryBuilder implements Cloneable {
 
     private String orderBy;
     private String groupBy;
@@ -37,7 +35,10 @@ public class QueryBuilder {
      */
     private String attribute;
     private Class from;
+    private QueryBuilder fromNestedQuery;
+    private String fromString;
     private String alias;
+    private boolean nativeQuery = false;
     private final JoinBuilder joins = new JoinBuilder();
     private final List<Restriction> restrictions = new ArrayList<>();
     private final List<Restriction> having = new ArrayList<>();
@@ -51,12 +52,48 @@ public class QueryBuilder {
     private boolean debug;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
+    public QueryBuilder() {
+        this.entityManager = null;
+    }
+
     public QueryBuilder(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    public QueryBuilder nativeQuery(boolean nativeQuery) {
+        this.nativeQuery = nativeQuery;
+        return this;
+    }
+
     /**
-     * Defines the "from" clusule
+     * Defines the "from" clausule. This method is used to nested query
+     *
+     * @param from QueryBuilder to be used in select
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder from(QueryBuilder from) {
+        return from(from, null);
+    }
+
+    /**
+     * Defines the "from" clausule. This method is used to nested query
+     *
+     * @param from QueryBuilder to be used in select
+     * @param alias
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder from(QueryBuilder from, String alias) {
+        this.fromNestedQuery = from;
+        this.alias = alias;
+        this.fromNestedQuery.nativeQuery(this.nativeQuery);
+        //add restrictions 
+        this.fromNestedQuery.loadNormalizedRestrictions();
+        this.parameters.addAll(from.getQueryParameters());
+        return this;
+    }
+
+    /**
+     * Defines the "from" clausule
      *
      * @param from Class to be used in select
      * @return Current QueryBuilder
@@ -75,6 +112,30 @@ public class QueryBuilder {
      */
     public QueryBuilder from(Class from, String alias) {
         this.from = from;
+        this.alias = alias;
+        return this;
+    }
+
+    /**
+     * Defines the "from" clausule
+     *
+     * @param from Table name to be used in select
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder from(String from) {
+        this.fromString = from;
+        return this;
+    }
+
+    /**
+     * Defines the "from" clusule
+     *
+     * @param from Table name to be used in select
+     * @param alias An alias for the entity
+     * @return Current QueryBuilder
+     */
+    public QueryBuilder from(String from, String alias) {
+        this.fromString = from;
         this.alias = alias;
         return this;
     }
@@ -104,13 +165,29 @@ public class QueryBuilder {
      */
     public QueryBuilder by(String... by) {
         if (by == null) {
-            this.groupBy = null;
             this.attributes = null;
+            this.groupBy = null;
             this.orderBy = null;
         } else {
-            this.groupBy = StringUtils.join(by, ", ");
             this.attributes = StringUtils.join(by, ", ");
-            this.orderBy = StringUtils.join(by, ", ");
+
+            //remove alias "AS"
+            StringBuilder byClauseWithoutAlias = new StringBuilder();
+            for (String byPart : by) {
+                //add comma in second iteration
+                if (byClauseWithoutAlias.length() > 0) {
+                    byClauseWithoutAlias.append(", ");
+                }
+                int indexOfAlias = byPart.indexOf(" AS ");
+                if (indexOfAlias > -1) {
+                    byClauseWithoutAlias.append(byPart.substring(0, indexOfAlias));
+                } else {
+                    byClauseWithoutAlias.append(byPart);
+                }
+            }
+
+            this.groupBy = byClauseWithoutAlias.toString();
+            this.orderBy = byClauseWithoutAlias.toString();
         }
         return this;
     }
@@ -355,7 +432,23 @@ public class QueryBuilder {
             queryString.append(QueryBuilderUtils.getQuerySelectClausule(type, attribute, aggregate));
         }
 
-        queryString.append("FROM ").append(from.getName()).append(" ");
+        queryString.append("FROM ");
+
+        //1 - Nested Query BUilder
+        if (fromNestedQuery != null) {
+            queryString.append("(").append(fromNestedQuery.getQueryString()).append(") ");
+        } else if (fromString != null) {
+            //2 - From String
+            queryString.append(fromString).append(" ");
+        } else {
+            //3 - From Class
+            if (nativeQuery) {
+                queryString.append(EntityUtils.getEntityTableName(from, true)).append(" ");
+            } else {
+                queryString.append(from.getName()).append(" ");
+            }
+
+        }
 
         if (alias != null) {
             queryString.append(alias).append(" ");
@@ -574,8 +667,14 @@ public class QueryBuilder {
             logger.log(Level.INFO, "Parameters: Max Results: {0}, First result: {1}, Order By: {2}, Restrictions: {3}, Joins: {4}", new Object[]{maxResults, firstResult, orderBy, normalizedRestrictions, joins});
         }
 
-        Query query = entityManager.createQuery(queryString);
+        Query query;
 
+        if (nativeQuery == true) {
+            query = entityManager.createNativeQuery(queryString);
+        } else {
+            query = entityManager.createQuery(queryString);
+
+        }
         List<QueryParameter> parameters = getQueryParameters();
         for (QueryParameter parameter : parameters) {
             //dates (Date and Calendar)

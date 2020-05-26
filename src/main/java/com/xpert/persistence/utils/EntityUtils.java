@@ -108,7 +108,7 @@ public class EntityUtils {
             }
         }
 
-        if (nameWithSchema == true && schema != null) {
+        if (nameWithSchema == true && schema != null && !schema.isEmpty()) {
             name = schema + "." + name;
         }
 
