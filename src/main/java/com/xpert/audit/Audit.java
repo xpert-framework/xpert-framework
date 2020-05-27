@@ -5,12 +5,13 @@ import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.Configuration;
 import com.xpert.faces.utils.FacesUtils;
+import com.xpert.i18n.I18N;
 import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class Audit {
     private static final Map<Method, Boolean> MAPPED_ONE_TO_ONE_CASCADE_ALL = new HashMap<>();
     private final EntityManager entityManager;
     private final EntityManager auditEntityManager;
-    private final SimpleDateFormat AUDIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, I18N.getLocale());
 
     public Audit(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -526,9 +527,9 @@ public class Audit {
 
     private String getToString(Object object) {
         if (object instanceof Date) {
-            return AUDIT_DATE_FORMAT.format(object);
+            return dateFormat.format(object);
         } else if (object instanceof Calendar) {
-            return AUDIT_DATE_FORMAT.format(((Calendar) object).getTime());
+            return dateFormat.format(((Calendar) object).getTime());
         } else {
             return object.toString();
         }

@@ -23,7 +23,7 @@ public class I18N {
         }
         return ResourceBundleUtils.get(key, Configuration.getBundleName(), Thread.currentThread().getContextClassLoader(), (Object[]) null);
     }
-    
+
     public static String get(String key, Object... parameters) {
         if (Configuration.getBundleName() == null) {
             return key;
@@ -35,11 +35,16 @@ public class I18N {
         return ((SimpleDateFormat) DateFormat.getDateInstance(SimpleDateFormat.SHORT, getLocale())).toPattern();
     }
 
+    public static String getAttributeName(String classSimpleName, String fieldName) {
+        String property = StringUtils.getLowerFirstLetter(classSimpleName) + "." + fieldName;
+        return I18N.get(property);
+    }
+
     /**
      *
      * @param clazz
      * @param fieldName
-     * 
+     *
      * @return the attribute name from configured resourcebundle the message
      * for: simple name (FirstLetter lowercase) + "." + property. Example: Class
      * Person and attribute name - person.name
