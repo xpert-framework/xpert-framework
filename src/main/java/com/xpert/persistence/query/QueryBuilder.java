@@ -468,17 +468,17 @@ public class QueryBuilder implements Cloneable {
         //restrictions
         queryString.append(getQueryStringFromRestrictions(normalizedRestrictions));
 
+        //group by
+        if (groupBy != null && !groupBy.trim().isEmpty()) {
+            queryString.append(" GROUP BY ").append(groupBy);
+        }
+
         //having clause
         if (normalizedHaving != null && !normalizedHaving.isEmpty()) {
             queryString.append(" HAVING ");
         }
         //restrictions having
         queryString.append(getQueryStringFromRestrictions(normalizedHaving));
-
-        //group by
-        if (groupBy != null && !groupBy.trim().isEmpty()) {
-            queryString.append(" GROUP BY ").append(groupBy);
-        }
 
         //order by
         if (type.equals(QueryType.SELECT) && orderBy != null && !orderBy.trim().isEmpty()) {
@@ -1444,6 +1444,11 @@ public class QueryBuilder implements Cloneable {
         return this;
     }
 
+    public QueryBuilder leftJoin(String join, String alias, String on) {
+        joins.leftJoin(join, alias, on);
+        return this;
+    }
+
     public QueryBuilder leftJoinFetch(String join) {
         joins.leftJoinFetch(join);
         return this;
@@ -1461,6 +1466,11 @@ public class QueryBuilder implements Cloneable {
 
     public QueryBuilder innerJoin(String join, String alias) {
         joins.innerJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder innerJoin(String join, String alias, String on) {
+        joins.innerJoin(join, alias, on);
         return this;
     }
 
@@ -1484,6 +1494,11 @@ public class QueryBuilder implements Cloneable {
         return this;
     }
 
+    public QueryBuilder join(String join, String alias, String on) {
+        joins.join(join, alias);
+        return this;
+    }
+
     public QueryBuilder joinFetch(String join) {
         joins.join(join);
         return this;
@@ -1501,6 +1516,11 @@ public class QueryBuilder implements Cloneable {
 
     public QueryBuilder rightJoin(String join, String alias) {
         joins.rightJoin(join, alias);
+        return this;
+    }
+
+    public QueryBuilder rightJoin(String join, String alias, String on) {
+        joins.rightJoin(join, alias, on);
         return this;
     }
 

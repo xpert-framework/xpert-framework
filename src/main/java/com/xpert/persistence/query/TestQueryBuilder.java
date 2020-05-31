@@ -19,7 +19,7 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryParameters());
     }
 
-    public static void main(String[] args) {
+    public static void mainff(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null);
         queryBuilder
                 .by("horario")
@@ -50,7 +50,7 @@ public class TestQueryBuilder {
                                 .by(select("CAST(dataHora as date)", "data"), select("EXTRACT(HOUR FROM dataHora)", "horario"))
                                 .aggregate(count("*", "total"))
                                 .from(Object.class),
-                         "tab"
+                        "tab"
                 );
 
         System.out.println(queryBuilder.getQueryString());
@@ -70,12 +70,13 @@ public class TestQueryBuilder {
         System.out.println(queryBuilder.getQueryParameters());
     }
 
-    public static void main55(String[] args) {
+    public static void main(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null);
         queryBuilder.select("data", "usuario.nome", "COUNT(*)")
-                .from(QueryBuilder.class)
+                .from(Object.class, "o1")
+                .leftJoin("object2", "o2", "o1.id = o2.id")
                 .groupBy("data", "usuario.nome")
-                .having(Restriction.greaterThan("COUNT(*)", 0))
+                .having(Restriction.greaterThan(count("*"), 0))
                 .orderBy("data", "usuario.nome");
         System.out.println(queryBuilder.getQueryString());
         System.out.println(queryBuilder.getQueryParameters());
