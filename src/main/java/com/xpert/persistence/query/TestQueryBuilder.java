@@ -1,6 +1,6 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Aggregate.*;
+import static com.xpert.persistence.query.Sql.*;
 import static com.xpert.persistence.query.Restriction.*;
 
 /**
@@ -19,11 +19,49 @@ public class TestQueryBuilder {
         System.out.println(builder.getQueryParameters());
     }
 
-    public static void main(String[] args) {
+    public static void mainff(String[] args) {
+        QueryBuilder queryBuilder = new QueryBuilder(null);
+        queryBuilder
+                .by("horario")
+                .aggregate(avg("total"))
+                .from(
+                        new QueryBuilder()
+                                .by(
+                                        select("cast(data as date)", "data"),
+                                        select("HOUR(data)", "horario")
+                                )
+                                .aggregate(
+                                        count("*", "total")
+                                )
+                                .from(Object.class, "o")
+                );
+
+        System.out.println(queryBuilder.getQueryString());
+        System.out.println(queryBuilder.getQueryParameters());
+    }
+
+    public static void mainYYY(String[] args) {
+        QueryBuilder queryBuilder = new QueryBuilder(null);
+        queryBuilder.nativeQuery(true)
+                .by("horario")
+                .aggregate(avg("total"))
+                .from(
+                        new QueryBuilder()
+                                .by(select("CAST(dataHora as date)", "data"), select("EXTRACT(HOUR FROM dataHora)", "horario"))
+                                .aggregate(count("*", "total"))
+                                .from(Object.class),
+                        "tab"
+                );
+
+        System.out.println(queryBuilder.getQueryString());
+        System.out.println(queryBuilder.getQueryParameters());
+    }
+
+    public static void mainXX(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null);
         queryBuilder
                 .by("data", "usuario.nome")
-                .aggregate(sum("total"), count("*"))
+                .aggregate(sum("total", "total"), count("*", "count"))
                 .from(Object.class, "o")
                 .having(greaterThan(count("*"), 0))
                 .having(greaterThan(sum("total"), 100));
@@ -32,12 +70,13 @@ public class TestQueryBuilder {
         System.out.println(queryBuilder.getQueryParameters());
     }
 
-    public static void main55(String[] args) {
+    public static void main(String[] args) {
         QueryBuilder queryBuilder = new QueryBuilder(null);
         queryBuilder.select("data", "usuario.nome", "COUNT(*)")
-                .from(QueryBuilder.class)
+                .from(Object.class, "o1")
+                .leftJoin("object2", "o2", "o1.id = o2.id")
                 .groupBy("data", "usuario.nome")
-                .having(Restriction.greaterThan("COUNT(*)", 0))
+                .having(Restriction.greaterThan(count("*"), 0))
                 .orderBy("data", "usuario.nome");
         System.out.println(queryBuilder.getQueryString());
         System.out.println(queryBuilder.getQueryParameters());

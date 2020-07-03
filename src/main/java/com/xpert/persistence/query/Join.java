@@ -8,6 +8,10 @@ public class Join {
 
     private String property;
     private String alias;
+    /**
+     * ON CLAUSE must be used in NativeQuery
+     */
+    private String on;
     private JoinType type;
     private boolean fetch;
 
@@ -28,6 +32,14 @@ public class Join {
         this.alias = alias;
         this.type = type;
         this.fetch = false;
+    }
+
+    public Join(String property, String alias, JoinType type, String on) {
+        this.property = property;
+        this.alias = alias;
+        this.type = type;
+        this.fetch = false;
+        this.on = on;
     }
 
     public Join(String property, String alias, JoinType type, boolean fetch) {
@@ -69,6 +81,16 @@ public class Join {
         this.fetch = fetch;
     }
 
+    public String getOn() {
+        return on;
+    }
+
+    public void setOn(String on) {
+        this.on = on;
+    }
+    
+    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -78,6 +100,9 @@ public class Join {
         }
         if (alias != null) {
             builder.append("(Alias: ").append(alias).append(") ");
+        }
+        if (on != null) {
+            builder.append("(On: ").append(on).append(") ");
         }
         if (type != null) {
             builder.append("(Type: ").append(type.getClausule()).append(") ");

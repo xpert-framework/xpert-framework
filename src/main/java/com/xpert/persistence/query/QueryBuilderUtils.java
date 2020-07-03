@@ -1,6 +1,6 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Aggregate.*;
+import static com.xpert.persistence.query.Sql.*;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,22 +48,34 @@ public class QueryBuilderUtils {
 
         if (type.equals(QueryType.COUNT)) {
             if (select != null && !select.trim().isEmpty()) {
-                queryString.append("SELECT ").append(count(select));
+                queryString.append("SELECT ").append(count(select)).append(" ");
             } else {
-                queryString.append("SELECT ").append(count("*"));
+                queryString.append("SELECT ").append(count("*")).append(" ");
             }
         } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT ").append(max(select));
+            queryString.append("SELECT ").append(max(select)).append(" ");
         } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT ").append(min(select));
+            queryString.append("SELECT ").append(min(select)).append(" ");
         } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT ").append(sum(select));
+            queryString.append("SELECT ").append(sum(select)).append(" ");
         } else if (type.equals(QueryType.AVG)) {
-            queryString.append("SELECT ").append(avg(select));
-        } else if (type.equals(QueryType.SELECT) && (select != null && !select.isEmpty())) {
-            queryString.append("SELECT ").append(select).append(" ");
+            queryString.append("SELECT ").append(avg(select)).append(" ");
+        } else if (type.equals(QueryType.SELECT)) {
+
+            boolean hasSelect = select != null && !select.isEmpty();
+            boolean hasAggregate = aggregate != null && !aggregate.isEmpty();
+
+            if (hasSelect || hasAggregate) {
+                queryString.append("SELECT ");
+            }
+            if (hasSelect) {
+                queryString.append(select).append(" ");
+            }
+            if (hasSelect && hasAggregate) {
+                queryString.append(", ");
+            }
             if (aggregate != null && !aggregate.isEmpty()) {
-                queryString.append(", ").append(aggregate).append(" ");
+                queryString.append(aggregate).append(" ");
             }
         }
 

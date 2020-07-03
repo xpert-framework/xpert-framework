@@ -10,10 +10,11 @@ public class JoinBuilder extends ArrayList<Join> {
 
     private String rootAlias;
     private boolean distinct;
-    
+
     public String getJoinString() {
         return getJoinString(QueryType.SELECT);
     }
+
     public String getJoinString(QueryType queryType) {
         StringBuilder builder = new StringBuilder();
         for (Join join : this) {
@@ -28,10 +29,14 @@ public class JoinBuilder extends ArrayList<Join> {
                 builder.append(" ");
                 builder.append(join.getAlias());
             }
+            
+            if(join.getOn() != null && !join.getOn().trim().isEmpty()){
+                builder.append(" ON ").append(join.getOn());
+            }
+            
         }
         return builder.toString();
     }
-    
 
     public JoinBuilder() {
     }
@@ -44,7 +49,7 @@ public class JoinBuilder extends ArrayList<Join> {
         this.rootAlias = rootAlias;
         this.distinct = distinct;
     }
-    
+
     public JoinBuilder leftJoin(String join) {
         add(new Join(join, JoinType.LEFT_JOIN));
         return this;
@@ -52,6 +57,11 @@ public class JoinBuilder extends ArrayList<Join> {
 
     public JoinBuilder leftJoin(String join, String alias) {
         add(new Join(join, alias, JoinType.LEFT_JOIN));
+        return this;
+    }
+
+    public JoinBuilder leftJoin(String join, String alias, String on) {
+        add(new Join(join, alias, JoinType.LEFT_JOIN, on));
         return this;
     }
 
@@ -75,6 +85,11 @@ public class JoinBuilder extends ArrayList<Join> {
         return this;
     }
 
+    public JoinBuilder innerJoin(String join, String alias, String on) {
+        add(new Join(join, alias, JoinType.INNER_JOIN, on));
+        return this;
+    }
+
     public JoinBuilder innerJoinFetch(String join) {
         add(new Join(join, JoinType.INNER_JOIN, true));
         return this;
@@ -92,6 +107,11 @@ public class JoinBuilder extends ArrayList<Join> {
 
     public JoinBuilder join(String join, String alias) {
         add(new Join(join, alias, JoinType.JOIN));
+        return this;
+    }
+
+    public JoinBuilder join(String join, String alias, String on) {
+        add(new Join(join, alias, JoinType.JOIN, on));
         return this;
     }
 
@@ -115,6 +135,11 @@ public class JoinBuilder extends ArrayList<Join> {
         return this;
     }
 
+    public JoinBuilder rightJoin(String join, String alias, String on) {
+        add(new Join(join, alias, JoinType.RIGHT_JOIN, on));
+        return this;
+    }
+
     public JoinBuilder rightJoinFetch(String join) {
         add(new Join(join, JoinType.RIGHT_JOIN, true));
         return this;
@@ -132,6 +157,5 @@ public class JoinBuilder extends ArrayList<Join> {
     public boolean isDistinct() {
         return distinct;
     }
-    
-    
+
 }

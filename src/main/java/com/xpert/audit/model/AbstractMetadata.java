@@ -4,8 +4,9 @@ import com.xpert.i18n.I18N;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Abstract class to represent the fields of an audit event. Each metadata is a field from the entity that has a "old value" and "new value".
- * 
+ * Abstract class to represent the fields of an audit event. Each metadata is a
+ * field from the entity that has a "old value" and "new value".
+ *
  * @author ayslan
  */
 @MappedSuperclass
@@ -23,13 +24,13 @@ public abstract class AbstractMetadata {
     public abstract AbstractAuditing getAuditing();
 
     public abstract void setAuditing(AbstractAuditing auditing);
-    
+
     /**
      * defines max size to fields "oldValue" and "newValue"
-     * 
-     * @return 
+     *
+     * @return
      */
-    public Integer getMaxSizeValues(){
+    public Integer getMaxSizeValues() {
         return null;
     }
 
@@ -41,16 +42,20 @@ public abstract class AbstractMetadata {
      * Person and attribute name - person.name
      */
     public String getFieldName(Class clazz) {
-        if (field != null) {
+        if (field != null && !clazz.getSuperclass().equals(AbstractAuditing.class)) {
             return I18N.getAttributeName(clazz, field);
         }
-        return field;
+        return getFieldName();
     }
 
     public String getFieldName() {
         AbstractAuditing auditing = getAuditing();
-        if (auditing != null && auditing.getAuditClass() != null) {
-            return getFieldName(auditing.getAuditClass());
+        if (auditing != null) {
+            if (auditing.getAuditClass() != null) {
+                return getFieldName(auditing.getAuditClass());
+            } else {
+                return I18N.getAttributeName(auditing.getEntity(), field);
+            }
         }
         return field;
     }

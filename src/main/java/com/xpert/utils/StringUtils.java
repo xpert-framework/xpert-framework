@@ -272,6 +272,9 @@ public class StringUtils {
      * @return
      */
     public static String getLowerFirstLetter(String string) {
+        if (string == null) {
+            return null;
+        }
         if (string.length() == 1) {
             return string.toLowerCase();
         }
@@ -289,6 +292,9 @@ public class StringUtils {
      * @return
      */
     public static String getUpperFirstLetter(String string) {
+        if (string == null) {
+            return null;
+        }
         if (string.length() == 1) {
             return string.toUpperCase();
         }
