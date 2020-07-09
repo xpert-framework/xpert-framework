@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:x="http://xpert.com/faces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="target"/>
+        <cc:attribute name="widgetVar"/>
+        <cc:attribute name="fileName"/>
+        <cc:attribute name="landscape" default="true"/>
+        <cc:attribute name="printable" default="true"/>
+        <cc:attribute name="columns" default="true"/>
+        <cc:attribute name="downloads" default="true"/>
+        <cc:attribute name="clear" default="true"/>
+        <cc:attribute name="refresh" default="true"/>
+        <cc:attribute name="styleClass" default=""/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div cclass="visible-sm">
+            <h:panelGroup rendered="#{cc.attrs.refresh}">
+                <p:commandButton onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="fa fa-fw fa-refresh" id="btnDataTableRefresh" ignoreAutoUpdate="false" global="true" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
+                <p:tooltip id="toolTipDataTableRefresh" for="btnDataTableRefresh" value="#{xmsg['refresh']}" />
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{cc.attrs.clear}">
+                <p:commandButton onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.clearFilters();" icon="fa fa-fw fa-eraser" id="btnDataTableClearFilters" global="false" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
+                <p:tooltip id="toolTipDataTableClearFilters" for="btnDataTableClearFilters" value="#{xmsg['clearFilters']}"/>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{cc.attrs.downloads}">
+                <p:commandButton id="btnDataTableDownload" type="button" icon="fa fa-fw fa-download" global="false" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
+                <p:menu overlay="true" trigger="btnDataTableDownload" my="left top" at="left bottom" >
+                    <p:submenu label="Página Atual">
+                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o">
+                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        </p:menuitem>
+                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o">
+                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true"/>
+                        </p:menuitem>
+                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o">
+                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        </p:menuitem>
+                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o">
+                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        </p:menuitem>
+                    </p:submenu>
+                    <p:submenu label="Tudo">
+                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o">
+                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o">
+                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o">
+                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" />
+                        </p:menuitem>
+                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o">
+                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                    </p:submenu>
+                </p:menu>
+                <p:tooltip id="toolTipDataTableDownload" for="btnDataTableDownload" value="#{xmsg['export']}" />
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{cc.attrs.printable}">
+                <p:commandButton type="button" icon="fa fa-fw fa-print" id="btnDataTablePrint" global="false" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}">
+                    <p:printer target="#{cc.attrs.target}"/>
+                </p:commandButton>
+                <p:tooltip id="toolTipDataTablePrint" for="btnDataTablePrint" value="#{xmsg['print']}"/>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{cc.attrs.columns}">
+                <p:commandButton type="button" icon="fa fa-fw fa-columns" id="btnDataTableColumns" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}" onclick="Xpert.fixColumnToggler()" global="false"/>
+                <p:columnToggler datasource="#{cc.attrs.target}" trigger="btnDataTableColumns" />
+                <p:tooltip id="toolTipDataTableColumns" for="btnDataTableColumns" value="#{xmsg['columns']}" />
+            </h:panelGroup>
+
+            <ui:remove>
+                <p:commandButton type="button" title="#{xmsg['export']}" icon="fa fa-download" id="buttonExport" />
+                <p:overlayPanel for="buttonExport">
+                    <p:menuButton value="#{xmsg['currentPage']}">
+                        <p:menuitem value="Excel" immediate="true" ajax="false">
+                            <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" skipComponents="javax.faces.component.UIPanel"/>
+                        </p:menuitem>
+                        <p:menuitem value="PDF" immediate="true" ajax="false">
+                            <pe:exporter pageOnly="true" cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
+                                         orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" 
+                                         skipComponents="javax.faces.component.UIPanel"
+                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                                         type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                        <p:menuitem value="CSV" immediate="true" ajax="false">
+                            <p:dataExporter pageOnly="true" type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                    </p:menuButton>
+                    <p:menuButton value="#{xmsg['allPages']}">
+                        <p:menuitem value="Excel" immediate="true" ajax="false">
+                            <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
+                                          skipComponents="javax.faces.component.UIPanel"/>
+                        </p:menuitem>
+                        <p:menuitem value="PDF" immediate="true" ajax="false">
+                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" 
+                                         cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
+                                         skipComponents="javax.faces.component.UIPanel"
+                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                                         target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                        <p:menuitem value="CSV" immediate="true" ajax="false">
+                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                        </p:menuitem>
+                    </p:menuButton>
+                </p:overlayPanel>
+            </ui:remove>
+        </div>
+    </cc:implementation>
+</html>
