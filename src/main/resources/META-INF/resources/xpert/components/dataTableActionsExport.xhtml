@@ -27,7 +27,7 @@
     <cc:implementation>
         <div cclass="visible-sm">
             <h:panelGroup rendered="#{cc.attrs.refresh}">
-                <p:commandButton onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="fa fa-fw fa-refresh" id="btnDataTableRefresh" ignoreAutoUpdate="false" global="true" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
+                <p:commandButton onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="ui-icon-refresh" id="btnDataTableRefresh" ignoreAutoUpdate="false" global="true" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
                 <p:tooltip id="toolTipDataTableRefresh" for="btnDataTableRefresh" value="#{xmsg['refresh']}" />
             </h:panelGroup>
 
@@ -40,31 +40,31 @@
                 <p:commandButton id="btnDataTableDownload" type="button" icon="fa fa-fw fa-download" global="false" styleClass="#{empty cc.attrs.styleClass ? '' : cc.attrs.styleClass}"/>
                 <p:menu overlay="true" trigger="btnDataTableDownload" my="left top" at="left bottom" >
                     <p:submenu label="Página Atual">
-                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o">
-                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
+                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" />
                         </p:menuitem>
-                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o">
-                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true"/>
+                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o" ajax="false" immediate="true">
+                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true"/>
                         </p:menuitem>
-                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o">
-                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
+                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" />
                         </p:menuitem>
-                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o">
-                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" pageOnly="true" />
+                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o" ajax="false" immediate="true">
+                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" />
                         </p:menuitem>
                     </p:submenu>
                     <p:submenu label="Tudo">
-                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o">
-                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
+                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                         </p:menuitem>
-                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o">
-                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o" ajax="false" immediate="true">
+                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}.pdf"/>
                         </p:menuitem>
-                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o">
-                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}" />
+                        <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
+                            <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" />
                         </p:menuitem>
-                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o">
-                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="Exportar #{cc.attrs.fileName}"/>
+                        <p:menuitem value="XML" icon="fa fa-fw fa-file-code-o" ajax="false" immediate="true">
+                            <p:dataExporter type="xml" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                         </p:menuitem>
                     </p:submenu>
                 </p:menu>

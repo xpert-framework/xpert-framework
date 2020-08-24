@@ -48,7 +48,7 @@ th.uix-datatable-index .ui-menubutton .ui-button{height: 24px; width: 30px;}
 .panel-detail-auditing{margin-top: 10px;}
 .uix-confirm-dialog{max-width: 90%; max-height: 90%;}
 .uix-confirm-dialog .ui-dialog-content{max-height: 80% !important;}
-.uix-confirm-dialog .dialog-confirm-message{max-height: 300px;}
+.uix-confirm-dialog .dialog-confirm-message{max-height: 350px;}
 .uix-spinner{padding: 0;}
 .uix-spinner .ui-inputfield{border: 0; width: 100%; height: 32px;}
 .uix-calendar{white-space: nowrap}
