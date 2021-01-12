@@ -39,6 +39,8 @@ Add this repository:
 
 Archetype | Zip | Jar | Release Date
 ----------|-----|----|-----------|
+war-1.5 | [war-archetype-1.5.zip](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.5/xpert-framework-war-archetype-1.5.zip) | [war-archetype-1.5.jar](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.5/xpert-framework-war-archetype-1.5.jar) | 11/01/2021
+ear-1.5 | [ear-archetype-1.5.zip](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.5/xpert-framework-ear-archetype-1.5.zip) | [ear-archetype-1.5.jar](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.5/xpert-framework-ear-archetype-1.5.jar) | 11/01/2021
 war-1.4 | [war-archetype-1.4.zip](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.4/xpert-framework-war-archetype-1.4.zip) | [war-archetype-1.4.jar](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.4/xpert-framework-war-archetype-1.4.jar) | 04/01/2021
 ear-1.4 | [ear-archetype-1.4.zip](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.4/xpert-framework-ear-archetype-1.4.zip) | [ear-archetype-1.4.jar](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.4/xpert-framework-ear-archetype-1.4.jar) | 04/01/2021
 war-1.3 | [war-archetype-1.3.zip](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.3/xpert-framework-war-archetype-1.3.zip) | [war-archetype-1.3.jar](https://github.com/xpert-framework/download/raw/master/archetypes/archetypes-1.3/xpert-framework-war-archetype-1.3.jar) | 13/08/2015
