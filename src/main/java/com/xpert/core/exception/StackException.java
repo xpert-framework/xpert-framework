@@ -88,6 +88,76 @@ public class StackException extends Exception {
     }
 
     /**
+     * Return messages from StackException. String returned is Array of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @return
+     */
+    public String[] getMessages() {
+        return getMessagesList().toArray(new String[0]);
+    }
+
+    /**
+     * Return messages from StackException. String returned is Array of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @param i18n if true then user I18N class to resolve messages
+     * @return
+     */
+    public String[] getMessages(boolean i18n) {
+        return getMessagesList(i18n).toArray(new String[0]);
+    }
+
+    /**
+     * Return messages from StackException. String returned is List of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @return
+     */
+    public List<String> getMessagesList() {
+
+        List<String> messages = new ArrayList<>();
+        if (getMessage() != null) {
+            messages.add(getMessage());
+        }
+        if (getExceptions() != null) {
+            for (StackException se : getExceptions()) {
+                if (se.getMessage() != null) {
+                    messages.add(se.getMessage());
+                }
+            }
+        }
+        return messages;
+    }
+
+    /**
+     * Return messages from StackException. String returned is List of
+     * getMessage() and getMessage() from each getExceptions()
+     *
+     * @param i18n if true then user I18N class to resolve messages
+     * @return
+     */
+    public List<String> getMessagesList(boolean i18n) {
+
+        List<String> messages = new ArrayList<>();
+        if (i18n == false) {
+            return getMessagesList();
+        }
+
+        if (getMessage() != null) {
+            messages.add(I18N.get(getMessage()));
+        }
+        if (getExceptions() != null) {
+            for (StackException se : getExceptions()) {
+                if (se.getMessage() != null) {
+                    messages.add(I18N.get(se.getMessage()));
+                }
+            }
+        }
+        return messages;
+    }
+
+    /**
      * Return messages from StackException. String returned is as concat of
      * getMessage() and getMessage() from each getExceptions()
      *
