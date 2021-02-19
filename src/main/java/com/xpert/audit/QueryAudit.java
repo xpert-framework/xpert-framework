@@ -1,0 +1,266 @@
+package com.xpert.audit;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.xpert.Configuration;
+import com.xpert.audit.model.AbstractQueryAuditing;
+import com.xpert.audit.model.QueryAuditingType;
+import com.xpert.faces.utils.FacesUtils;
+import com.xpert.persistence.dao.BaseDAO;
+import com.xpert.persistence.query.QueryBuilder;
+import com.xpert.persistence.utils.EntityUtils;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Parameter;
+import javax.persistence.Query;
+
+/**
+ *
+ * @author ayslanms
+ */
+public class QueryAudit {
+
+    public static final boolean debug = true;
+    private static final Logger logger = Logger.getLogger(QueryAudit.class.getName());
+
+    private QueryAuditConfig queryAuditConfig;
+
+    public QueryAudit() {
+    }
+
+    public QueryAudit(QueryAuditConfig queryAuditConfig) {
+        this.queryAuditConfig = queryAuditConfig;
+    }
+
+    /**
+     * Returns a EntityManager proxy with audit feature
+     *
+     * @param entityManager
+     * @param queryBuilder
+     * @return
+     */
+    public EntityManager proxy(EntityManager entityManager, QueryBuilder queryBuilder) {
+        QueryAuditConfig config = new QueryAuditConfig(entityManager, queryBuilder);
+        return (EntityManager) Proxy.newProxyInstance(EntityManager.class.getClassLoader(), new Class[]{EntityManager.class}, new EntityManagerAuditProxy(config));
+    }
+
+    /**
+     * Returns a EntityManager proxy with audit feature
+     *
+     * @param entityManager
+     * @return
+     */
+    public EntityManager proxy(EntityManager entityManager) {
+        QueryAuditConfig config = new QueryAuditConfig(entityManager);
+        return (EntityManager) Proxy.newProxyInstance(EntityManager.class.getClassLoader(), new Class[]{EntityManager.class}, new EntityManagerAuditProxy(config));
+    }
+
+    /**
+     * Returns a EntityManager proxy with audit feature
+     *
+     * @param config
+     * @return
+     */
+    public Query proxy(QueryAuditConfig config) {
+        return (Query) Proxy.newProxyInstance(Query.class.getClassLoader(), new Class[]{Query.class}, new QueryAuditProxy(config));
+    }
+    
+    /**
+     * Returns a BaseDAO proxy with audit feature
+     *
+     * @param baseDAO
+     * @return 
+     */
+    public BaseDAO proxy(BaseDAO baseDAO) {
+        return (BaseDAO) Proxy.newProxyInstance(BaseDAO.class.getClassLoader(), new Class[]{BaseDAO.class}, new BaseDAOAuditProxy(baseDAO));
+    }
+
+    public static QueryAuditingType getQueryAuditingType(Method method) {
+        if (method.getName().equals("find")) {
+            return QueryAuditingType.FIND_BY_ID;
+        }
+        if (method.getName().equals("createQuery")) {
+            return QueryAuditingType.QUERY;
+        }
+        if (method.getName().equals("createNativeQuery")) {
+            return QueryAuditingType.NATIVE_QUERY;
+        }
+        return QueryAuditingType.OTHER;
+    }
+
+    public Object persistQuery(Object wrapped, Method method, Object[] args) throws Throwable {
+
+        if (debug) {
+            logger.log(Level.INFO, "Wrapped: {0}, Invoke: {1}, Args: {2}", new Object[]{wrapped.getClass().getName(), method.getName(), Arrays.toString(args)});
+        }
+
+        //create before Invoke results
+        AbstractQueryAuditing queryAuditing = Configuration.getAbstractQueryAuditing();
+        queryAuditConfig.setQueryAuditing(queryAuditing);
+        queryAuditing.setAuditingType(queryAuditConfig.getAuditingType());
+        queryAuditing.setStartDate(new Date());
+
+        Object result = null;
+        try {
+            result = method.invoke(wrapped, args);
+        } catch (NoResultException ex) {
+            result = null;
+        }
+
+        queryAuditing.setEndDate(new Date());
+        queryAuditing.calculateTime();
+
+        if (debug) {
+            logger.log(Level.INFO, "Query executed in {0} milliseconds", queryAuditing.getTimeMilliseconds());
+        }
+
+        //find (get Idenfier)
+        //JPA find signature - find(Class<T> entityClass, Object primaryKey)
+        if (method.getName().equals("find")) {
+            if (args.length > 0 && args[0] instanceof Class) {
+                queryAuditing.setAuditClass((Class) args[0]);
+                queryAuditing.setEntity(Audit.getEntityName((Class) args[0]));
+            }
+            if (args.length > 1 && args[1] instanceof Number) {
+                queryAuditing.setIdentifier(((Number) args[1]).longValue());
+            }
+        }
+
+        //try to get entity from QueryBuilder
+        if (queryAuditing.getEntity() == null && queryAuditConfig.getQueryBuilder() != null && queryAuditConfig.getQueryBuilder().from() != null) {
+            queryAuditing.setEntity(Audit.getEntityName(queryAuditConfig.getQueryBuilder().from()));
+        }
+
+        if (queryAuditConfig.getQuery() != null) {
+            queryAuditing.setFirstResult(queryAuditConfig.getQuery().getFirstResult());
+            if (queryAuditConfig.getQuery().getMaxResults() != Integer.MAX_VALUE) {
+                queryAuditing.setMaxResults(queryAuditConfig.getQuery().getMaxResults());
+            }
+            if (queryAuditing.getMaxResults() != null && queryAuditing.getMaxResults() > 0) {
+                queryAuditing.setPaginatedQuery(true);
+            }
+        }
+
+//        CDI cdi = CDI.current();
+//        if (debug) {
+//            logger.log(Level.INFO, "cdi.isUnsatisfied: {0}", cdi.isUnsatisfied());
+//            logger.log(Level.INFO, "cdi.getBeanManager: {0}", cdi.getBeanManager());
+//        }
+//
+//        QueryAuditPersister queryAuditPersister = (QueryAuditPersister) cdi.select(QueryAuditPersister.class).get();
+        QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
+        buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
+
+        //get SQL Query (HQL/JPQL)
+        if (queryAuditConfig.getQuery() != null) {
+            queryAuditing.setSqlQuery(getValueWithMaxSize(queryAuditConfig.getQuery().unwrap(org.hibernate.Query.class).getQueryString(), queryAuditPersister.getSqlStringMaxSize()));
+            if (debug) {
+                logger.log(Level.INFO, "SQL Query: {0}", queryAuditing.getSqlQuery());
+            }
+        }
+
+        queryAuditing.setRowsTotal(getRows(result));
+
+        if (FacesContext.getCurrentInstance() != null) {
+            queryAuditing.setIp(FacesUtils.getIP());
+        }
+        queryAuditPersister.persist(queryAuditing);
+
+        return result;
+    }
+
+    public void buildParameters(Query query, AbstractQueryAuditing queryAuditing, QueryAuditPersister queryAuditPersister) {
+
+        //create JSON object
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
+        }.getType();
+
+        List<QueryAudit.QueryParameter> parameters = new ArrayList<>();
+
+        //if has id, then is "find" method, set the idenfier
+        if (queryAuditing.getIdentifier() != null && queryAuditing.getAuditClass() != null) {
+            String idName = EntityUtils.getIdFieldName(queryAuditing.getAuditClass());
+            Class idType = EntityUtils.getIdType(queryAuditing.getAuditClass());
+            QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(1, idName, idType.getName(), queryAuditing.getIdentifier());
+            parameters.add(queryParameter);
+        } else {
+            if (query != null && query.getParameters() != null) {
+                for (Parameter<?> parameter : query.getParameters()) {
+                    QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(parameter.getPosition(), parameter.getName(),
+                            (parameter.getParameterType() == null ? null : parameter.getParameterType().getName()), query.getParameterValue(parameter));
+
+                    parameters.add(queryParameter);
+
+                }
+            }
+        }
+
+        String json = parameters.isEmpty() ? null : gson.toJson(parameters, listType);
+
+        if (debug) {
+            logger.log(Level.INFO, "JSON Parameters: {0}", json);
+        }
+
+        queryAuditing.setParametersSize(parameters.size());
+        if (parameters.size() > 0) {
+            queryAuditing.setHasQueryParameter(true);
+        }
+        queryAuditing.setSqlParameters(getValueWithMaxSize(json, queryAuditPersister.getParametersMaxSize()));
+    }
+
+    /**
+     * Return rows of Query result
+     *
+     * @param result
+     * @return
+     */
+    public static Long getRows(Object result) {
+        if (result != null && result instanceof Collection) {
+            return (long) ((Collection) result).size();
+        }
+        if (result != null && result instanceof Object[]) {
+            return (long) ((Object[]) result).length;
+        }
+        if (result != null) {
+            return 1L;
+        }
+        return 0L;
+    }
+
+    private static String getValueWithMaxSize(String value, Integer maxSize) {
+        if (maxSize == null || value == null || value.length() <= maxSize || maxSize <= 0) {
+            return value;
+        }
+        return value.substring(0, maxSize - 3) + "...";
+    }
+
+    public class QueryParameter {
+
+        private final Integer position;
+        private final String name;
+        private final String type;
+        private final Object value;
+
+        public QueryParameter(Integer position, String name, String type, Object value) {
+            this.position = position;
+            this.name = name;
+            this.type = type;
+            this.value = value;
+        }
+
+    }
+
+}

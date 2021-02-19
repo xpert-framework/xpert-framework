@@ -1,5 +1,7 @@
 package com.xpert.persistence.query;
 
+import com.xpert.audit.QueryAudit;
+import com.xpert.audit.QueryAudit;
 import com.xpert.persistence.exception.QueryFileNotFoundException;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.IOException;
@@ -50,6 +52,7 @@ public class QueryBuilder implements Cloneable {
     private Integer firstResult;
     private List<QueryParameter> parameters = new ArrayList<>();
     private boolean debug;
+    private boolean audit = false;
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
     public QueryBuilder() {
@@ -90,6 +93,32 @@ public class QueryBuilder implements Cloneable {
         this.fromNestedQuery.loadNormalizedRestrictions();
         this.parameters.addAll(from.getQueryParameters());
         return this;
+    }
+
+    /**
+     * return EntityManager
+     *
+     * @return
+     */
+    public EntityManager getEntityManager() {
+        return getEntityManager(audit);
+    }
+
+    /**
+     * return EntityManager
+     *
+     * @param audit
+     * @return
+     */
+    private EntityManager getEntityManager(boolean audit) {
+        if (audit) {
+            return new QueryAudit().proxy(entityManager, this);
+        }
+        return entityManager;
+    }
+
+    public Class from() {
+        return this.from;
     }
 
     /**
@@ -286,6 +315,35 @@ public class QueryBuilder implements Cloneable {
     public QueryBuilder debug(boolean debug) {
         this.debug = debug;
         return this;
+    }
+
+    /**
+     * Defines if the this builder will be audited
+     *
+     * @return
+     */
+    public QueryBuilder audit() {
+        this.audit = true;
+        return this;
+    }
+
+    /**
+     * Defines if the this builder will be audited
+     *
+     * @param audit
+     * @return
+     */
+    public QueryBuilder audit(boolean audit) {
+        this.audit = audit;
+        return this;
+    }
+
+    public Object find(Class entityClass, Object id) {
+        return getEntityManager().find(entityClass, id);
+    }
+
+    public Object find(Object id) {
+        return getEntityManager().find(this.from, id);
     }
 
     private void loadNormalizedRestrictions() {
@@ -533,7 +591,7 @@ public class QueryBuilder implements Cloneable {
      */
     public Long count() {
         type = QueryType.COUNT;
-        return (Long) createQuery().getSingleResult();
+        return (Long) getSingleResult(type);
     }
 
     /**
@@ -543,7 +601,7 @@ public class QueryBuilder implements Cloneable {
     public Long count(String attributes) {
         type = QueryType.COUNT;
         this.attributes = attributes;
-        return (Long) createQuery().getSingleResult();
+        return (Long) getSingleResult(type);
     }
 
     /**
@@ -553,7 +611,7 @@ public class QueryBuilder implements Cloneable {
     public Long countDistinct(String attributes) {
         type = QueryType.COUNT;
         this.attributes = "DISTINCT " + attributes;
-        return (Long) createQuery().getSingleResult();
+        return (Long) getSingleResult(type);
     }
 
     /**
@@ -564,7 +622,7 @@ public class QueryBuilder implements Cloneable {
     public Number avg(String property) {
         type = QueryType.AVG;
         attribute = property;
-        return (Number) createQuery().getSingleResult();
+        return (Number) getSingleResult(type);
     }
 
     /**
@@ -589,7 +647,7 @@ public class QueryBuilder implements Cloneable {
     public Number sum(String property) {
         type = QueryType.SUM;
         attribute = property;
-        return (Number) createQuery().getSingleResult();
+        return (Number) getSingleResult(type);
     }
 
     /**
@@ -613,7 +671,7 @@ public class QueryBuilder implements Cloneable {
     public Object max(String property) {
         type = QueryType.MAX;
         attribute = property;
-        return createQuery().getSingleResult();
+        return getSingleResult(type);
     }
 
     /**
@@ -637,7 +695,7 @@ public class QueryBuilder implements Cloneable {
     public Object min(String property) {
         type = QueryType.MIN;
         attribute = property;
-        return createQuery().getSingleResult();
+        return getSingleResult(type);
     }
 
     /**
@@ -651,6 +709,14 @@ public class QueryBuilder implements Cloneable {
             return valueWhenNull;
         }
         return value;
+    }
+
+    public Query createQuery(String queryString) {
+        return getEntityManager().createQuery(queryString);
+    }
+
+    public Query createNativeQuery(String queryString) {
+        return getEntityManager().createNativeQuery(queryString);
     }
 
     /**
@@ -670,9 +736,9 @@ public class QueryBuilder implements Cloneable {
         Query query;
 
         if (nativeQuery == true) {
-            query = entityManager.createNativeQuery(queryString);
+            query = createNativeQuery(queryString);
         } else {
-            query = entityManager.createQuery(queryString);
+            query = createQuery(queryString);
 
         }
         List<QueryParameter> parameters = getQueryParameters();
@@ -717,16 +783,34 @@ public class QueryBuilder implements Cloneable {
     }
 
     /**
+     * @param type
+     * @return entityManager.getSingleResult(), returns null when
+     * NoResultExceptionis throw
+     */
+    public Object getSingleResult(QueryType type) {
+        Object result;
+        try {
+            result = this.createQuery().getSingleResult();
+        } catch (NoResultException ex) {
+            result = null;
+        }
+        return result;
+    }
+
+    /**
      * @return entityManager.getSingleResult(), returns null when
      * NoResultExceptionis throw
      */
     public Object getSingleResult() {
+        Object result;
         try {
             type = QueryType.SELECT;
-            return this.createQuery().getSingleResult();
+            result = this.createQuery().getSingleResult();
         } catch (NoResultException ex) {
-            return null;
+            result = null;
         }
+        return result;
+
     }
 
     /**
@@ -766,7 +850,7 @@ public class QueryBuilder implements Cloneable {
         type = QueryType.SELECT;
         List list = this.createQuery().getResultList();
         if (list != null && attributes != null && !attributes.trim().isEmpty() && expectedType != null) {
-            return QueryBuilderUtils.getNormalizedResultList(attributes, list, expectedType);
+            list = QueryBuilderUtils.getNormalizedResultList(attributes, list, expectedType);
         }
         return list;
     }

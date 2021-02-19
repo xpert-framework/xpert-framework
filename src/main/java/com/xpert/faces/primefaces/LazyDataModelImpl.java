@@ -50,6 +50,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     private boolean restorableFilter = false;
     private Map currentFilters;
     private List<QueryParameter> parameters = new ArrayList<>();
+    private boolean auditQuery = false;
 
     /**
      * @param attributes Attributes of object thet will be loaded
@@ -367,7 +368,8 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .join(joinBuilder)
                 .add(queryRestrictions)
-                .debug(debug);
+                .debug(debug)
+                .audit(isAuditQuery());
     }
 
     /**
@@ -485,6 +487,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
                 .join(joinBuilder)
                 .orderBy(orderBy)
                 .debug(debug)
+                .audit(isAuditQuery())
                 .getResultList();
     }
 
@@ -654,5 +657,16 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
+
+    public boolean isAuditQuery() {
+        return auditQuery;
+    }
+
+    public void setAuditQuery(boolean auditQuery) {
+        this.auditQuery = auditQuery;
+    }
+
+    
+    
 
 }

@@ -2,10 +2,12 @@ package com.xpert.persistence.dao;
 
 import com.xpert.audit.Audit;
 import com.xpert.Configuration;
+import com.xpert.audit.QueryAudit;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
+import com.xpert.utils.ReflectionUtils;
 import com.xpert.utils.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -61,6 +63,16 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     @Override
+     public BaseDAO<T> audit() {
+        return new QueryAudit().proxy(this);
+    }
+
+    @Override
+    public EntityManager getEntityManagerQueryAudit() {
+        return new QueryAudit().proxy(getEntityManager());
+    }
+
+    @Override
     public Class getEntityClass() {
         return entityClass;
     }
@@ -83,6 +95,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public QueryBuilder getQueryBuilder() {
+        System.out.println(this);
         return new QueryBuilder(getEntityManager());
     }
 
@@ -445,10 +458,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return list(getEntityClass(), getRestrictions(restriction), null, null, null, attributes);
     }
 
+    @Override
     public List listAttributes(String property, Object value, String attributes) {
         return listAttributes(new Restriction(property, value), attributes);
     }
 
+    @Override
     public List listAttributes(String property, Object value, String attributes, String order) {
         return listAttributes(new Restriction(property, value), attributes, order);
     }
@@ -682,7 +697,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         }
 
         try {
-            Field field = getDeclaredField(entity, fieldName);
+            Field field = ReflectionUtils.getDeclaredField(entity, fieldName);
             if (field != null) {
                 OrderBy annotation = field.getAnnotation(OrderBy.class);
                 orderBy = getOrderByFromAnnotaion(annotation, field, null);
@@ -708,21 +723,14 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return orderBy;
     }
 
-    private Field getDeclaredField(Class clazz, String fieldName) {
-        Field field = null;
-        try {
-            field = clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException ex) {
-            if (field == null && clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
-                field = getDeclaredField(clazz.getSuperclass(), fieldName);
-            }
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        return field;
-    }
-
+    /**
+     * Get filed in @OrderBy annotation
+     *
+     * @param annotation
+     * @param field
+     * @param method
+     * @return
+     */
     private String getOrderByFromAnnotaion(OrderBy annotation, Field field, Method method) {
         String orderBy = null;
         if (annotation != null) {
@@ -754,6 +762,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return orderBy;
     }
 
+    /**
+     * Convert a Map into a List of Restriction
+     *
+     * @param args
+     * @return
+     */
     private List<Restriction> getRestrictionsFromMap(Map<String, Object> args) {
         List<Restriction> restrictions = new ArrayList<>();
         for (Entry e : args.entrySet()) {
@@ -762,6 +776,12 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
         return restrictions;
     }
 
+    /**
+     * Return a list with a single restriction
+     *
+     * @param restriction
+     * @return
+     */
     private List<Restriction> getRestrictions(Restriction restriction) {
         List<Restriction> restrictions = null;
         if (restriction != null) {

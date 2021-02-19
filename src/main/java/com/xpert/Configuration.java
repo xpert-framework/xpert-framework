@@ -1,8 +1,11 @@
 package com.xpert;
 
 import com.xpert.audit.AbstractAuditingListener;
+import com.xpert.audit.QueryAuditPersister;
+import com.xpert.audit.QueryAuditPersisterFactory;
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
+import com.xpert.audit.model.AbstractQueryAuditing;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -20,6 +23,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
+ * xpert-framework Configuration class. This class acess xpert-config.xml and
+ * its possible to retrieve the value with static methods.
  *
  * @author ayslan
  */
@@ -36,6 +41,8 @@ public class Configuration {
     private static Class entityManagerFactoryClass;
     private static Class auditEntityManagerFactoryClass;
     private static String bundleName;
+    private static Class queryAuditingImplClass;
+    private static Class queryAuditPersisterFactoryImplClass;
 
     public static EntityManager getEntityManager() {
         try {
@@ -68,55 +75,39 @@ public class Configuration {
     }
 
     public static EntityManagerFactory getEntityManagerFactory() {
-        if (entityManagerFactoryClass == null) {
-            return null;
-        }
-        try {
-            return (EntityManagerFactory) entityManagerFactoryClass.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return (EntityManagerFactory) newInstance(entityManagerFactoryClass);
     }
 
     public static EntityManagerFactory getAuditEntityManagerFactory() {
-        if (auditEntityManagerFactoryClass == null) {
-            return null;
-        }
-        try {
-            return (EntityManagerFactory) auditEntityManagerFactoryClass.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return (EntityManagerFactory) newInstance(auditEntityManagerFactoryClass);
     }
 
     public static AbstractAuditing getAbstractAuditing() {
-        if (auditingImplClass == null) {
-            return null;
-        }
-        try {
-            return (AbstractAuditing) auditingImplClass.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return (AbstractAuditing) newInstance(auditingImplClass);
     }
 
     public static AbstractMetadata getAbstractMetadata() {
-        if (metadataImplClass == null) {
-            return null;
-        }
-        try {
-            return (AbstractMetadata) metadataImplClass.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return (AbstractMetadata) newInstance(metadataImplClass);
+    }
+
+    public static AbstractQueryAuditing getAbstractQueryAuditing() {
+        return (AbstractQueryAuditing) newInstance(queryAuditingImplClass);
     }
 
     public static AbstractAuditingListener getAuditingListener() {
-        if (auditingListenerClass == null) {
+        return (AbstractAuditingListener) newInstance(auditingListenerClass);
+    }
+
+    public static QueryAuditPersisterFactory getQueryAuditPersisterFactory() {
+        return (QueryAuditPersisterFactory) newInstance(queryAuditPersisterFactoryImplClass);
+    }
+
+    public static Object newInstance(Class clazz) {
+        if (clazz == null) {
             return null;
         }
         try {
-            return (AbstractAuditingListener) auditingListenerClass.newInstance();
+            return clazz.newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -144,55 +135,34 @@ public class Configuration {
             for (int temp = 0; temp < children.getLength(); temp++) {
                 Node node = children.item(temp);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    if (children.item(temp).getNodeName().equals("auditing")) {
+                    String nomeName = children.item(temp).getNodeName();
+                    if (nomeName.equals("auditing")) {
                         Element element = (Element) node;
+                        auditingImplClass = getClass("auditing-impl", element);
+                        metadataImplClass = getClass("metadata-impl", element);
+                        auditingListenerClass = getClass("auditing-listener", element);
+                        queryAuditingImplClass = getClass("query-auditing-impl", element);
+                        queryAuditPersisterFactoryImplClass = getClass("query-audit-persister-factory", element);
+                    }
+                    if (nomeName.equals("entity-manager-factory")) {
                         try {
-                            String tagValue = getTagValue("auditing-impl", element);
-                            if (tagValue != null && !tagValue.isEmpty()) {
-                                auditingImplClass = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
-                                logger.log(Level.INFO, "Found AuditingImpl: {0}", auditingImplClass.getName());
-                            }
-                        } catch (ClassNotFoundException ex) {
-                            logger.log(Level.SEVERE, null, ex);
-                        }
-                        try {
-                            String tagValue = getTagValue("metadata-impl", element);
-                            if (tagValue != null && !tagValue.isEmpty()) {
-                                metadataImplClass = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
-                                logger.log(Level.INFO, "Found MetadataImpl: {0}", metadataImplClass.getName());
-                            }
-                        } catch (ClassNotFoundException ex) {
-                            logger.log(Level.SEVERE, null, ex);
-                        }
-                        try {
-                            String tagValue = getTagValue("auditing-listener", element);
-                            if (tagValue != null && !tagValue.isEmpty()) {
-                                auditingListenerClass = Class.forName(tagValue, true, Thread.currentThread().getContextClassLoader());
-                                logger.log(Level.INFO, "Found AuditingListener: {0}", auditingListenerClass.getName());
-                            }
+                            entityManagerFactoryClass = getClass(node.getTextContent());
+                            logger.log(Level.INFO, "[xpert-config.xml] Found entity-manager-factory: {0}", entityManagerFactoryClass.getName());
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
                     }
-                    if (children.item(temp).getNodeName().equals("entity-manager-factory")) {
+                    if (nomeName.equals("audit-entity-manager-factory")) {
                         try {
-                            entityManagerFactoryClass = Class.forName(children.item(temp).getTextContent(), true, Thread.currentThread().getContextClassLoader());
-                            logger.log(Level.INFO, "Found EntityManagerFactory: {0}", entityManagerFactoryClass.getName());
+                            auditEntityManagerFactoryClass = getClass(node.getTextContent());
+                            logger.log(Level.INFO, "[xpert-config.xml] Found audit-entity-manager-factory: {0}", auditEntityManagerFactoryClass.getName());
                         } catch (ClassNotFoundException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
                     }
-                    if (children.item(temp).getNodeName().equals("audit-entity-manager-factory")) {
-                        try {
-                            auditEntityManagerFactoryClass = Class.forName(children.item(temp).getTextContent(), true, Thread.currentThread().getContextClassLoader());
-                            logger.log(Level.INFO, "Found AuditEntityManagerFactory: {0}", auditEntityManagerFactoryClass.getName());
-                        } catch (ClassNotFoundException ex) {
-                            logger.log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    if (children.item(temp).getNodeName().equals("resource-bundle")) {
+                    if (nomeName.equals("resource-bundle")) {
                         bundleName = children.item(temp).getTextContent();
-                        logger.log(Level.INFO, "Found ResourceBundle: {0}", bundleName);
+                        logger.log(Level.INFO, "[xpert-config.xml] Found resource-bundle: {0}", bundleName);
                     }
                 }
             }
@@ -201,6 +171,24 @@ public class Configuration {
             logger.log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private static Class getClass(String className) throws ClassNotFoundException {
+        return Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+    }
+
+    private static Class getClass(String tag, Element element) {
+        try {
+            String tagValue = getTagValue(tag, element);
+            if (tagValue != null && !tagValue.isEmpty()) {
+                Class clazz = getClass(tagValue);
+                logger.log(Level.INFO, "[xpert-config.xml] Found {0}: {1}", new Object[]{tag, clazz.getName()});
+                return clazz;
+            }
+        } catch (ClassNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     private static String getTagValue(String tag, Element element) {
@@ -215,26 +203,74 @@ public class Configuration {
         return null;
     }
 
+    /**
+     * Return a class instance of AuditingImpl
+     *
+     * @return
+     */
     public static Class getAuditingImplClass() {
         return auditingImplClass;
     }
 
+    /**
+     * Return a class instance of AuditingImpl
+     *
+     * @return
+     */
     public static Class getMetadataImplClass() {
         return metadataImplClass;
     }
 
+    /**
+     * Return a class instance of AuditingListener
+     *
+     * @return
+     */
     public static Class getAuditingListenerClass() {
         return auditingListenerClass;
     }
 
+    /**
+     * Return a class instance of EntityManagerFactory
+     *
+     * @return
+     */
     public static Class getEntityManagerFactoryClass() {
         return entityManagerFactoryClass;
     }
 
+    /**
+     * Return a class instance of AuditEntityManagerFactory
+     *
+     * @return
+     */
     public static Class getAuditEntityManagerFactoryClass() {
         return auditEntityManagerFactoryClass;
     }
 
+    /**
+     * Return a class instance of QueryAuditingImpl
+     *
+     * @return
+     */
+    public static Class getQueryAuditingImplClass() {
+        return queryAuditingImplClass;
+    }
+
+    /**
+     * Return a class instance of QueryAuditPersisterFactoryImpl
+     *
+     * @return
+     */
+    public static Class getQueryAuditPersisterFactoryImplClass() {
+        return queryAuditPersisterFactoryImplClass;
+    }
+
+    /**
+     * Return the bundle name
+     *
+     * @return
+     */
     public static String getBundleName() {
         return bundleName;
     }

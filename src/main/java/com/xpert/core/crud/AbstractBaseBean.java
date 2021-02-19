@@ -251,6 +251,7 @@ public abstract class AbstractBaseBean<T> {
      */
     public void createDataModel() {
         dataModel = new LazyDataModelImpl<>(getDataModelOrder(), getDAO());
+        dataModel.setAuditQuery(isAuditQuery());
         dataModel.setRestrictions(getDataModelRestrictions());
         OrderByHandler orderByHandler = getOrderByHandler();
         if (orderByHandler != null) {
@@ -314,14 +315,21 @@ public abstract class AbstractBaseBean<T> {
         if (getEntity() != null) {
             Object entityId = EntityUtils.getId(getEntity());
             if (entityId != null) {
-                setEntity(getDAO().find(entityId));
+                setEntity((T) getDAO()
+                        .getQueryBuilder()
+                        .audit(isAuditQuery())
+                        .find(entityClass, entityId)
+                );
             }
         }
     }
 
     public T findById(Object id) {
         if (id != null) {
-            Object object = getDAO().find(id);
+            Object object = getDAO()
+                    .getQueryBuilder()
+                    .audit(isAuditQuery())
+                    .find(entityClass, id);
             if (object != null) {
                 return (T) object;
             }
@@ -434,6 +442,16 @@ public abstract class AbstractBaseBean<T> {
 
     public void setForceReloadEntity(boolean forceReloadEntity) {
         this.forceReloadEntity = forceReloadEntity;
+    }
+
+    /**
+     * If true then generic LazyDataModel query and reload envent will be
+     * audited with xpert-framework QueryAudit feature
+     *
+     * @return
+     */
+    public boolean isAuditQuery() {
+        return false;
     }
 
 }
