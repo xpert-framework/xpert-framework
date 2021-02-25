@@ -76,16 +76,6 @@ public class QueryAudit {
     public Query proxy(QueryAuditConfig config) {
         return (Query) Proxy.newProxyInstance(Query.class.getClassLoader(), new Class[]{Query.class}, new QueryAuditProxy(config));
     }
-    
-    /**
-     * Returns a BaseDAO proxy with audit feature
-     *
-     * @param baseDAO
-     * @return 
-     */
-    public BaseDAO proxy(BaseDAO baseDAO) {
-        return (BaseDAO) Proxy.newProxyInstance(BaseDAO.class.getClassLoader(), new Class[]{BaseDAO.class}, new BaseDAOAuditProxy(baseDAO));
-    }
 
     public static QueryAuditingType getQueryAuditingType(Method method) {
         if (method.getName().equals("find")) {
@@ -153,13 +143,6 @@ public class QueryAudit {
             }
         }
 
-//        CDI cdi = CDI.current();
-//        if (debug) {
-//            logger.log(Level.INFO, "cdi.isUnsatisfied: {0}", cdi.isUnsatisfied());
-//            logger.log(Level.INFO, "cdi.getBeanManager: {0}", cdi.getBeanManager());
-//        }
-//
-//        QueryAuditPersister queryAuditPersister = (QueryAuditPersister) cdi.select(QueryAuditPersister.class).get();
         QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
         buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
 
@@ -181,12 +164,14 @@ public class QueryAudit {
         return result;
     }
 
+    /**
+     * Build parameters from Query
+     *
+     * @param query
+     * @param queryAuditing
+     * @param queryAuditPersister
+     */
     public void buildParameters(Query query, AbstractQueryAuditing queryAuditing, QueryAuditPersister queryAuditPersister) {
-
-        //create JSON object
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
-        }.getType();
 
         List<QueryAudit.QueryParameter> parameters = new ArrayList<>();
 
@@ -199,8 +184,16 @@ public class QueryAudit {
         } else {
             if (query != null && query.getParameters() != null) {
                 for (Parameter<?> parameter : query.getParameters()) {
-                    QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(parameter.getPosition(), parameter.getName(),
-                            (parameter.getParameterType() == null ? null : parameter.getParameterType().getName()), query.getParameterValue(parameter));
+
+                    Integer position = parameter.getPosition();
+                    String name = parameter.getName();
+                    String type = (parameter.getParameterType() == null ? null : parameter.getParameterType().getName());
+                    Object value = query.getParameterValue(parameter);
+                    if (value != null) {
+                        value = getQueryValue(value);
+                    }
+
+                    QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(position, name, type, value);
 
                     parameters.add(queryParameter);
 
@@ -208,7 +201,7 @@ public class QueryAudit {
             }
         }
 
-        String json = parameters.isEmpty() ? null : gson.toJson(parameters, listType);
+        String json = getJsonParameters(parameters);
 
         if (debug) {
             logger.log(Level.INFO, "JSON Parameters: {0}", json);
@@ -219,6 +212,40 @@ public class QueryAudit {
             queryAuditing.setHasQueryParameter(true);
         }
         queryAuditing.setSqlParameters(getValueWithMaxSize(json, queryAuditPersister.getParametersMaxSize()));
+    }
+
+    public Object getQueryValue(Object value) {
+        if (value != null) {
+            if (value instanceof Collection) {
+                Collection collection = (Collection) value;
+                List parameters = new ArrayList<>();
+                for (Object object : collection) {
+                    parameters.add(getQueryValue(object));
+                }
+                return parameters;
+            }
+            if (EntityUtils.isEntity(value.getClass())) {
+                return new EntityType(EntityUtils.getId(value), value.getClass().getSimpleName(), value.toString());
+            }
+        }
+        return value;
+
+    }
+
+    /**
+     * Return a String with the Query Parameters (using Gson framework)
+     *
+     * @param parameters
+     * @return
+     */
+    public String getJsonParameters(List<QueryAudit.QueryParameter> parameters) {
+
+        //create JSON object
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
+        }.getType();
+
+        return parameters.isEmpty() ? null : gson.toJson(parameters, listType);
     }
 
     /**
@@ -240,11 +267,33 @@ public class QueryAudit {
         return 0L;
     }
 
+    /**
+     * Returns a Striing with a max size (using "..." at the end). If max size
+     * "less or equals" than zero, then return the complete String
+     *
+     * @param value
+     * @param maxSize
+     * @return
+     */
     private static String getValueWithMaxSize(String value, Integer maxSize) {
         if (maxSize == null || value == null || value.length() <= maxSize || maxSize <= 0) {
             return value;
         }
         return value.substring(0, maxSize - 3) + "...";
+    }
+
+    public class EntityType {
+
+        private final Object id;
+        private final String name;
+        private final String value;
+
+        public EntityType(Object id, String name, String value) {
+            this.id = id;
+            this.name = name;
+            this.value = value;
+        }
+
     }
 
     public class QueryParameter {

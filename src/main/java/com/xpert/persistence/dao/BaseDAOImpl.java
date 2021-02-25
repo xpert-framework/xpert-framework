@@ -62,9 +62,11 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     }
 
-    @Override
-     public BaseDAO<T> audit() {
-        return new QueryAudit().proxy(this);
+    public EntityManager getEntityManager(boolean audit) {
+        if (audit) {
+            return getEntityManagerQueryAudit();
+        }
+        return getEntityManager();
     }
 
     @Override
@@ -95,7 +97,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public QueryBuilder getQueryBuilder() {
-        System.out.println(this);
         return new QueryBuilder(getEntityManager());
     }
 
@@ -265,34 +266,69 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T find(Object id) {
-        return (T) getEntityManager().find(getEntityClass(), id);
+        return find(id, false);
+    }
+
+    @Override
+    public T find(Object id, boolean audit) {
+        return (T) getEntityManager(audit).find(getEntityClass(), id);
     }
 
     @Override
     public T find(Class entityClass, Object id) {
-        return (T) getEntityManager().find(entityClass, id);
+        return find(entityClass, id, false);
+    }
+
+    @Override
+    public T find(Class entityClass, Object id, boolean audit) {
+        return (T) getEntityManager(audit).find(entityClass, id);
     }
 
     @Override
     public List<T> listAll() {
-        return listAll(null);
+        return listAll(false);
+    }
+
+    @Override
+    public List<T> listAll(boolean audit) {
+        return listAll(null, audit);
     }
 
     @Override
     public List<T> listAll(String order) {
-        return listAll(getEntityClass(), order);
+        return listAll(order, false);
+    }
+
+    @Override
+    public List<T> listAll(String order, boolean audit) {
+        return listAll(getEntityClass(), order, audit);
     }
 
     @Override
     public List<T> listAll(Class clazz, String order) {
-        Query query = getQueryBuilder().from(clazz).orderBy(order).createQuery();
+        return listAll(clazz, order, false);
+    }
+
+    @Override
+    public List<T> listAll(Class clazz, String order, boolean audit) {
+        Query query = getQueryBuilder()
+                .audit(audit)
+                .from(clazz)
+                .orderBy(order)
+                .createQuery();
         return query.getResultList();
     }
 
     @Override
     public Object findAttribute(String attributeName, Number id) {
+        return findAttribute(attributeName, id, false);
 
-        QueryBuilder builder = getQueryBuilder();
+    }
+
+    @Override
+    public Object findAttribute(String attributeName, Number id, boolean audit) {
+
+        QueryBuilder builder = getQueryBuilder().audit(audit);
 
         return builder.select("o." + attributeName)
                 .from(getEntityClass(), "o")
@@ -303,13 +339,24 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Object findAttribute(String attributeName, Object object) {
-        return findAttribute(attributeName, (Number) EntityUtils.getId(object));
+        return findAttribute(attributeName, object, false);
+    }
+
+    @Override
+    public Object findAttribute(String attributeName, Object object, boolean audit) {
+        return findAttribute(attributeName, (Number) EntityUtils.getId(object), audit);
     }
 
     @Override
     public Object findList(String attributeName, Number id) {
+        return findList(attributeName, id, false);
 
-        QueryBuilder builder = getQueryBuilder();
+    }
+
+    @Override
+    public Object findList(String attributeName, Number id, boolean audit) {
+
+        QueryBuilder builder = getQueryBuilder().audit(audit);
 
         return builder.select("o." + attributeName)
                 .from(getEntityClass(), "o")
@@ -320,12 +367,25 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Object findList(String attributeName, Object object) {
-        return findAttribute(attributeName, (Number) EntityUtils.getId(object));
+        return findList(attributeName, object, false);
     }
 
     @Override
-    public T unique(Map<String, Object> args) {
-        Query query = getQueryBuilder().from(getEntityClass()).add(args).createQuery().setMaxResults(1);
+    public Object findList(String attributeName, Object object, boolean audit) {
+        return findAttribute(attributeName, (Number) EntityUtils.getId(object), audit);
+    }
+
+    @Override
+    public T unique(Map<String, Object> restrictions) {
+        return unique(restrictions, false);
+    }
+
+    @Override
+    public T unique(Map<String, Object> restrictions, boolean audit) {
+        Query query = getQueryBuilder().audit(false)
+                .from(getEntityClass())
+                .add(restrictions).createQuery()
+                .setMaxResults(1);
         try {
             return (T) query.getSingleResult();
         } catch (NoResultException ex) {
@@ -335,27 +395,55 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public T unique(Restriction restriction) {
-        return unique(getRestrictions(restriction), getEntityClass());
+        return unique(restriction, false);
+    }
+
+    @Override
+    public T unique(Restriction restriction, boolean audit) {
+        return unique(getRestrictions(restriction), getEntityClass(), audit);
     }
 
     @Override
     public T unique(List<Restriction> restrictions) {
-        return unique(restrictions, getEntityClass());
+        return unique(restrictions, false);
     }
 
     @Override
-    public T unique(Restriction restrictions, Class clazz) {
-        return unique(getRestrictions(restrictions), clazz);
+    public T unique(List<Restriction> restrictions, boolean audit) {
+        return unique(restrictions, getEntityClass(), audit);
+    }
+
+    @Override
+    public T unique(Restriction restriction, Class clazz) {
+        return unique(restriction, clazz, false);
+    }
+
+    @Override
+    public T unique(Restriction restriction, Class clazz, boolean audit) {
+        return unique(getRestrictions(restriction), clazz, audit);
     }
 
     @Override
     public T unique(String property, Object value) {
-        return unique(new Restriction(property, value), getEntityClass());
+        return unique(property, value, false);
+    }
+
+    @Override
+    public T unique(String property, Object value, boolean audit) {
+        return unique(new Restriction(property, value), getEntityClass(), audit);
     }
 
     @Override
     public T unique(List<Restriction> restrictions, Class clazz) {
-        Query query = getQueryBuilder().from(clazz).add(restrictions).createQuery();
+        return unique(restrictions, clazz, false);
+    }
+
+    @Override
+    public T unique(List<Restriction> restrictions, Class clazz, boolean audit) {
+        Query query = getQueryBuilder()
+                .audit(audit)
+                .from(clazz)
+                .add(restrictions).createQuery();
         query.setMaxResults(1);
         try {
             return (T) query.getSingleResult();
@@ -366,17 +454,37 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order) {
-        return list(restrictions, order, null, null);
+        return list(restrictions, order, false);
     }
 
     @Override
-    public List<T> list(Map<String, Object> args) {
-        return list(args, null);
+    public List<T> list(Map<String, Object> restrictions, String order, boolean audit) {
+        return list(restrictions, order, null, null, audit);
+    }
+
+    @Override
+    public List<T> list(Map<String, Object> restrictions) {
+        return list(restrictions, false);
+    }
+
+    @Override
+    public List<T> list(Map<String, Object> restrictions, boolean audit) {
+        return list(restrictions, null, audit);
     }
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order, Integer firstResult, Integer maxResults) {
-        Query query = getQueryBuilder().from(getEntityClass()).add(restrictions).orderBy(order).createQuery();
+        return list(restrictions, order, firstResult, maxResults, false);
+    }
+
+    @Override
+    public List<T> list(Map<String, Object> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit) {
+        Query query = getQueryBuilder()
+                .audit(audit)
+                .from(getEntityClass())
+                .add(restrictions)
+                .orderBy(order)
+                .createQuery();
 
         if (firstResult != null) {
             query.setFirstResult(firstResult);
@@ -390,122 +498,242 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public List<T> list(Class clazz, List<Restriction> restrictions) {
-        return list(clazz, restrictions, null);
+        return list(clazz, restrictions, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, List<Restriction> restrictions, boolean audit) {
+        return list(clazz, restrictions, null, audit);
     }
 
     @Override
     public List<T> list(List<Restriction> restrictions) {
-        return list(getEntityClass(), restrictions);
+        return list(restrictions, false);
+    }
+
+    @Override
+    public List<T> list(List<Restriction> restrictions, boolean audit) {
+        return list(getEntityClass(), restrictions, audit);
     }
 
     @Override
     public List<T> list(Class clazz, Restriction restriction) {
-        return list(clazz, getRestrictions(restriction), null);
+        return list(clazz, restriction, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, Restriction restriction, boolean audit) {
+        return list(clazz, getRestrictions(restriction), null, audit);
     }
 
     @Override
     public List<T> list(String property, Object value) {
-        return list(getEntityClass(), new Restriction(property, value));
+        return list(property, value, false);
+    }
+
+    @Override
+    public List<T> list(String property, Object value, boolean audit) {
+        return list(getEntityClass(), new Restriction(property, value), audit);
     }
 
     @Override
     public List<T> list(String property, Object value, String order) {
-        return list(getEntityClass(), new Restriction(property, value), order);
+        return list(property, value, order, false);
+    }
+
+    @Override
+    public List<T> list(String property, Object value, String order, boolean audit) {
+        return list(getEntityClass(), new Restriction(property, value), order, audit);
     }
 
     @Override
     public List<T> list(Restriction restriction) {
-        return list(getEntityClass(), getRestrictions(restriction));
+        return list(restriction, false);
+    }
+
+    @Override
+    public List<T> list(Restriction restriction, boolean audit) {
+        return list(getEntityClass(), getRestrictions(restriction), audit);
     }
 
     @Override
     public List<T> listAttributes(String attributes) {
-        return listAttributes(attributes, null);
+        return listAttributes(attributes, false);
+    }
+
+    @Override
+    public List<T> listAttributes(String attributes, boolean audit) {
+        return listAttributes(attributes, null, audit);
     }
 
     @Override
     public List<T> listAttributes(String attributes, String order) {
-        return list(getEntityClass(), (List) null, order, null, null, attributes);
+        return listAttributes(attributes, order, false);
     }
 
     @Override
-    public List<T> listAttributes(Map<String, Object> args, String attributes, String order) {
-        return list(getEntityClass(), getRestrictionsFromMap(args), order, null, null, attributes);
+    public List<T> listAttributes(String attributes, String order, boolean audit) {
+        return list(getEntityClass(), (List) null, order, null, null, attributes, audit);
     }
 
     @Override
-    public List<T> listAttributes(Map<String, Object> args, String attributes) {
-        return list(getEntityClass(), getRestrictionsFromMap(args), null, null, null, attributes);
+    public List<T> listAttributes(Map<String, Object> restrictions, String attributes, String order) {
+        return listAttributes(restrictions, attributes, order, false);
+    }
+
+    @Override
+    public List<T> listAttributes(Map<String, Object> restrictions, String attributes, String order, boolean audit) {
+        return list(getEntityClass(), getRestrictionsFromMap(restrictions), order, null, null, attributes, audit);
+    }
+
+    @Override
+    public List<T> listAttributes(Map<String, Object> restrictions, String attributes) {
+        return listAttributes(restrictions, attributes, false);
+    }
+
+    @Override
+    public List<T> listAttributes(Map<String, Object> restrictions, String attributes, boolean audit) {
+        return list(getEntityClass(), getRestrictionsFromMap(restrictions), null, null, null, attributes, audit);
     }
 
     @Override
     public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order) {
-        return list(getEntityClass(), restrictions, order, null, null, attributes);
+        return listAttributes(restrictions, attributes, order, false);
+    }
+
+    @Override
+    public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order, boolean audit) {
+        return list(getEntityClass(), restrictions, order, null, null, attributes, audit);
     }
 
     @Override
     public List<T> listAttributes(List<Restriction> restrictions, String attributes) {
-        return list(getEntityClass(), restrictions, null, null, null, attributes);
+        return listAttributes(restrictions, attributes, false);
+    }
+
+    @Override
+    public List<T> listAttributes(List<Restriction> restrictions, String attributes, boolean audit) {
+        return list(getEntityClass(), restrictions, null, null, null, attributes, audit);
     }
 
     @Override
     public List<T> listAttributes(Restriction restriction, String attributes, String order) {
-        return list(getEntityClass(), getRestrictions(restriction), order, null, null, attributes);
+        return listAttributes(restriction, attributes, order, false);
+    }
+
+    @Override
+    public List<T> listAttributes(Restriction restriction, String attributes, String order, boolean audit) {
+        return list(getEntityClass(), getRestrictions(restriction), order, null, null, attributes, audit);
     }
 
     @Override
     public List<T> listAttributes(Restriction restriction, String attributes) {
-        return list(getEntityClass(), getRestrictions(restriction), null, null, null, attributes);
+        return listAttributes(restriction, attributes, false);
+    }
+
+    @Override
+    public List<T> listAttributes(Restriction restriction, String attributes, boolean audit) {
+        return list(getEntityClass(), getRestrictions(restriction), null, null, null, attributes, audit);
     }
 
     @Override
     public List listAttributes(String property, Object value, String attributes) {
-        return listAttributes(new Restriction(property, value), attributes);
+        return listAttributes(property, value, attributes, false);
+    }
+
+    @Override
+    public List listAttributes(String property, Object value, String attributes, boolean audit) {
+        return listAttributes(new Restriction(property, value), attributes, audit);
     }
 
     @Override
     public List listAttributes(String property, Object value, String attributes, String order) {
-        return listAttributes(new Restriction(property, value), attributes, order);
+        return listAttributes(property, value, attributes, order, false);
+    }
+
+    @Override
+    public List listAttributes(String property, Object value, String attributes, String order, boolean audit) {
+        return listAttributes(new Restriction(property, value), attributes, order, audit);
     }
 
     @Override
     public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults) {
-        return list(getEntityClass(), restrictions, order, firstResult, maxResults);
+        return list(restrictions, order, firstResult, maxResults, false);
+    }
+
+    @Override
+    public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit) {
+        return list(getEntityClass(), restrictions, order, firstResult, maxResults, audit);
     }
 
     @Override
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults) {
-        return list(clazz, restrictions, order, firstResult, maxResults, null);
+        return list(clazz, restrictions, order, firstResult, maxResults, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit) {
+        return list(clazz, restrictions, order, firstResult, maxResults, null, audit);
     }
 
     @Override
     public List<T> list(Restriction restriction, String order, Integer firstResult, Integer maxResults) {
-        return list(getEntityClass(), getRestrictions(restriction), order, firstResult, maxResults);
+        return list(restriction, order, firstResult, maxResults, false);
+    }
+
+    @Override
+    public List<T> list(Restriction restriction, String order, Integer firstResult, Integer maxResults, boolean audit) {
+        return list(getEntityClass(), getRestrictions(restriction), order, firstResult, maxResults, audit);
     }
 
     @Override
     public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults) {
+        return list(clazz, restriction, order, firstResult, maxResults, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, boolean audit) {
         return list(clazz, getRestrictions(restriction), order, firstResult, maxResults, null);
     }
 
     @Override
     public List<T> list(List<Restriction> restrictions, String order) {
-        return list(getEntityClass(), restrictions, order);
+        return list(restrictions, order, false);
+    }
+
+    @Override
+    public List<T> list(List<Restriction> restrictions, String order, boolean audit) {
+        return list(getEntityClass(), restrictions, order, audit);
     }
 
     @Override
     public List<T> list(Class clazz, List<Restriction> restrictions, String order) {
-        return list(clazz, restrictions, order, null, null);
+        return list(clazz, restrictions, order, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, List<Restriction> restrictions, String order, boolean audit) {
+        return list(clazz, restrictions, order, null, null, audit);
     }
 
     @Override
     public List<T> list(Restriction restriction, String order) {
-        return list(getEntityClass(), getRestrictions(restriction), order);
+        return list(restriction, order, false);
+    }
+
+    @Override
+    public List<T> list(Restriction restriction, String order, boolean audit) {
+        return list(getEntityClass(), getRestrictions(restriction), order, audit);
     }
 
     @Override
     public List<T> list(Class clazz, Restriction restriction, String order) {
-        return list(clazz, getRestrictions(restriction), order, null, null);
+        return list(clazz, restriction, order, false);
+    }
+
+    @Override
+    public List<T> list(Class clazz, Restriction restriction, String order, boolean audit) {
+        return list(clazz, getRestrictions(restriction), order, null, null, audit);
     }
 
     @Override
@@ -514,9 +742,21 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     }
 
     @Override
+    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit) {
+        return list(clazz, getRestrictions(restriction), order, firstResult, maxResults, attributes, audit);
+    }
+
+    @Override
     public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes) {
+        return list(clazz, restrictions, order, firstResult, maxResults, attributes, false);
+
+    }
+
+    @Override
+    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit) {
 
         return getQueryBuilder()
+                .audit(audit)
                 .select(attributes)
                 .from(clazz)
                 .add(restrictions)
@@ -529,42 +769,98 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public Long count(Map<String, Object> restrictions) {
-        return getQueryBuilder().from(getEntityClass()).add(restrictions).count();
+        return count(restrictions, false);
+    }
+
+    @Override
+    public Long count(Map<String, Object> restrictions, boolean audit) {
+        return getQueryBuilder()
+                .audit(audit)
+                .from(getEntityClass())
+                .add(restrictions)
+                .count();
     }
 
     @Override
     public Long count(String property, Object value) {
-        return count(new Restriction(property, value));
+        return count(property, value, false);
+    }
+
+    @Override
+    public Long count(String property, Object value, boolean audit) {
+        return count(new Restriction(property, value), audit);
     }
 
     @Override
     public Long count(Restriction restriction) {
-        return count(getRestrictions(restriction));
+        return count(restriction, false);
+    }
+
+    @Override
+    public Long count(Restriction restriction, boolean audit) {
+        return count(getRestrictions(restriction), audit);
     }
 
     @Override
     public Long count(List<Restriction> restrictions) {
-        return getQueryBuilder().from(getEntityClass()).add(restrictions).count();
+        return count(restrictions, false);
+    }
+
+    @Override
+    public Long count(List<Restriction> restrictions, boolean audit) {
+        return getQueryBuilder()
+                .audit(audit)
+                .from(getEntityClass())
+                .add(restrictions)
+                .count();
     }
 
     @Override
     public Long count() {
-        return count(getEntityClass());
+        return count(false);
+    }
+
+    @Override
+    public Long count(boolean audit) {
+        return count(getEntityClass(), audit);
     }
 
     @Override
     public Long count(Class clazz) {
-        return count((List) null);
+        return count(clazz, false);
+    }
+
+    @Override
+    public Long count(Class clazz, boolean audit) {
+        return count((List) null, clazz, audit);
     }
 
     @Override
     public Long count(List<Restriction> restrictions, Class clazz) {
-        return getQueryBuilder().from(clazz).add(restrictions).count();
+        return count(restrictions, clazz, false);
+    }
+
+    @Override
+    public Long count(List<Restriction> restrictions, Class clazz, boolean audit) {
+        return getQueryBuilder()
+                .audit(audit)
+                .from(clazz)
+                .add(restrictions)
+                .count();
     }
 
     @Override
     public Long count(Restriction restriction, Class clazz) {
-        return getQueryBuilder().from(clazz).add(restriction).count();
+        return count(restriction, clazz, false);
+    }
+
+    @Override
+    public Long count(Restriction restriction, Class clazz, boolean audit) {
+        return getQueryBuilder()
+                .audit(audit)
+                .from(clazz)
+                .add(restriction)
+                .count();
     }
 
     @Override

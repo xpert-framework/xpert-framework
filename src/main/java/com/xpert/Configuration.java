@@ -1,7 +1,6 @@
 package com.xpert;
 
 import com.xpert.audit.AbstractAuditingListener;
-import com.xpert.audit.QueryAuditPersister;
 import com.xpert.audit.QueryAuditPersisterFactory;
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
@@ -48,7 +47,7 @@ public class Configuration {
         try {
             EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
             if (entityManagerFactory == null) {
-                throw new RuntimeException("No EntityManagerFactory defined in xpert-config.xml");
+                throw new RuntimeException("[xpert-framework] No EntityManagerFactory defined in xpert-config.xml");
             }
             return entityManagerFactory.getEntityManager();
         } catch (Exception ex) {
@@ -61,7 +60,7 @@ public class Configuration {
         try {
             EntityManagerFactory entityManagerFactory = getAuditEntityManagerFactory();
             if (entityManagerFactory == null) {
-                throw new RuntimeException("No AuditEntityManagerFactory defined in xpert-config.xml");
+                throw new RuntimeException("[xpert-framework] No AuditEntityManagerFactory defined in xpert-config.xml");
             }
             return entityManagerFactory.getEntityManager();
         } catch (Exception ex) {
@@ -91,6 +90,9 @@ public class Configuration {
     }
 
     public static AbstractQueryAuditing getAbstractQueryAuditing() {
+        if (queryAuditingImplClass == null) {
+            throw new RuntimeException("[xpert-framework] No 'query-auditing-impl' defined in xpert-config.xml");
+        }
         return (AbstractQueryAuditing) newInstance(queryAuditingImplClass);
     }
 
@@ -99,6 +101,9 @@ public class Configuration {
     }
 
     public static QueryAuditPersisterFactory getQueryAuditPersisterFactory() {
+        if (queryAuditPersisterFactoryImplClass == null) {
+            throw new RuntimeException("[xpert-framework] No 'query-audit-persister-factory' defined in xpert-config.xml");
+        }
         return (QueryAuditPersisterFactory) newInstance(queryAuditPersisterFactoryImplClass);
     }
 

@@ -1,7 +1,6 @@
 package com.xpert.persistence.query;
 
 import com.xpert.audit.QueryAudit;
-import com.xpert.audit.QueryAudit;
 import com.xpert.persistence.exception.QueryFileNotFoundException;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.IOException;
@@ -338,10 +337,24 @@ public class QueryBuilder implements Cloneable {
         return this;
     }
 
+    /**
+     * Call EntityManager.find
+     *
+     * @param entityClass
+     * @param id
+     * @return
+     */
     public Object find(Class entityClass, Object id) {
         return getEntityManager().find(entityClass, id);
     }
 
+    /**
+     * 
+     * Call EntityManager.find
+     * 
+     * @param id
+     * @return 
+     */
     public Object find(Object id) {
         return getEntityManager().find(this.from, id);
     }
