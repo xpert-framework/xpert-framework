@@ -179,7 +179,7 @@ public class QueryAudit {
         if (queryAuditing.getIdentifier() != null && queryAuditing.getAuditClass() != null) {
             String idName = EntityUtils.getIdFieldName(queryAuditing.getAuditClass());
             Class idType = EntityUtils.getIdType(queryAuditing.getAuditClass());
-            QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(1, idName, idType.getName(), queryAuditing.getIdentifier());
+            QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(1, idName, idType.getName(), queryAuditing.getIdentifier(), false);
             parameters.add(queryParameter);
         } else {
             if (query != null && query.getParameters() != null) {
@@ -189,11 +189,15 @@ public class QueryAudit {
                     String name = parameter.getName();
                     String type = (parameter.getParameterType() == null ? null : parameter.getParameterType().getName());
                     Object value = query.getParameterValue(parameter);
+                    boolean listOfValues = false;
                     if (value != null) {
                         value = getQueryValue(value);
+                        if (value instanceof Collection || value instanceof Object[]) {
+                            listOfValues = true;
+                        }
                     }
 
-                    QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(position, name, type, value);
+                    QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(position, name, type, value, listOfValues);
 
                     parameters.add(queryParameter);
 
@@ -225,7 +229,7 @@ public class QueryAudit {
                 return parameters;
             }
             if (EntityUtils.isEntity(value.getClass())) {
-                return new EntityType(EntityUtils.getId(value), value.getClass().getSimpleName(), value.toString());
+                return new EntityType(EntityUtils.getId(value), value.toString());
             }
         }
         return value;
@@ -285,12 +289,10 @@ public class QueryAudit {
     public class EntityType {
 
         private final Object id;
-        private final String name;
         private final String value;
 
-        public EntityType(Object id, String name, String value) {
+        public EntityType(Object id, String value) {
             this.id = id;
-            this.name = name;
             this.value = value;
         }
 
@@ -301,13 +303,15 @@ public class QueryAudit {
         private final Integer position;
         private final String name;
         private final String type;
+        private final boolean listOfValues;
         private final Object value;
 
-        public QueryParameter(Integer position, String name, String type, Object value) {
+        public QueryParameter(Integer position, String name, String type, Object value, boolean listOfValues) {
             this.position = position;
             this.name = name;
             this.type = type;
             this.value = value;
+            this.listOfValues = listOfValues;
         }
 
     }

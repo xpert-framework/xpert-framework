@@ -11,7 +11,7 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class AbstractQueryAuditing {
     
-    public static final int SQL_STRING_MAX_SIZE = 500;
+    public static final int SQL_STRING_MAX_SIZE = 2000;
 
     @Transient
     private Class auditClass;
