@@ -31,15 +31,15 @@ import javax.persistence.Query;
  * @author ayslanms
  */
 public class QueryAudit {
-
+    
     public static final boolean debug = true;
     private static final Logger logger = Logger.getLogger(QueryAudit.class.getName());
-
+    
     private QueryAuditConfig queryAuditConfig;
-
+    
     public QueryAudit() {
     }
-
+    
     public QueryAudit(QueryAuditConfig queryAuditConfig) {
         this.queryAuditConfig = queryAuditConfig;
     }
@@ -76,7 +76,7 @@ public class QueryAudit {
     public Query proxy(QueryAuditConfig config) {
         return (Query) Proxy.newProxyInstance(Query.class.getClassLoader(), new Class[]{Query.class}, new QueryAuditProxy(config));
     }
-
+    
     public static QueryAuditingType getQueryAuditingType(Method method) {
         if (method.getName().equals("find")) {
             return QueryAuditingType.FIND_BY_ID;
@@ -89,9 +89,9 @@ public class QueryAudit {
         }
         return QueryAuditingType.OTHER;
     }
-
+    
     public Object persistQuery(Object wrapped, Method method, Object[] args) throws Throwable {
-
+        
         if (debug) {
             logger.log(Level.INFO, "Wrapped: {0}, Invoke: {1}, Args: {2}", new Object[]{wrapped.getClass().getName(), method.getName(), Arrays.toString(args)});
         }
@@ -101,17 +101,17 @@ public class QueryAudit {
         queryAuditConfig.setQueryAuditing(queryAuditing);
         queryAuditing.setAuditingType(queryAuditConfig.getAuditingType());
         queryAuditing.setStartDate(new Date());
-
+        
         Object result = null;
         try {
             result = method.invoke(wrapped, args);
         } catch (NoResultException ex) {
             result = null;
         }
-
+        
         queryAuditing.setEndDate(new Date());
         queryAuditing.calculateTime();
-
+        
         if (debug) {
             logger.log(Level.INFO, "Query executed in {0} milliseconds", queryAuditing.getTimeMilliseconds());
         }
@@ -132,7 +132,7 @@ public class QueryAudit {
         if (queryAuditing.getEntity() == null && queryAuditConfig.getQueryBuilder() != null && queryAuditConfig.getQueryBuilder().from() != null) {
             queryAuditing.setEntity(Audit.getEntityName(queryAuditConfig.getQueryBuilder().from()));
         }
-
+        
         if (queryAuditConfig.getQuery() != null) {
             queryAuditing.setFirstResult(queryAuditConfig.getQuery().getFirstResult());
             if (queryAuditConfig.getQuery().getMaxResults() != Integer.MAX_VALUE) {
@@ -142,25 +142,26 @@ public class QueryAudit {
                 queryAuditing.setPaginatedQuery(true);
             }
         }
-
+        
         QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
         buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
 
         //get SQL Query (HQL/JPQL)
         if (queryAuditConfig.getQuery() != null) {
             queryAuditing.setSqlQuery(getValueWithMaxSize(queryAuditConfig.getQuery().unwrap(org.hibernate.Query.class).getQueryString(), queryAuditPersister.getSqlStringMaxSize()));
-            if (debug) {
-                logger.log(Level.INFO, "SQL Query: {0}", queryAuditing.getSqlQuery());
-            }
         }
-
+        
+        if (debug) {
+            logger.log(Level.INFO, "SQL Query: {0}", queryAuditing.getSqlQuery());
+        }
+        
         queryAuditing.setRowsTotal(getRows(result));
-
+        
         if (FacesContext.getCurrentInstance() != null) {
             queryAuditing.setIp(FacesUtils.getIP());
         }
         queryAuditPersister.persist(queryAuditing);
-
+        
         return result;
     }
 
@@ -172,19 +173,21 @@ public class QueryAudit {
      * @param queryAuditPersister
      */
     public void buildParameters(Query query, AbstractQueryAuditing queryAuditing, QueryAuditPersister queryAuditPersister) {
-
+        
         List<QueryAudit.QueryParameter> parameters = new ArrayList<>();
 
         //if has id, then is "find" method, set the idenfier
         if (queryAuditing.getIdentifier() != null && queryAuditing.getAuditClass() != null) {
             String idName = EntityUtils.getIdFieldName(queryAuditing.getAuditClass());
             Class idType = EntityUtils.getIdType(queryAuditing.getAuditClass());
+            //force a SQL in FIND BY ID
+            queryAuditing.setSqlQuery("FROM " + queryAuditing.getAuditClass().getName() + " WHERE " + idName + " =?1 ");
             QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(1, idName, idType.getName(), queryAuditing.getIdentifier(), false);
             parameters.add(queryParameter);
         } else {
             if (query != null && query.getParameters() != null) {
                 for (Parameter<?> parameter : query.getParameters()) {
-
+                    
                     Integer position = parameter.getPosition();
                     String name = parameter.getName();
                     String type = (parameter.getParameterType() == null ? null : parameter.getParameterType().getName());
@@ -196,28 +199,28 @@ public class QueryAudit {
                             listOfValues = true;
                         }
                     }
-
+                    
                     QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(position, name, type, value, listOfValues);
-
+                    
                     parameters.add(queryParameter);
-
+                    
                 }
             }
         }
-
+        
         String json = getJsonParameters(parameters);
-
+        
         if (debug) {
             logger.log(Level.INFO, "JSON Parameters: {0}", json);
         }
-
+        
         queryAuditing.setParametersSize(parameters.size());
         if (parameters.size() > 0) {
             queryAuditing.setHasQueryParameter(true);
         }
         queryAuditing.setSqlParameters(getValueWithMaxSize(json, queryAuditPersister.getParametersMaxSize()));
     }
-
+    
     public Object getQueryValue(Object value) {
         if (value != null) {
             if (value instanceof Collection) {
@@ -233,7 +236,7 @@ public class QueryAudit {
             }
         }
         return value;
-
+        
     }
 
     /**
@@ -248,7 +251,7 @@ public class QueryAudit {
         Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
         Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
         }.getType();
-
+        
         return parameters.isEmpty() ? null : gson.toJson(parameters, listType);
     }
 
@@ -285,27 +288,27 @@ public class QueryAudit {
         }
         return value.substring(0, maxSize - 3) + "...";
     }
-
+    
     public class EntityType {
-
+        
         private final Object id;
         private final String value;
-
+        
         public EntityType(Object id, String value) {
             this.id = id;
             this.value = value;
         }
-
+        
     }
-
+    
     public class QueryParameter {
-
+        
         private final Integer position;
         private final String name;
         private final String type;
         private final boolean listOfValues;
         private final Object value;
-
+        
         public QueryParameter(Integer position, String name, String type, Object value, boolean listOfValues) {
             this.position = position;
             this.name = name;
@@ -313,7 +316,7 @@ public class QueryAudit {
             this.value = value;
             this.listOfValues = listOfValues;
         }
-
+        
     }
-
+    
 }
