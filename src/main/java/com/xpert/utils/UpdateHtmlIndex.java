@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,8 +16,12 @@ import java.util.Locale;
  */
 public class UpdateHtmlIndex {
 
+    private static final Logger logger = Logger.getLogger(UpdateHtmlIndex.class.getName());
+    
+    
+
     public static void main(String[] args) throws FileNotFoundException {
-        updateIndex("D:\\Desenvolvimento\\xpert-framework\\git\\xpert-framework.github.io\\maven");
+        updateIndex("./../xpert-framework.github.io/maven");
     }
 
 //    public static void main2(String[] args) throws FileNotFoundException {
@@ -37,6 +43,9 @@ public class UpdateHtmlIndex {
         if (file == null) {
             return;
         }
+        
+        logger.log(Level.INFO, "Updating Index in {0}", file.getAbsolutePath());
+        
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm", Locale.ENGLISH);
         StringBuilder html = new StringBuilder();
@@ -81,11 +90,10 @@ public class UpdateHtmlIndex {
         html.append("<hr>");
         html.append("</body>\n</html>");
 
-        System.out.println(html);
-
         if (files != null && files.length > 0) {
             for (File child : files) {
                 if (child.isDirectory()) {
+                    logger.log(Level.INFO, "Updating File {0}", file.getName());
                     updateIndex(child, root + "/" + file.getName());
                 }
             }
