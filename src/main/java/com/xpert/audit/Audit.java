@@ -199,7 +199,7 @@ public class Audit {
      * @return true if object must be audited
      */
     public static boolean isAudit(Object object) {
-        if (object == null) {
+        if (object == null || !Configuration.isAudit()) {
             return false;
         }
         return isAudit(EntityUtils.getPersistentClass(object));
