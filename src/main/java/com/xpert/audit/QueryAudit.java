@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
+import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 /**
  *
@@ -146,9 +147,11 @@ public class QueryAudit {
         QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
         buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
 
-        //get SQL Query (HQL/JPQL)
+        //get SQL Query (HQL/JPQL or native)
         if (queryAuditConfig.getQuery() != null) {
-            queryAuditing.setSqlQuery(getValueWithMaxSize(queryAuditConfig.getQuery().unwrap(org.hibernate.Query.class).getQueryString(), queryAuditPersister.getSqlStringMaxSize()));
+            //Hibernate Format SQL
+            String sql = new BasicFormatterImpl().format(queryAuditConfig.getQuery().unwrap(org.hibernate.Query.class).getQueryString());
+            queryAuditing.setSqlQuery(getValueWithMaxSize(sql, queryAuditPersister.getSqlStringMaxSize()));
         }
         
         if (debug) {
@@ -248,7 +251,7 @@ public class QueryAudit {
     public String getJsonParameters(List<QueryAudit.QueryParameter> parameters) {
 
         //create JSON object
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().setDateFormat("dd/MM/yyyy").create();
         Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
         }.getType();
         
