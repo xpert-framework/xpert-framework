@@ -57,7 +57,7 @@ http://showcase.xpertsistemas.com.br/
 
 ## Documentation
 
-PDF Version: 
+PDF Version (legacy): 
 
 - [xpert-framework-1.8.1](https://github.com/xpert-framework/download/raw/master/docs/xpert_framework_1_8_1.pdf)
 - [xpert-framework-1.8](https://github.com/xpert-framework/download/raw/master/docs/xpert_framework_1_8.pdf)
@@ -161,6 +161,7 @@ Web Version:
 	- [Ignorar auditoria de uma classe ou de um atributo](https://github.com/xpert-framework/xpert-framework/wiki/Auditando-as-entidades-com-o-Xpert-Audit#ignorar-auditoria-de-uma-classe-ou-de-um-atributo)
 	- [Acessando alterações do objeto com o AuditContext](https://github.com/xpert-framework/xpert-framework/wiki/Auditando-as-entidades-com-o-Xpert-Audit#acessando-altera%C3%A7%C3%B5es-do-objeto-com-o-auditcontext)
 	- [Criando o audit em um banco de dados diferente](https://github.com/xpert-framework/xpert-framework/wiki/Auditando-as-entidades-com-o-Xpert-Audit#criando-o-audit-em-um-banco-de-dados-diferente)
+- [Auditoria de Consultas](https://github.com/xpert-framework/xpert-framework/wiki/Auditoria-de-Consultas)   
 - [SequenceUpdater - Atualizando as sequences do banco de dados](https://github.com/xpert-framework/xpert-framework/wiki/SequenceUpdater---Atualizando-as-sequences-do-banco-de-dados)
 	- [Introdução](https://github.com/xpert-framework/xpert-framework/wiki/SequenceUpdater---Atualizando-as-sequences-do-banco-de-dados#introdu%C3%A7%C3%A3o)
 	- [Utilização do SequenceUpdater](https://github.com/xpert-framework/xpert-framework/wiki/SequenceUpdater---Atualizando-as-sequences-do-banco-de-dados#utiliza%C3%A7%C3%A3o-do-sequenceupdater)
