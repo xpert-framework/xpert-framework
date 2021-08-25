@@ -7,6 +7,7 @@ import com.xpert.security.EncryptionType;
 import com.xpert.security.model.User;
 import com.xpert.security.session.AbstractUserSession;
 import com.xpert.utils.Encryption;
+import com.xpert.utils.StringUtils;
 import java.security.NoSuchAlgorithmException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -21,6 +22,7 @@ import javax.persistence.Query;
  */
 public abstract class SecurityLoginBean {
 
+    private String userCpf;
     private String userLogin;
     private String userPassword;
 
@@ -163,6 +165,18 @@ public abstract class SecurityLoginBean {
         }
         return valid;
     }
+    public boolean validateByCpf() {
+        boolean valid = true;
+        if (userCpf == null || userCpf.trim().isEmpty()) {
+            addErrorMessage("CPF is required");
+            valid = false;
+        }
+        if (userPassword == null || userPassword.trim().isEmpty()) {
+            addErrorMessage("Password is required");
+            valid = false;
+        }
+        return valid;
+    }
 
     /**
      * Executed after user query in database
@@ -196,6 +210,16 @@ public abstract class SecurityLoginBean {
 
     /**
      *
+     * @return Query String to find User by CPF
+     */
+    public String getUserLoginByCpfQueryString() {
+        String queryString = " FROM " + getUserClass().getName();
+        queryString = queryString + " WHERE cpf = :cpf ";
+        return queryString;
+    }
+
+    /**
+     *
      * @param entityManager
      * @param queryString String to find User
      * @param login User Login
@@ -203,6 +227,17 @@ public abstract class SecurityLoginBean {
      */
     public Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
         return entityManager.createQuery(queryString).setParameter("userLogin", login);
+    }
+
+    /**
+     *
+     * @param entityManager
+     * @param queryString String to find User
+     * @param cpf User CPF
+     * @return
+     */
+    public Query getUserLoginByCpfQuery(EntityManager entityManager, String queryString, String cpf) {
+        return entityManager.createQuery(queryString).setParameter("cpf", cpf);
     }
 
     public User getUser(String login, String password) {
@@ -222,6 +257,31 @@ public abstract class SecurityLoginBean {
         }
         try {
             user = (User) getUserLoginQuery(entityManager, queryString, login).getSingleResult();
+        } catch (NoResultException ex) {
+            //
+        }
+
+        //verify user password
+        if (user != null) {
+            user = authenticateUserPassword(user, password);
+        }
+
+        return user;
+    }
+
+    public User getUserByCpf(String cpf, String password) {
+
+        User user = null;
+        EntityManager entityManager = getEntityManager();
+        if (entityManager == null || getUserClass() == null) {
+            throw new IllegalArgumentException("To get the user you must override methods getEntityManager() and getUserClass() or override getUser() and do your own logic");
+        }
+
+        String queryString = getUserLoginByCpfQueryString();
+
+        cpf = StringUtils.getOnlyIntegerNumbers(cpf);
+        try {
+            user = (User) getUserLoginByCpfQuery(entityManager, queryString, cpf).getSingleResult();
         } catch (NoResultException ex) {
             //
         }
@@ -281,7 +341,59 @@ public abstract class SecurityLoginBean {
         }
 
         if (validate()) {
-            User user = getUser(userLogin, userPassword);
+            User user = getUser(userCpf, userPassword);
+
+            if (user == null) {
+                addErrorMessage(getUserNotFoundMessage());
+                onError();
+                return;
+            }
+            if (!user.isActive()) {
+                addErrorMessage(getInactiveUserMessage());
+                onError();
+                return;
+            }
+            if (user.getUserPassword() == null || user.getUserPassword().isEmpty()) {
+                addErrorMessage(getUserWithoutPassword());
+                onError();
+                return;
+            }
+            try {
+                //more validation
+                validate(user);
+            } catch (BusinessException ex) {
+                FacesMessageUtils.error(ex);
+                return;
+            }
+
+            //set user in session
+            if (getUserSession() != null) {
+                getUserSession().setUser(user);
+                getUserSession().createSession();
+                //when no roles found, login is not sucessful
+                if (isValidateWhenNoRolesFound() && (getUserSession().getRoles() == null || getUserSession().getRoles().isEmpty())) {
+                    addErrorMessage(getNoRolesFoundMessage());
+                    getUserSession().setUser(null);
+                    return;
+                }
+            }
+            onSucess(user);
+            FacesUtils.redirect(getRedirectPageWhenSucess());
+        }
+
+    }
+    /**
+     * This method make the user login
+     */
+    public void loginCpf() {
+
+        //clear user session
+        if (getUserSession() != null) {
+            getUserSession().setUser(null);
+        }
+
+        if (validateByCpf()) {
+            User user = getUserByCpf(userCpf, userPassword);
 
             if (user == null) {
                 addErrorMessage(getUserNotFoundMessage());
@@ -368,4 +480,13 @@ public abstract class SecurityLoginBean {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
+
+    public String getUserCpf() {
+        return userCpf;
+    }
+
+    public void setUserCpf(String userCpf) {
+        this.userCpf = userCpf;
+    }
+
 }
