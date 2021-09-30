@@ -66,7 +66,7 @@ public class DateUtils {
         calendar.set(Calendar.YEAR, year);
         return calendar.getTime();
     }
-
+    
     /**
      * Return the first day in month. Example: year 2013, month 0 return
      * '2013-01-31' (yyyy-MM-dd)
@@ -77,6 +77,8 @@ public class DateUtils {
      */
     public static Date getLastDayInMonth(int month, int year) {
         Calendar calendar = Calendar.getInstance();
+        //set day 1 before month
+        calendar.set(Calendar.DATE, 1);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
         calendar.set(Calendar.YEAR, year);
