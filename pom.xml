@@ -5,7 +5,7 @@
     <groupId>com.xpert</groupId>
     <artifactId>xpert-framework</artifactId>
     <name>xpert-framework</name>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.1</version>
     <packaging>jar</packaging>
     <url>http://xpert-framework.github.io/</url>
 
