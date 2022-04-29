@@ -78,10 +78,10 @@ public class RestrictionComponent {
             restrictionType = RestrictionType.EQUALS;
         }
 
-        boolean ilikeValue = true;
+        Boolean ilikeValue = true;
         //if no value informed, then use "eq"
         if (ilike != null) {
-            ilikeValue = Boolean.valueOf(ilike.toString());
+            ilikeValue = (Boolean) ilike.getValue(elContext);
         }
 
         LikeType likeTypeValue = null;
