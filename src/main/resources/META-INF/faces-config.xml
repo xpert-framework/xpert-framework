@@ -49,6 +49,14 @@
         <converter-class>com.xpert.faces.conversion.CpfConverter</converter-class>
     </converter>
     <converter>
+        <converter-id>dataSerproConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.DataSerproConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>dataHoraSerproConverter</converter-id>
+        <converter-class>com.xpert.faces.conversion.DataHoraSerproConverter</converter-class>
+    </converter>
+    <converter>
         <converter-id>placaCarroConverter</converter-id>
         <converter-class>com.xpert.faces.conversion.PlacaCarroConverter</converter-class>
     </converter>
