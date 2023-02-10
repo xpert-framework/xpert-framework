@@ -31,13 +31,13 @@ public class DataHoraSerproConverter implements Converter {
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
             Date dataHora = sdf.parse(dataPadraoSerpro);
-            SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return dt.format(dataHora);
         } catch (ParseException e) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 Date dataHora = sdf.parse(dataPadraoSerpro);
-                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 return dt.format(dataHora);
             } catch (ParseException ex) {
                 return null;
