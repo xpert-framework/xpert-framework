@@ -451,6 +451,22 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
             return null;
         }
     }
+    
+    @Override
+    public T unique(List<Restriction> restrictions, String order) {
+        Query query = getQueryBuilder()
+                .audit(false)
+                .from(getEntityClass())
+                .add(restrictions)
+                .orderBy(order)
+                .createQuery();
+        query.setMaxResults(1);
+        try {
+            return (T) query.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
+    }
 
     @Override
     public List<T> list(Map<String, Object> restrictions, String order) {

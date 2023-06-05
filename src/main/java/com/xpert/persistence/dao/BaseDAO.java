@@ -467,6 +467,15 @@ public interface BaseDAO<T> {
      * @return a unique object from query
      */
     public T unique(List<Restriction> restrictions);
+    
+    /**
+     * Returns a unique object from query
+     *
+     * @param restrictions - Restrictions query results
+     * @param order
+     * @return a unique object from query
+     */
+    public T unique(List<Restriction> restrictions,String order);
 
     /**
      * Returns a unique object from query
