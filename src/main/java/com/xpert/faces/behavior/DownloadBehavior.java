@@ -1,11 +1,11 @@
 package com.xpert.faces.behavior;
 
 import com.xpert.i18n.XpertResourceBundle;
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.behavior.ClientBehaviorBase;
-import javax.faces.component.behavior.ClientBehaviorContext;
-import org.apache.commons.lang.StringEscapeUtils;
+import jakarta.faces.application.ResourceDependencies;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.component.behavior.ClientBehaviorBase;
+import jakarta.faces.component.behavior.ClientBehaviorContext;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -43,7 +43,7 @@ public class DownloadBehavior extends ClientBehaviorBase {
         }
         script.append(",message:'");
         if (message != null && !message.isEmpty()) {
-            script.append(StringEscapeUtils.escapeJavaScript(message));
+            script.append(StringEscapeUtils.escapeEcmaScript(message));
         } else {
             script.append(XpertResourceBundle.get("loading"));
 

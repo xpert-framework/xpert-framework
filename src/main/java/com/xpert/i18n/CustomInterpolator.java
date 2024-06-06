@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.validation.MessageInterpolator;
+import jakarta.validation.MessageInterpolator;
 
 public class CustomInterpolator implements MessageInterpolator {
 

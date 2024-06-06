@@ -2,8 +2,8 @@ package com.xpert.audit;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 /**
  *

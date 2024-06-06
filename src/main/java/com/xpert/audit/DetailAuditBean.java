@@ -5,6 +5,7 @@ import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,8 +15,10 @@ import org.primefaces.model.LazyDataModel;
  *
  * @author ayslan
  */
-public class DetailAuditBean {
+public class DetailAuditBean implements Serializable {
 
+    private static final long serialVersionUID = 7498075390454510513L;
+    
     private static final Logger logger = Logger.getLogger(AuditBean.class.getName());
     private BeanModel beanModel;
     private LazyDataModel<AbstractAuditing> auditings;
@@ -53,10 +56,7 @@ public class DetailAuditBean {
     }
 
     public boolean isPersisted(Object object) {
-        if (EntityUtils.getId(object) != null) {
-            return true;
-        }
-        return false;
+        return EntityUtils.getId(object) != null;
     }
 
     public LazyDataModel<AbstractAuditing> getAuditings() {
@@ -74,4 +74,5 @@ public class DetailAuditBean {
     public void setBeanModel(BeanModel beanModel) {
         this.beanModel = beanModel;
     }
+    
 }

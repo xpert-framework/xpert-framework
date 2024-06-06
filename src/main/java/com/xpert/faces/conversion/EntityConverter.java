@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Id;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Id;
 import org.hibernate.proxy.HibernateProxy;
 
 /**

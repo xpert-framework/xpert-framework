@@ -3,8 +3,8 @@ package com.xpert.faces.function;
 import com.xpert.core.conversion.NumberUtils;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
 import java.util.Collection;
-import javax.faces.FacesException;
-import javax.faces.model.DataModel;
+import jakarta.faces.FacesException;
+import jakarta.faces.model.DataModel;
 
 /**
  *

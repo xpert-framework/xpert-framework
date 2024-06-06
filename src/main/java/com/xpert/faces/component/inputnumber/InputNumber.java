@@ -1,8 +1,8 @@
 package com.xpert.faces.component.inputnumber;
 
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.convert.NumberConverter;
+import jakarta.faces.application.ResourceDependencies;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.convert.NumberConverter;
 import org.primefaces.component.inputtext.InputText;
 
 /**

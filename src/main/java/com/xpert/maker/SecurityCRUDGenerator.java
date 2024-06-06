@@ -5,7 +5,7 @@ import com.xpert.utils.StringUtils;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 /**
  * Class to create acess control generation. The xpert-framework base project

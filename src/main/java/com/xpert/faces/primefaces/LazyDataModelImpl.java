@@ -2,7 +2,6 @@ package com.xpert.faces.primefaces;
 
 import com.xpert.faces.bean.Xpert;
 import com.xpert.faces.component.restorablefilter.RestorableFilter;
-import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.QueryBuilder;
@@ -12,12 +11,16 @@ import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 /**
@@ -28,7 +31,7 @@ import org.primefaces.model.SortOrder;
  */
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
-    private boolean debug = false;
+    private boolean debug = true;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
 
     private BaseDAO<T> dao;
@@ -155,7 +158,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @param order Order from primefaces
      * @return The "Order By" to the data model
      */
-    public String getOrderBy(String orderBy, SortOrder order) {
+    private String getOrderBy(String orderBy, SortOrder order) {
         if (orderBy == null || orderBy.trim().isEmpty()) {
             orderBy = defaultOrder;
         } else {
@@ -183,58 +186,128 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @param filters Filters from "load" method
      * @return The filter map converted into "restrictions"
      */
-    public List<Restriction> getRestrictionsFromFilterMap(Map filters) {
-
+    public List<Restriction> getRestrictionsFromFilterMap(Map<String, Object> filters) {
         List<Restriction> filterRestrictions = new ArrayList<>();
 
-        if (filters != null && !filters.isEmpty()) {
-            for (Entry e : ((Map<String, Object>) filters).entrySet()) {
-                if (e.getValue() != null && !e.getValue().toString().isEmpty()) {
-                    FilterByHandler filterByHandler = getFilterByHandler();
-                    Restrictions restrictionsFromFilterByHandler = null;
-                    if (filterByHandler != null) {
-                        restrictionsFromFilterByHandler = filterByHandler.getFilterBy(e.getKey().toString(), e.getValue());
-                    }
-                    if (filterByHandler != null && restrictionsFromFilterByHandler != null && !restrictionsFromFilterByHandler.isEmpty()) {
-                        filterRestrictions.addAll(restrictionsFromFilterByHandler);
-                    } else {
-                        if (debug) {
-                            logger.log(Level.INFO, "Restriction added. Name: {0}, Value:  {1}", new Object[]{e.getKey(), e.getValue()});
-                        }
-                        //primefaces 5 can add custom types in filter not only String
-                        String property = e.getKey().toString();
-                        if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
-                            property = joinBuilder.getRootAlias() + "." + property;
-                        }
-                        if (e.getValue() instanceof String) {
-                            filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, e.getValue()));
-                        } else if (e.getValue() instanceof Object[]) {
-                            if (((Object[]) e.getValue()).length > 0) {
-                                //copy Array into List. (Arrays.asList din't work here)
-                                List list = new ArrayList();
-                                for (Object item : (Object[]) e.getValue()) {
-                                    list.add(item);
-                                }
-                                filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
-                            }
-                        } else {
-                            filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, e.getValue()));
-
-                        }
-                    }
-                }
-            }
+        if (filters == null || filters.isEmpty()) {
+            return filterRestrictions;
         }
+
+        for (Map.Entry<String, Object> entry : filters.entrySet()) {
+            Object filterValue = entry.getValue();
+            if (filterValue == null) {
+                continue;
+            }
+
+            FilterMeta filterMeta = (FilterMeta) filterValue;
+            addRestrictions(filterRestrictions, filterMeta);
+        }
+
         return filterRestrictions;
     }
 
+    private void addRestrictions(List<Restriction> filterRestrictions, FilterMeta filterMeta) {
+        
+        FilterByHandler filterHandler = getFilterByHandler();
+        if (filterHandler != null) {
+            Restrictions r = filterHandler.getFilterBy(filterMeta.getField(), filterMeta.getFilterValue().toString());
+            if (r != null && !r.isEmpty()) {
+                filterRestrictions.addAll(r);
+                return;
+            }
+        }
+
+        logDebug(filterMeta);
+
+        String property = getProperty(filterMeta);
+        Object filterValue = filterMeta.getFilterValue();
+
+        if (filterValue instanceof String string) {
+            filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, string));
+        } else if (filterValue instanceof Object[] objects) {
+            addArrayRestrictions(filterRestrictions, property, objects);
+        } else {
+            filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, filterValue.toString()));
+        }
+    }
+
+    private void logDebug(FilterMeta filterMeta) {
+        if (debug) {
+            logger.log(Level.INFO, "Restriction added. Name: {0}, Value: {1}", new Object[]{filterMeta.getField(), filterMeta.getFilterValue().toString()});
+        }
+    }
+
+    private String getProperty(FilterMeta filterMeta) {
+        String property = filterMeta.getField();
+        if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
+            property = joinBuilder.getRootAlias() + "." + property;
+        }
+        return property;
+    }
+
+    private void addArrayRestrictions(List<Restriction> filterRestrictions, String property, Object[] filterValueArray) {
+        if (filterValueArray.length > 0) {
+            List<Object> list = new ArrayList<>(Arrays.asList(filterValueArray));
+            filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
+        }
+    }
+
     @Override
-    public List load(int first, int pageSize, String orderBy, SortOrder order, Map filters
-    ) {
-        if (isLoadData() == false) {
+    public int count(Map filters) {
+
+        if (isRestorableFilter()) {
+            RestorableFilter.restoreFilterFromSession(filters);
+        }
+
+        this.currentFilters = filters;
+        
+        List<Restriction> currentQueryRestrictions = getCurrentQueryRestrictions();
+
+        boolean restrictionsChanged = !currentQueryRestrictions.equals(queryRestrictions);
+
+        this.queryRestrictions = currentQueryRestrictions;
+        
+        LazyCountType countType = getLazyCountType();
+        if (countType == null) {
+            countType = LazyCountType.ALWAYS;
+        }
+        
+        // If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
+        if (countType.equals(LazyCountType.ALWAYS)
+                || (countType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
+
+            QueryBuilder queryBuilderCount = buildQueryBuilder();
+            // added distinct verification
+            if (joinBuilder != null && joinBuilder.isDistinct()) {
+                currentRowCount = queryBuilderCount.countDistinct(joinBuilder.getRootAlias()).intValue();
+            } else {
+                currentRowCount = queryBuilderCount.count().intValue();
+            }
+            if (debug) {
+                logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
+            }
+            this.setRowCount(currentRowCount);
+        }
+        if (countType.equals(LazyCountType.ONLY_ONCE)) {
+            this.setRowCount(currentRowCount);
+        } else if (countType.equals(LazyCountType.NONE)) {
+//            currentRowCount = dados.size();
+            this.setRowCount(Integer.MAX_VALUE);
+        }
+
+        return currentRowCount;
+    }
+
+    @Override
+    public List load(int first, int pageSize, Map sortBy, Map filters) {
+
+        Map<String, SortMeta> sortByMap = sortBy;
+
+        if (!isLoadData()) {
             setRowCount(0);
             return null;
         }
+
         if (isRestorableFilter()) {
             RestorableFilter.restoreFilterFromSession(filters);
         }
@@ -242,20 +315,27 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         this.currentFilters = filters;
         long begin = System.currentTimeMillis();
 
-        LazyCountType lazyCountType = getLazyCountType();
-        if (lazyCountType == null) {
-            lazyCountType = LazyCountType.ALWAYS;
+        LazyCountType countType = getLazyCountType();
+        if (countType == null) {
+            countType = LazyCountType.ALWAYS;
         }
 
-        orderBy = getOrderBy(orderBy, order);
+        String orderByField = "";
+        if (sortBy != null) {
+            StringJoiner orderByJoiner = new StringJoiner(", ");
+            for (Entry<String, SortMeta> entry : sortByMap.entrySet()) {
+                orderByJoiner.add(getOrderBy(entry.getValue().getField(), entry.getValue().getOrder()));
+            }
+            orderByField = orderByJoiner.toString();
+        }
 
         if (debug) {
-            logger.log(Level.INFO, "Lazy Count Type: {0}. Using order by {1}", new Object[]{lazyCountType, orderBy});
+            logger.log(Level.INFO, "Lazy Count Type: {0}. Using order by {1}", new Object[]{countType, orderByField});
         }
 
         List<Restriction> currentQueryRestrictions = getCurrentQueryRestrictions();
 
-        this.currentOrderBy = orderBy;
+        this.currentOrderBy = orderByField;
 
         String select = null;
         if (attributes != null && !attributes.isEmpty()) {
@@ -264,7 +344,6 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             select = joinBuilder.getRootAlias();
         }
 
-        boolean restrictionsChanged = !currentQueryRestrictions.equals(queryRestrictions);
         //update current restrictions
         queryRestrictions = currentQueryRestrictions;
 
@@ -278,36 +357,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         List<T> dados = queryBuilder
                 .addParameters(parameters)
-                .orderBy(orderBy)
+                .orderBy(orderByField)
                 .setFirstResult(first)
                 .setMaxResults(pageSize)
                 .getResultList();
 
         if (debug) {
             logger.log(Level.INFO, "Select on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), dados.size()});
-        }
-
-        //If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
-        if (lazyCountType.equals(LazyCountType.ALWAYS)
-                || (lazyCountType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
-
-            QueryBuilder queryBuilderCount = buildQueryBuilder();
-            //added distinct verification
-            if (joinBuilder != null && joinBuilder.isDistinct()) {
-                currentRowCount = queryBuilderCount.countDistinct(joinBuilder.getRootAlias()).intValue();
-            } else {
-                currentRowCount = queryBuilderCount.count().intValue();
-            }
-            if (debug) {
-                logger.log(Level.INFO, "Count on entity {0}, records found: {1} ", new Object[]{dao.getEntityClass().getName(), currentRowCount});
-            }
-            this.setRowCount(currentRowCount);
-        }
-        if (lazyCountType.equals(LazyCountType.ONLY_ONCE)) {
-            this.setRowCount(currentRowCount);
-        } else if (lazyCountType.equals(LazyCountType.NONE)) {
-            currentRowCount = dados.size();
-            this.setRowCount(Integer.MAX_VALUE);
         }
 
         if (debug) {
@@ -345,15 +401,6 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             if (id != null) {
                 return getDao().find(id);
             }
-        }
-        return null;
-    }
-
-    @Override
-    public Object getRowKey(Object object) {
-        if (object != null) {
-            //return id from entity
-            return EntityUtils.getId(object);
         }
         return null;
     }
@@ -665,8 +712,5 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void setAuditQuery(boolean auditQuery) {
         this.auditQuery = auditQuery;
     }
-
-    
-    
 
 }

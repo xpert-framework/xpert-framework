@@ -1,10 +1,10 @@
 package com.xpert.faces.component.confirmation;
 
 import java.util.List;
-import javax.el.ValueExpression;
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.UIComponentBase;
+import jakarta.el.ValueExpression;
+import jakarta.faces.application.ResourceDependencies;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.component.UIComponentBase;
 
 /**
  *
@@ -72,7 +72,7 @@ public class Confirmation extends UIComponentBase {
         getStateHelper().put(property, value);
 
         List<String> setAttributes =
-                (List<String>) this.getAttributes().get("javax.faces.component.UIComponentBase.attributesThatAreSet");
+                (List<String>) this.getAttributes().get("jakarta.faces.component.UIComponentBase.attributesThatAreSet");
 
         if (setAttributes != null && value == null) {
             final String attributeName = property.toString();

@@ -1,6 +1,6 @@
 package com.xpert.persistence.query;
 
-import javax.persistence.TemporalType;
+import jakarta.persistence.TemporalType;
 
 /**
  *

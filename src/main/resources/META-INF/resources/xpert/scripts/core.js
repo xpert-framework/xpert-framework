@@ -314,10 +314,10 @@ Xpert.behavior = {
         }
         var $object = $(Xpert.escapeClientId(element));
         Xpert.clearDownloadCookie();
-        var token = $($object.closest("form")).find("input[id*=javax\\.faces\\.ViewState]").val();
+        var token = $($object.closest("form")).find("input[id*=jakarta\\.faces\\.ViewState]").val();
         if (token == null || token == "") {
             //find by name
-            token = $($object.closest("form")).find("input[name*=javax\\.faces\\.ViewState]").val();
+            token = $($object.closest("form")).find("input[name*=jakarta\\.faces\\.ViewState]").val();
             if (token == null || token == "") {
                 return;
             }

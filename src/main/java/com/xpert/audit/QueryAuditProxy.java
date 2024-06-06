@@ -2,7 +2,7 @@ package com.xpert.audit;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 /**
  *

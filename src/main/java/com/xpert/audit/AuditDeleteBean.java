@@ -2,7 +2,6 @@ package com.xpert.audit;
 
 import com.xpert.AuditDAO;
 import com.xpert.Configuration;
-import com.xpert.DAO;
 import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
@@ -17,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
+import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.primefaces.model.LazyDataModel;
 
@@ -27,6 +27,8 @@ import org.primefaces.model.LazyDataModel;
  */
 public class AuditDeleteBean implements Serializable {
 
+    private static final long serialVersionUID = -2653891634297925727L;
+    
     private static final Logger logger = Logger.getLogger(AuditDeleteBean.class.getName());
     private Class entity;
     private LazyDataModel<AbstractAuditing> auditings;
@@ -72,11 +74,11 @@ public class AuditDeleteBean implements Serializable {
     public Object newBeanInstance(AbstractAuditing auditingDelete) {
         try {
 
-            Object newInstance = entity.newInstance();
+            Object newInstance = entity.getDeclaredConstructor().newInstance();
             PropertyUtils.setProperty(newInstance, EntityUtils.getIdFieldName(entity), auditingDelete.getIdentifier());
 
             return newInstance;
-        } catch (Exception ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
         return null;
@@ -124,6 +126,5 @@ public class AuditDeleteBean implements Serializable {
     public BaseDAO getBaseDAO() {
         return baseDAO;
     }
-    
-    
+
 }

@@ -3,8 +3,8 @@ package com.xpert.faces.component.group;
 import com.xpert.faces.component.renderkit.CoreRenderer;
 import java.io.IOException;
 import java.util.Map;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
 
 /**
  *

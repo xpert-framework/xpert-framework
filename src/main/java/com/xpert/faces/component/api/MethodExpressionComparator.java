@@ -1,8 +1,8 @@
 package com.xpert.faces.component.api;
 
 import java.util.Comparator;
-import javax.el.MethodExpression;
-import javax.faces.context.FacesContext;
+import jakarta.el.MethodExpression;
+import jakarta.faces.context.FacesContext;
 
 /**
  *

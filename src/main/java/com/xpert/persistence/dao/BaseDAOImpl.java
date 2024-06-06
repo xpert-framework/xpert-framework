@@ -19,16 +19,16 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.OrderBy;
-import javax.persistence.Query;
-import javax.validation.ConstraintViolationException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Query;
+import jakarta.validation.ConstraintViolationException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.collection.internal.PersistentBag;
-import org.hibernate.collection.internal.PersistentSet;
+import org.hibernate.collection.spi.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.collection.spi.PersistentSet;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -87,7 +87,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public Connection getConnection() throws SQLException {
         SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) getSession().getSessionFactory();
-        return sessionFactoryImpl.getConnectionProvider().getConnection();
+        return sessionFactoryImpl.getJdbcServices().getBootstrapJdbcConnectionAccess().obtainConnection();
     }
 
     @Override

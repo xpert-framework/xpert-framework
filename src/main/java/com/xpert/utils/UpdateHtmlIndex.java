@@ -72,9 +72,9 @@ public class UpdateHtmlIndex {
 
                     String link = "<a href=\"" + fileName + "\">" + fileName + "</a>";
                     html.append(link);
-                    html.append(org.apache.commons.lang.StringUtils.rightPad("", 51 - fileName.length()));
+                    html.append(org.apache.commons.lang3.StringUtils.rightPad("", 51 - fileName.length()));
                     html.append(dateFormat.format(file.lastModified()));
-                    html.append(org.apache.commons.lang.StringUtils.rightPad("", 19));
+                    html.append(org.apache.commons.lang3.StringUtils.rightPad("", 19));
                     if (child.isDirectory()) {
                         html.append("-");
                     } else {

@@ -6,8 +6,8 @@ import com.xpert.core.validation.UniqueField;
 import com.xpert.core.validation.UniqueFields;
 import com.xpert.core.exception.BusinessException;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 import ${entity.name};
 
 /**

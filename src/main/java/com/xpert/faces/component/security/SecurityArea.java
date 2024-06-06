@@ -1,8 +1,8 @@
 package com.xpert.faces.component.security;
 
 import com.xpert.security.SecuritySessionManager;
-import javax.faces.component.UIComponentBase;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponentBase;
+import jakarta.faces.context.FacesContext;
 
 /**
  *

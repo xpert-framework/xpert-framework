@@ -21,9 +21,10 @@
         <h:outputStylesheet library="xpert" name="css/style.css" />
         <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <div id="#{cc.attrs.clientId}" >
-            <p:outputPanel autoUpdate="#{cc.attrs.autoUpdate}">
+            <p:outputPanel>
+                <p:autoUpdate rendered="#{cc.attrs.autoUpdate}"/>
                 <h:panelGroup rendered="#{not empty facesContext.messageList}">
-                    <p:dialog showHeader="false" closable="false" modal="true" appendToBody="true"
+                    <p:dialog showHeader="false" closable="false" modal="true"
                               id="xpertModalMessages1"
                               onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)"
                               rendered="#{primeFacesVersion.primeFaces3}"

@@ -2,7 +2,7 @@ package ${configuration.dao};
 
 import com.xpert.persistence.dao.BaseDAO;
 import ${entity.name};
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  *

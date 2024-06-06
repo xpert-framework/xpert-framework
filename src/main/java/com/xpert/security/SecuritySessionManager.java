@@ -5,9 +5,9 @@ import com.xpert.security.model.Role;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Class to control the user session

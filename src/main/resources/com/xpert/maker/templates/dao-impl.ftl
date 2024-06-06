@@ -3,7 +3,7 @@ package ${configuration.daoImpl};
 import ${configuration.baseDAO};
 import ${configuration.dao}.${name}DAO;
 import ${entity.name};
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 /**
  *

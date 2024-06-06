@@ -1,13 +1,13 @@
 package com.xpert.faces.component.initializer;
 
 import java.io.Serializable;
-import javax.el.ValueExpression;
-import javax.faces.component.UIComponent;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ComponentSystemEventListener;
-import javax.faces.view.facelets.FaceletContext;
-import javax.persistence.EntityManager;
+import jakarta.el.ValueExpression;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ComponentSystemEvent;
+import jakarta.faces.event.ComponentSystemEventListener;
+import jakarta.faces.view.facelets.FaceletContext;
+import jakarta.persistence.EntityManager;
 
 /**
  *

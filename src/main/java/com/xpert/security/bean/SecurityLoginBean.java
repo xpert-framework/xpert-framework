@@ -8,11 +8,11 @@ import com.xpert.security.model.User;
 import com.xpert.security.session.AbstractUserSession;
 import com.xpert.utils.Encryption;
 import java.security.NoSuchAlgorithmException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 
 /**
  * A generic bean to do the login in security control

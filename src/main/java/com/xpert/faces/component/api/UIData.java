@@ -20,23 +20,23 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.faces.FacesException;
-import javax.faces.application.Application;
-import javax.faces.component.*;
-import javax.faces.component.visit.VisitCallback;
-import javax.faces.component.visit.VisitContext;
-import javax.faces.component.visit.VisitHint;
-import javax.faces.component.visit.VisitResult;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PostValidateEvent;
-import javax.faces.event.PreValidateEvent;
-import javax.faces.model.ArrayDataModel;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.ResultSetDataModel;
-import javax.faces.model.ScalarDataModel;
-import javax.faces.render.Renderer;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.Application;
+import jakarta.faces.component.*;
+import jakarta.faces.component.visit.VisitCallback;
+import jakarta.faces.component.visit.VisitContext;
+import jakarta.faces.component.visit.VisitHint;
+import jakarta.faces.component.visit.VisitResult;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PostValidateEvent;
+import jakarta.faces.event.PreValidateEvent;
+import jakarta.faces.model.ArrayDataModel;
+import jakarta.faces.model.DataModel;
+import jakarta.faces.model.ListDataModel;
+import jakarta.faces.model.ResultSetDataModel;
+import jakarta.faces.model.ScalarDataModel;
+import jakarta.faces.render.Renderer;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.columngroup.ColumnGroup;
 import org.primefaces.component.columns.Columns;
@@ -44,7 +44,7 @@ import org.primefaces.component.columns.Columns;
 /**
  * UIData from primfaces
  */
-public class UIData extends javax.faces.component.UIData {
+public class UIData extends jakarta.faces.component.UIData {
 
     private String clientId = null;
     private StringBuilder idBuilder = new StringBuilder();
@@ -739,7 +739,7 @@ public class UIData extends javax.faces.component.UIData {
             return !visitContext.getHints().contains(skipHint);
         } catch (IllegalArgumentException e) {
             //JSF 2.0
-            Object skipHint = context.getAttributes().get("javax.faces.visit.SKIP_ITERATION");
+            Object skipHint = context.getAttributes().get("jakarta.faces.visit.SKIP_ITERATION");
             return !Boolean.TRUE.equals(skipHint);
         }
     }

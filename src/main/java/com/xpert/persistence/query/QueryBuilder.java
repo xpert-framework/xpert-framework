@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.TemporalType;
-import org.apache.commons.lang.StringUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
+import jakarta.persistence.TemporalType;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A JPQL/HQL based builder. This class is a collection of utility methods to
@@ -525,7 +525,7 @@ public class QueryBuilder implements Cloneable {
             queryString.append(alias).append(" ");
         }
 
-        if (joins != null && joins.size() > 0) {
+        if (joins != null && !joins.isEmpty()) {
             queryString.append(joins.getJoinString(type));
         }
 
@@ -754,8 +754,8 @@ public class QueryBuilder implements Cloneable {
             query = createQuery(queryString);
 
         }
-        List<QueryParameter> parameters = getQueryParameters();
-        for (QueryParameter parameter : parameters) {
+        List<QueryParameter> params = getQueryParameters();
+        for (QueryParameter parameter : params) {
             //dates (Date and Calendar)
             if (parameter.getTemporalType() != null && (parameter.getValue() instanceof Date || parameter.getValue() instanceof Calendar)) {
                 if (parameter.getValue() instanceof Date) {

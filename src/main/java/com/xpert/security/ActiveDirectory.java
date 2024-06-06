@@ -1,7 +1,6 @@
 package com.xpert.security;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Properties;
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;

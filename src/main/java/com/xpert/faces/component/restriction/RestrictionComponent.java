@@ -4,11 +4,11 @@ import com.xpert.persistence.query.LikeType;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import java.util.Arrays;
-import javax.el.ELContext;
-import javax.el.ValueExpression;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.UIComponent;
-import javax.persistence.TemporalType;
+import jakarta.el.ELContext;
+import jakarta.el.ValueExpression;
+import jakarta.faces.component.EditableValueHolder;
+import jakarta.faces.component.UIComponent;
+import jakarta.persistence.TemporalType;
 
 /**
  * This class is a java bean with some values to be used in restrictions

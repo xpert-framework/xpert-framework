@@ -1,7 +1,7 @@
 package com.xpert.audit.model;
 
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Abstract class to represent a audit event in a Query.

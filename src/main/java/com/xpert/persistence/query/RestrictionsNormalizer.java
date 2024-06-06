@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.TemporalType;
+import jakarta.persistence.TemporalType;
 
 /**
  * Class to "normalize" restrictions. The RestrictionType.DATA_TABLE_FILTER is a

@@ -15,7 +15,7 @@ public class Mod10 {
      */
     public static String getDV(String number) {
 
-        if (!org.apache.commons.lang.StringUtils.isNumeric(number)) {
+        if (!org.apache.commons.lang3.StringUtils.isNumeric(number)) {
             throw new IllegalArgumentException("Value is not number");
         }
 

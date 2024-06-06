@@ -6,27 +6,27 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.context.ResponseWriter;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.el.ELContext;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
+import jakarta.faces.FacesException;
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.EditableValueHolder;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Collection of utility methods for the JSF API
@@ -278,8 +278,6 @@ public class FacesUtils {
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         cookie.setMaxAge(2592000);
-        // NOTE: If cookie version is set to 1, cookie values will be quoted.
-        cookie.setVersion(0);
         HttpServletResponse response = getResponse();
         response.addCookie(cookie);
     }
@@ -378,7 +376,7 @@ public class FacesUtils {
      * Generates a file to download.
      *
      * This method put a cookie named 'fileDownloadToken', this cookie can be
-     * used to control the downloaded file by the "javax.faces.ViewState" (wich
+     * used to control the downloaded file by the "jakarta.faces.ViewState" (wich
      * is a param submited in JSF forms)
      *
      * @param bytes
@@ -394,7 +392,7 @@ public class FacesUtils {
      * Generates a file to download.
      *
      * This method put a cookie named 'fileDownloadToken', this cookie can be
-     * used to control the downloaded file by the "javax.faces.ViewState" (wich
+     * used to control the downloaded file by the "jakarta.faces.ViewState" (wich
      * is a param submited in JSF forms)
      *
      * @param bytes
@@ -409,7 +407,7 @@ public class FacesUtils {
         HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         try {
-            addCookie(FILE_DOWNLOAD_TOKEN, request.getParameter("javax.faces.ViewState"));
+            addCookie(FILE_DOWNLOAD_TOKEN, request.getParameter("jakarta.faces.ViewState"));
             response.setContentType(contentType);
             if (attachment) {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -425,7 +423,7 @@ public class FacesUtils {
      * Generates a file to download.
      *
      * This method put a cookie named 'fileDownloadToken', this cookie can be
-     * used to control the downloaded file by the "javax.faces.ViewState" (wich
+     * used to control the downloaded file by the "jakarta.faces.ViewState" (wich
      * is a param submited in JSF forms)
      *
      * @param inputStream
@@ -440,7 +438,7 @@ public class FacesUtils {
      * Generates a file to download.
      *
      * This method put a cookie named 'fileDownloadToken', this cookie can be
-     * used to control the downloaded file by the "javax.faces.ViewState" (wich
+     * used to control the downloaded file by the "jakarta.faces.ViewState" (wich
      * is a param submited in JSF forms)
      *
      * @param inputStream

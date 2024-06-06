@@ -624,7 +624,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="panelOthers" pref="796" max="32767" attributes="0"/>
+                              <Component id="panelOthers" pref="800" max="32767" attributes="0"/>
                               <Component id="panelViewConfiguration" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep4" alignment="0" max="32767" attributes="0"/>
                               <Component id="panelStep2" alignment="0" max="32767" attributes="0"/>
@@ -634,7 +634,7 @@
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="buttonTab2Next" min="-2" pref="87" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="panelJavaClassConfiguration" alignment="1" pref="796" max="32767" attributes="0"/>
+                              <Component id="panelJavaClassConfiguration" alignment="1" pref="800" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1150,7 +1150,7 @@
                                   <Component id="textResourceBundleLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="buttonSelectMessageBundle" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="30" max="32767" attributes="0"/>
+                              <EmptySpace pref="25" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

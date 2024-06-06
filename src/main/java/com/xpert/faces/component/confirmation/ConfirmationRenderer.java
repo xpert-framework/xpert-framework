@@ -3,11 +3,11 @@ package com.xpert.faces.component.confirmation;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.i18n.XpertResourceBundle;
 import java.io.IOException;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.Renderer;
-import org.apache.commons.lang.StringEscapeUtils;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.render.Renderer;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -42,9 +42,9 @@ public class ConfirmationRenderer extends Renderer {
         StringBuilder script = new StringBuilder();
 
         script.append("$(function() {Xpert.behavior.verifyConfirmation($(PrimeFaces.escapeClientId('").append(target).append("'))");
-        script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getConfirmLabel())).append("'");
-        script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getCancelLabel())).append("'");
-        script.append(",'").append(StringEscapeUtils.escapeJavaScript(confirmation.getMessage())).append("'");
+        script.append(",'").append(StringEscapeUtils.escapeEcmaScript(confirmation.getConfirmLabel())).append("'");
+        script.append(",'").append(StringEscapeUtils.escapeEcmaScript(confirmation.getCancelLabel())).append("'");
+        script.append(",'").append(StringEscapeUtils.escapeEcmaScript(confirmation.getMessage())).append("'");
         script.append(",").append(PrimeFacesUtils.isVersion3());
         script.append(");});");
 

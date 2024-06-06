@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Generic Managed Bean to create CRUD

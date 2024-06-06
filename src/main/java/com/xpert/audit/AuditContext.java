@@ -4,7 +4,7 @@ import com.xpert.audit.model.AbstractAuditing;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Represents que current context of audit, the "audits" form a object must be

@@ -9,7 +9,7 @@ import java.text.NumberFormat;
 import java.util.Collection;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utility class to manipulate Number.
@@ -93,7 +93,7 @@ public class NumberUtils {
         //verify if is a Array
         //array position
         if (StringUtils.isNumeric(field)) {
-            Integer index = Integer.parseInt(field);
+            Integer index = Integer.valueOf(field);
             for (Object[] o : (Collection<Object[]>) objects) {
                 total = total.add(convertToBigDecimal(o[index]));
             }
@@ -145,7 +145,7 @@ public class NumberUtils {
                 //verify if is a Array
                 //array position
                 if (StringUtils.isNumeric(field)) {
-                    Integer index = Integer.parseInt(field);
+                    Integer index = Integer.valueOf(field);
                     value = ((Object[]) o)[index];
                 } else {
 

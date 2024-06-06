@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.el.ValueExpression;
-import javax.el.ValueReference;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import static javax.faces.validator.BeanValidator.VALIDATOR_FACTORY_KEY;
-import javax.faces.validator.ValidatorException;
-import javax.validation.ValidatorFactory;
-import javax.validation.constraints.*;
+import jakarta.el.ValueExpression;
+import jakarta.el.ValueReference;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import static jakarta.faces.validator.BeanValidator.VALIDATOR_FACTORY_KEY;
+import jakarta.faces.validator.ValidatorException;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,7 +32,7 @@ import org.hibernate.validator.constraints.URL;
  *
  * @author ayslan
  */
-public class BeanValidator extends javax.faces.validator.BeanValidator {
+public class BeanValidator extends jakarta.faces.validator.BeanValidator {
 
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(BeanValidator.class.getName());
@@ -76,7 +76,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
             //if not instance of CustomInterpolator, then force
             //weblogic for some reason doesnt set the interpolator from validation.xml
             if (validatorFactory.getMessageInterpolator() instanceof CustomInterpolator == false) {
-                validatorFactory = javax.validation.Validation.byDefaultProvider()
+                validatorFactory = jakarta.validation.Validation.byDefaultProvider()
                         .configure()
                         .messageInterpolator(new CustomInterpolator())
                         .buildValidatorFactory();
@@ -132,7 +132,7 @@ public class BeanValidator extends javax.faces.validator.BeanValidator {
      * The messages are formated like:
      *
      * {org.hibernate.validator.constraints.NotBlank.message}
-     * {javax.validation.constraints.NotNull.message}
+     * {jakarta.validation.constraints.NotNull.message}
      *
      *
      * @param message

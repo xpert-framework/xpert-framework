@@ -1,8 +1,8 @@
 package com.xpert.faces.component.datefilter;
 
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.html.HtmlPanelGroup;
+import jakarta.faces.application.ResourceDependencies;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.component.html.HtmlPanelGroup;
 
 /**
  *
