@@ -31,6 +31,8 @@ import org.primefaces.model.SortOrder;
  */
 public class LazyDataModelImpl<T> extends LazyDataModel {
 
+    private static final long serialVersionUID = 5508266758681517868L;
+
     private boolean debug = true;
     private static final Logger logger = Logger.getLogger(LazyDataModelImpl.class.getName());
 
@@ -162,12 +164,12 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (orderBy == null || orderBy.trim().isEmpty()) {
             orderBy = defaultOrder;
         } else {
-            OrderByHandler orderByHandler = getOrderByHandler();
+            OrderByHandler orderHandler = getOrderByHandler();
             String orderByFromHandler = null;
-            if (orderByHandler != null) {
-                orderByFromHandler = orderByHandler.getOrderBy(orderBy);
+            if (orderHandler != null) {
+                orderByFromHandler = orderHandler.getOrderBy(orderBy);
             }
-            if (orderByHandler != null && orderByFromHandler != null && !orderByFromHandler.isEmpty()) {
+            if (orderHandler != null && orderByFromHandler != null && !orderByFromHandler.isEmpty()) {
                 orderBy = orderByFromHandler;
             } else {
                 if (joinBuilder != null && joinBuilder.getRootAlias() != null) {
@@ -186,7 +188,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      * @param filters Filters from "load" method
      * @return The filter map converted into "restrictions"
      */
-    public List<Restriction> getRestrictionsFromFilterMap(Map<String, Object> filters) {
+    private List<Restriction> getRestrictionsFromFilterMap(Map<String, Object> filters) {
         List<Restriction> filterRestrictions = new ArrayList<>();
 
         if (filters == null || filters.isEmpty()) {
@@ -246,7 +248,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     }
 
     private void addArrayRestrictions(List<Restriction> filterRestrictions, String property, Object[] filterValueArray) {
-        if (filterValueArray.length > 0) {
+        if (filterValueArray != null && filterValueArray.length > 0) {
             List<Object> list = new ArrayList<>(Arrays.asList(filterValueArray));
             filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
         }
@@ -377,7 +379,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return dados;
     }
 
-    public List<Restriction> getCurrentQueryRestrictions() {
+    private List<Restriction> getCurrentQueryRestrictions() {
         List<Restriction> currentQueryRestrictions = new ArrayList<>();
 
         if (restrictions != null && !restrictions.isEmpty()) {
@@ -410,7 +412,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
      *
      * @return
      */
-    public QueryBuilder buildQueryBuilder() {
+    private QueryBuilder buildQueryBuilder() {
         return dao.getQueryBuilder()
                 .from(dao.getEntityClass(), (joinBuilder != null ? joinBuilder.getRootAlias() : null))
                 .join(joinBuilder)
@@ -475,12 +477,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return Xpert.DEFAULT_PAGINATOR_TEMPLATE;
     }
 
-    public boolean isLazyCountTypeNone() {
-        LazyCountType lazyCountType = getLazyCountType();
-        if (lazyCountType != null && lazyCountType.equals(LazyCountType.NONE)) {
-            return true;
-        }
-        return false;
+    private boolean isLazyCountTypeNone() {
+        LazyCountType countType = getLazyCountType();
+        return countType != null && countType.equals(LazyCountType.NONE);
     }
 
     /**

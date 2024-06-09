@@ -2,6 +2,9 @@ package com.xpert.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -66,7 +69,7 @@ public class DateUtils {
         calendar.set(Calendar.YEAR, year);
         return calendar.getTime();
     }
-    
+
     /**
      * Return the first day in month. Example: year 2013, month 0 return
      * '2013-01-31' (yyyy-MM-dd)
@@ -223,4 +226,13 @@ public class DateUtils {
         }
         return true;
     }
+
+    public static LocalDate dateToLocalDate(Date date) {
+        return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    public static LocalDateTime dateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+    
 }

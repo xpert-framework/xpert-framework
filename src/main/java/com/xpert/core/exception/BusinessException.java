@@ -1,6 +1,12 @@
 package com.xpert.core.exception;
 
-public class BusinessException extends StackException {
+import jakarta.ejb.ApplicationException;
+import java.io.Serializable;
+
+@ApplicationException(rollback = true)
+public class BusinessException extends StackException implements Serializable {
+
+    private static final long serialVersionUID = 5373635135051321032L;
 
     public BusinessException() {
     }

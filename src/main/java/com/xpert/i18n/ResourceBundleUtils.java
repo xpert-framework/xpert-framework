@@ -87,7 +87,7 @@ public class ResourceBundleUtils {
                 Matcher matcher = PATTERN_FIND_NUMBER.matcher(key);
                 while (matcher.find()) {
                     String chave = matcher.group();
-                    int posicao = Integer.valueOf(StringUtils.getOnlyIntegerNumbers(chave));
+                    int posicao = Integer.parseInt(StringUtils.getOnlyIntegerNumbers(chave));
                     if (posicao < array.length && array[posicao] != null) {
                         Object object = array[posicao];
                         key = key.replace(chave, getObjectString(object));
@@ -107,20 +107,20 @@ public class ResourceBundleUtils {
         if (object == null) {
             return "";
         }
-        if (object instanceof String) {
-            return (String) object;
+        if (object instanceof String string) {
+            return string;
         }
-        if (object instanceof BigDecimal) {
-            return NumberUtils.convertToNumber((BigDecimal) object);
+        if (object instanceof BigDecimal bigDecimal) {
+            return NumberUtils.convertToNumber(bigDecimal);
         }
-        if (object instanceof Double) {
-            return NumberUtils.convertToNumber((Double) object);
+        if (object instanceof Double aDouble) {
+            return NumberUtils.convertToNumber(aDouble);
         }
-        if (object instanceof Date) {
-            return DateUtils.dateToString((Date) object, I18N.getDatePattern());
+        if (object instanceof Date date) {
+            return DateUtils.dateToString(date, I18N.getDatePattern());
         }
-        if (object instanceof Calendar) {
-            return DateUtils.dateToString((Calendar) object, I18N.getDatePattern());
+        if (object instanceof Calendar calendar) {
+            return DateUtils.dateToString(calendar, I18N.getDatePattern());
         }
         return object.toString();
     }
