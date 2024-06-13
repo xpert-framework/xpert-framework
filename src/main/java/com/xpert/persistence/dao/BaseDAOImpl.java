@@ -24,16 +24,29 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Query;
 import jakarta.validation.ConstraintViolationException;
+import java.io.Serializable;
 import org.hibernate.Hibernate;
+import org.hibernate.Hibernate.CollectionInterface;
+import static org.hibernate.Hibernate.collection;
 import org.hibernate.Session;
+import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLazinessInterceptor;
 import org.hibernate.collection.spi.PersistentBag;
 import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.collection.spi.PersistentMap;
 import org.hibernate.collection.spi.PersistentSet;
+import org.hibernate.collection.spi.PersistentSortedSet;
+import org.hibernate.engine.internal.ManagedTypeHelper;
+import static org.hibernate.engine.internal.ManagedTypeHelper.asPersistentAttributeInterceptable;
+import static org.hibernate.engine.internal.ManagedTypeHelper.isPersistentAttributeInterceptable;
+import org.hibernate.engine.spi.PersistentAttributeInterceptor;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
+import static org.primefaces.component.resizable.ResizableBase.PropertyKeys.proxy;
 
-public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
+public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
+
+    private static final long serialVersionUID = 2097589326637061615L;
 
     private Class entityClass;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
@@ -881,88 +894,78 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public <U> U getInitialized(U object) {
-        if (object != null) {
-            if (object instanceof HibernateProxy || object instanceof PersistentBag || object instanceof PersistentSet) {
 
-                if (object instanceof HibernateProxy) {
+        if (object == null) {
+            return null;
+        }
 
-                    LazyInitializer lazyInitializer = ((HibernateProxy) object).getHibernateLazyInitializer();
+        if (Hibernate.isInitialized(object)) {
+            return handleInitializedObject(object);
+        } else {
+            return handleUninitializedObject(object);
+        }
 
-                    if (Hibernate.isInitialized(object)) {
-                        return (U) lazyInitializer.getImplementation();
-                    }
-                    Object initilized = getEntityManager().find(lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier());
-                    //if find returns a proxy, then call getImplementation() to return the real object
-                    if (initilized instanceof HibernateProxy) {
-                        lazyInitializer = ((HibernateProxy) initilized).getHibernateLazyInitializer();
-                        return (U) lazyInitializer.getImplementation();
-                    } else {
-                        return (U) initilized;
-                    }
-                }
+    }
 
-                if (object instanceof PersistentCollection) {
-
-                    String role = ((PersistentCollection) object).getRole();
-                    Object owner = ((PersistentCollection) object).getOwner();
-
-                    Collection collection = null;
-                    if (object instanceof PersistentBag) {
-                        collection = new ArrayList();
-                        if (Hibernate.isInitialized(object)) {
-                            collection.addAll((PersistentBag) object);
-                            return (U) collection;
-                        }
-                    }
-                    if (object instanceof PersistentSet) {
-                        collection = new HashSet();
-                        if (Hibernate.isInitialized(object)) {
-                            collection.addAll((PersistentSet) object);
-                            return (U) collection;
-                        }
-                    }
-
-                    //if collections is null create generic case
-                    if (collection == null) {
-                        collection = new ArrayList();
-                    }
-
-                    String fieldName = role.substring(role.lastIndexOf(".") + 1, role.length());
-                    String orderBy = null;
-
-                    //generate "SELECT o FROM Object o JOIN o.itens c WHERE o = ?1 ORDER BY {something}"
-                    StringBuilder queryString = new StringBuilder();
-                    queryString.append(" SELECT ").append(" c ");
-                    queryString.append(" FROM ").append(owner.getClass().getName()).append(" o ");
-                    queryString.append(" JOIN ").append("o.").append(fieldName).append(" c ");
-                    queryString.append(" WHERE o = ?1 ");
-
-                    orderBy = getOrderBy(fieldName, owner.getClass());
-
-                    if (orderBy != null && !orderBy.isEmpty()) {
-                        //alias of attribute is "c"
-                        queryString.append(" ORDER BY ").append(getOrderByWithAlias("c", orderBy));
-                    }
-
-                    Query query = getEntityManager().createQuery(queryString.toString());
-                    query.setParameter(1, owner);
-
-                    for (Object result : query.getResultList()) {
-                        //prevent to add a proxy
-                        if (result instanceof HibernateProxy) {
-                            LazyInitializer lazyInitializer = ((HibernateProxy) result).getHibernateLazyInitializer();
-                            collection.add(lazyInitializer.getImplementation());
-                        } else {
-                            collection.add(result);
-                        }
-                    }
-
-                    return (U) collection;
-                }
-
+    @SuppressWarnings("unchecked")
+    private <U> U handleInitializedObject(U object) {
+        if (ManagedTypeHelper.isHibernateProxy(object)) {
+            HibernateProxy hibernateProxy = ManagedTypeHelper.asHibernateProxy(object);
+            if (hibernateProxy != null) {
+                LazyInitializer lazyInitializer = hibernateProxy.getHibernateLazyInitializer();
+                return (U) lazyInitializer.getImplementation();
             }
         }
         return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <U> U handleUninitializedObject(U object) {
+
+        if (isPersistentAttributeInterceptable(object)) {
+            final PersistentAttributeInterceptor interceptor = asPersistentAttributeInterceptable(object).$$_hibernate_getInterceptor();
+            if (interceptor instanceof EnhancementAsProxyLazinessInterceptor lazinessInterceptor) {
+                Object identifier = lazinessInterceptor.getEntityKey().getIdentifier();
+                Class<?> entity = lazinessInterceptor.getEntityKey().getPersister().getMappedClass();
+                return (U) getEntityManager().find(entity, identifier);
+            }
+        }
+
+        if (object instanceof PersistentCollection persistentCollection) {
+            return (U) handlePersistentCollection(persistentCollection);
+        }
+
+        return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <U> U handlePersistentCollection(PersistentCollection collection) {
+        
+        String role = collection.getRole();
+        Object owner = collection.getOwner();
+        String fieldName = role.substring(role.lastIndexOf(".") + 1);
+        String orderBy = getOrderBy(fieldName, owner.getClass());
+
+        String queryString = buildQueryString(owner.getClass().getName(), fieldName, orderBy);
+        Query query = getEntityManager().createQuery(queryString);
+        query.setParameter(1, owner);
+
+        return (U) query.getResultList();
+    }
+
+    private String buildQueryString(String ownerClassName, String fieldName, String orderBy) {
+
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT c ");
+        query.append(" FROM ").append(ownerClassName).append(" o ");
+        query.append(" JOIN o.").append(fieldName).append(" c ");
+        query.append(" WHERE o = ?1 ");
+
+        if (orderBy != null && !orderBy.isEmpty()) {
+            query.append(" ORDER BY ").append(getOrderByWithAlias("c", orderBy));
+        }
+
+        return query.toString();
     }
 
     /**
