@@ -1,7 +1,10 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Sql.*;
-import static com.xpert.persistence.query.Restriction.*;
+import static com.xpert.persistence.query.Restriction.greaterThan;
+import static com.xpert.persistence.query.Sql.avg;
+import static com.xpert.persistence.query.Sql.count;
+import static com.xpert.persistence.query.Sql.select;
+import static com.xpert.persistence.query.Sql.sum;
 
 /**
  *

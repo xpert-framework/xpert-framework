@@ -220,7 +220,7 @@ public class Icons extends HashMap<String, String> {
     /**
      * Configure "exportOptions" icon
      *
-     * @param exportOptions
+     * @param pdf
      * @return
      */
     public Icons pdf(String pdf) {

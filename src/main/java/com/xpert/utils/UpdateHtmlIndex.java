@@ -17,17 +17,11 @@ import java.util.logging.Logger;
 public class UpdateHtmlIndex {
 
     private static final Logger logger = Logger.getLogger(UpdateHtmlIndex.class.getName());
-    
-    
 
     public static void main(String[] args) throws FileNotFoundException {
         updateIndex("./../xpert-framework.github.io/maven");
     }
 
-//    public static void main2(String[] args) throws FileNotFoundException {
-//        File file = new File("D:\\Projetos\\xpert-framework\\git\\xpert-framework.github.io\\maven\\.index\\");
-//        file.mkdirs();
-//    }
     public static void updateIndex(String file) throws FileNotFoundException {
         updateIndex(new File(file), "");
     }

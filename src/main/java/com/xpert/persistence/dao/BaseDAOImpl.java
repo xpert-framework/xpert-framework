@@ -1,7 +1,7 @@
 package com.xpert.persistence.dao;
 
-import com.xpert.audit.Audit;
 import com.xpert.Configuration;
+import com.xpert.audit.Audit;
 import com.xpert.audit.QueryAudit;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
@@ -9,40 +9,38 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.ReflectionUtils;
 import com.xpert.utils.StringUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Query;
+import jakarta.validation.ConstraintViolationException;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLazinessInterceptor;
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.engine.internal.ManagedTypeHelper;
+import org.hibernate.engine.spi.PersistentAttributeInterceptor;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
+
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Query;
-import jakarta.validation.ConstraintViolationException;
-import java.io.Serializable;
-import org.hibernate.Hibernate;
-import org.hibernate.Hibernate.CollectionInterface;
-import static org.hibernate.Hibernate.collection;
-import org.hibernate.Session;
-import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLazinessInterceptor;
-import org.hibernate.collection.spi.PersistentBag;
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.collection.spi.PersistentMap;
-import org.hibernate.collection.spi.PersistentSet;
-import org.hibernate.collection.spi.PersistentSortedSet;
-import org.hibernate.engine.internal.ManagedTypeHelper;
+
 import static org.hibernate.engine.internal.ManagedTypeHelper.asPersistentAttributeInterceptable;
 import static org.hibernate.engine.internal.ManagedTypeHelper.isPersistentAttributeInterceptable;
-import org.hibernate.engine.spi.PersistentAttributeInterceptor;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.LazyInitializer;
-import static org.primefaces.component.resizable.ResizableBase.PropertyKeys.proxy;
 
 public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
 

@@ -1,6 +1,8 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Sql.*;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,8 +13,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
+
+import static com.xpert.persistence.query.Sql.avg;
+import static com.xpert.persistence.query.Sql.count;
+import static com.xpert.persistence.query.Sql.max;
+import static com.xpert.persistence.query.Sql.min;
+import static com.xpert.persistence.query.Sql.sum;
 
 /**
  *

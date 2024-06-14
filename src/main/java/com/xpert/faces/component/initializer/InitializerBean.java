@@ -2,11 +2,6 @@ package com.xpert.faces.component.initializer;
 
 import com.xpert.DAO;
 import com.xpert.faces.utils.FacesUtils;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import jakarta.el.ELException;
 import jakarta.el.ValueExpression;
 import jakarta.faces.component.UIComponent;
@@ -17,6 +12,13 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *

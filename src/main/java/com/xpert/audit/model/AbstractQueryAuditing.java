@@ -1,7 +1,14 @@
 package com.xpert.audit.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
+
 import java.util.Date;
-import jakarta.persistence.*;
 
 /**
  * Abstract class to represent a audit event in a Query.

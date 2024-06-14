@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * Abstract class to update sequences based on max value in current Entity, the
  * sequence name is get with reflections searching for annotation
  *
- * @SequenceGenerator
+ * @SequenceUpdater
  *
  * @author ayslan, arnaldo
  */
