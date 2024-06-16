@@ -93,7 +93,6 @@ Web Version:
 		- [DataTableExporter](https://github.com/xpert-framework/xpert-framework/wiki/DataTableExporter)
 		- [DateFilter](https://github.com/xpert-framework/xpert-framework/wiki/DateFilter)
 		- [Download](https://github.com/xpert-framework/xpert-framework/wiki/Componente-Download)
-		- [FilterOnEnter](https://github.com/xpert-framework/xpert-framework/wiki/Filter-On-Enter)
 		- [Find All Bean](https://github.com/xpert-framework/xpert-framework/wiki/Find-All-Bean)
 		- [Group](https://github.com/xpert-framework/xpert-framework/wiki/Group)
 		- [Initializer](https://github.com/xpert-framework/xpert-framework/wiki/Initializer)

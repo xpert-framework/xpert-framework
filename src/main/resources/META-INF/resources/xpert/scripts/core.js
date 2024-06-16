@@ -110,44 +110,6 @@ Xpert = {
         $column.find('.calendar-filter-start input').val(dateStart);
         $column.find('.calendar-filter-end input').val(dateEnd);
     },
-    filterOnEnter: function (target, selector) {
-
-        if (target != null && target != "" && target != undefined) {
-            selector = Xpert.escapeClientId(target);
-        }
-        if (selector == null || selector == "" || selector == undefined) {
-            selector = ".ui-datatable";
-        }
-
-        $("body").delegate(selector + " .ui-filter-column input", "focus", function (e) {
-
-            var attr = $(this).attr("data-x-filteronenter");
-            if (attr != null && attr != undefined && attr != false) {
-                return;
-            }
-
-            var events = $._data(this, "events");
-            var originalEvent;
-            $.each(events, function (i, event) {
-                if (i == "keyup" || i == "keydown") {
-                    originalEvent = event[0].handler;
-                    return;
-                }
-            });
-            $(this).unbind("keydown").unbind("keyup");
-            $(this).keyup(function (keyup) {
-                if (keyup.keyCode == 13) {
-                    keyup.preventDefault();
-                }
-            }).keydown(function (keydown) {
-                if (keydown.keyCode == 13) {
-                    keydown.preventDefault();
-                    originalEvent(keydown);
-                }
-            });
-            $(this).attr("data-x-filteronenter", true);
-        });
-    },
     spreadCheckBoxList: function (id, columns, highlight) {
         var $table = $("input[id ^= " + (id.replace(/:/g, "\\:") + "]:first")).closest("table");
         var $td = $table.find("tr td");
