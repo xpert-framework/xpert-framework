@@ -4,6 +4,7 @@ import com.xpert.faces.bean.Xpert;
 import com.xpert.faces.component.restorablefilter.RestorableFilter;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.JoinBuilder;
+import com.xpert.persistence.query.LikeType;
 import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.query.QueryParameter;
 import com.xpert.persistence.query.Restriction;
@@ -12,6 +13,7 @@ import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -208,13 +210,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return filterRestrictions;
     }
 
-    private void addRestrictions(List<Restriction> filterRestrictions, FilterMeta filterMeta) {
-        
+    private void addRestrictions(List<Restriction> filteres, FilterMeta filterMeta) {
+
         FilterByHandler filterHandler = getFilterByHandler();
         if (filterHandler != null) {
             Restrictions r = filterHandler.getFilterBy(filterMeta.getField(), filterMeta.getFilterValue().toString());
             if (r != null && !r.isEmpty()) {
-                filterRestrictions.addAll(r);
+                filteres.addAll(r);
                 return;
             }
         }
@@ -224,13 +226,64 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         String property = getProperty(filterMeta);
         Object filterValue = filterMeta.getFilterValue();
 
-        if (filterValue instanceof String string) {
-            filterRestrictions.add(new Restriction(property, RestrictionType.DATA_TABLE_FILTER, string));
-        } else if (filterValue instanceof Object[] objects) {
-            addArrayRestrictions(filterRestrictions, property, objects);
-        } else {
-            filterRestrictions.add(new Restriction(property, RestrictionType.EQUALS, filterValue.toString()));
+        if (filterValue == null) {
+            return;
         }
+
+        switch (filterMeta.getMatchMode()) {
+            case STARTS_WITH:
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.BEGIN));
+                break;
+            case NOT_STARTS_WITH:
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.BEGIN));
+                break;
+            case ENDS_WITH:
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.END));
+                break;
+            case NOT_ENDS_WITH:
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.END));
+                break;
+            case CONTAINS:
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.BOTH));
+                break;
+            case NOT_CONTAINS:
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.BOTH));
+                break;
+            case EXACT:
+            case EQUALS:
+                filteres.add(new Restriction(property, RestrictionType.EQUALS, filterValue.toString()));
+                break;
+            case NOT_EXACT:
+            case NOT_EQUALS:
+                filteres.add(new Restriction(property, RestrictionType.NOT_EQUALS, filterValue.toString()));
+                break;
+            case LESS_THAN:
+                filteres.add(new Restriction(property, RestrictionType.LESS_THAN, filterValue.toString()));
+                break;
+            case LESS_THAN_EQUALS:
+                filteres.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, filterValue.toString()));
+                break;
+            case GREATER_THAN:
+                filteres.add(new Restriction(property, RestrictionType.GREATER_THAN, filterValue.toString()));
+                break;
+            case GREATER_THAN_EQUALS:
+                filteres.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, filterValue.toString()));
+                break;
+            case IN:
+                filteres.add(new Restriction(property, RestrictionType.IN, filterArrayToList(filterValue)));
+                break;
+            case NOT_IN:
+                filteres.add(new Restriction(property, RestrictionType.NOT_IN, filterArrayToList(filterValue)));
+                break;
+            case BETWEEN:
+                List list = filterArrayToList(filterValue);
+                filteres.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, list.get(0)));
+                filteres.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, list.get(1)));
+                break;
+            case GLOBAL:
+                throw new UnsupportedOperationException("MatchMode.GLOBAL currently not supported!");
+        }
+
     }
 
     private void logDebug(FilterMeta filterMeta) {
@@ -247,10 +300,13 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return property;
     }
 
-    private void addArrayRestrictions(List<Restriction> filterRestrictions, String property, Object[] filterValueArray) {
-        if (filterValueArray != null && filterValueArray.length > 0) {
-            List<Object> list = new ArrayList<>(Arrays.asList(filterValueArray));
-            filterRestrictions.add(new Restriction(property, RestrictionType.IN, list));
+    private ArrayList<Object> filterArrayToList(Object filterValue) {
+        if (filterValue instanceof Collection<?> collection) {
+            return new ArrayList<>(collection);
+        } else if (filterValue != null && filterValue.getClass().isArray()) {
+            return new ArrayList<>(Arrays.asList(filterValue));
+        } else {
+            throw new IllegalArgumentException("O objeto deve ser uma Collection ou um array.");
         }
     }
 
@@ -262,18 +318,18 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         this.currentFilters = filters;
-        
+
         List<Restriction> currentQueryRestrictions = getCurrentQueryRestrictions();
 
         boolean restrictionsChanged = !currentQueryRestrictions.equals(queryRestrictions);
 
         this.queryRestrictions = currentQueryRestrictions;
-        
+
         LazyCountType countType = getLazyCountType();
         if (countType == null) {
             countType = LazyCountType.ALWAYS;
         }
-        
+
         // If ALWAYS or (ONLY_ONCE and not set currentRowCount or restrictions has changed)
         if (countType.equals(LazyCountType.ALWAYS)
                 || (countType.equals(LazyCountType.ONLY_ONCE) && (currentRowCount == null || restrictionsChanged))) {
