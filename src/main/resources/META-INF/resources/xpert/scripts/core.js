@@ -212,64 +212,6 @@ Xpert = {
     }
 };
 Xpert.behavior = {
-    verifyConfirmation: function (element, confirmLabel, cancelLabel, message, primefaces3) {
-        var $element = $(element);
-        var onclick = $element.attr("onclick");
-
-        if (onclick != null && onclick != undefined && onclick.length > 0) {
-            onclick = onclick.replace(/this/g, "'" + $(element).attr("id") + "'");
-
-            $element.removeAttr("onclick");
-            $element.click(function () {
-                Xpert.behavior.confirmation(confirmLabel, cancelLabel, message, onclick, primefaces3);
-                return false;
-            });
-        }
-
-    },
-    confirmation: function (confirmLabel, cancelLabel, message, onclick, primefaces3) {
-        //create dialog
-        var id = "idWidgetConfirmationDialog";
-        var widgetVar = "widgetConfirmationDialog";
-        if (primefaces3 == false) {
-            widgetVar = "PF('" + widgetVar + "')";
-        }
-        onclick = onclick.replace(/"/g, "'");
-        var confirmClick = widgetVar + ".hide();" + onclick + ";return false;";
-        //create only one time
-        var $createdDialog = $("#" + id);
-        if ($createdDialog != null && $createdDialog.length > 0) {
-            $createdDialog.find(".dialog-confirm-button span").html(confirmLabel);
-            $createdDialog.find(".dialog-cancel-button span").html(cancelLabel);
-            $createdDialog.find(".dialog-confirm-message").html(message);
-            $createdDialog.find("#xpertCofirmationButton").attr("onclick", confirmClick);
-        } else {
-            var html = '<div style="visibility: visible;" class="uix-confirm-dialog ui-confirm-dialog ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow" id="' + id + '" >'
-                    + '<div class="ui-dialog-content ui-widget-content" style="height: auto;">'
-                    + '<span class="ui-icon ui-icon-alert ui-confirm-dialog-severity"></span><div class="dialog-confirm-message">' + message + '</div>'
-                    + '</div>'
-                    + '<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">'
-                    + '<form>'
-                    + '<button id="xpertCofirmationButton" type="submit" onclick="' + confirmClick + '" class="dialog-confirm-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
-                    + '<span class="ui-button-text">' + confirmLabel + '</span>'
-                    + '</button>'
-                    + '<button type="button" onclick="' + widgetVar + '.hide()" class="dialog-cancel-button ui-state-default ui-button ui-widget ui-corner-all ui-button-text-only" role="button" aria-disabled="false">'
-                    + '<span class="ui-button-text">' + cancelLabel + '</span>'
-                    + '</button>'
-                    + '<script type="text/javascript">Xpert.skinButton("#' + id + ' button");</script>'
-                    + '</form>'
-                    + '</div>'
-                    + '</div>';
-            html = html + '<script type="text/javascript">PrimeFaces.cw("Dialog","widgetConfirmationDialog",{id:"' + id + '",modal:true,resizable:false,visible:true});</script>';
-            $(html).appendTo("body");
-        }
-        if (primefaces3 == true) {
-            widgetConfirmationDialog.show();
-        } else {
-            PF('widgetConfirmationDialog').show();
-        }
-        $("#" + id).find(".dialog-confirm-button").focus();
-    },
     download: function (element, cfg) {
         if (cfg.onstart) {
             cfg.onstart();

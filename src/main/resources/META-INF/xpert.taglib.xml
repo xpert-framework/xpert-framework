@@ -75,28 +75,6 @@
         </attribute>
     </tag>
     <tag>
-        <tag-name>confirmation</tag-name>
-        <component>
-            <component-type>com.xpert.faces.component.Confirmation</component-type>
-            <renderer-type>com.xpert.faces.component.ConfirmationRenderer</renderer-type>
-        </component>
-        <attribute>
-            <name>message</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>confirmLabel</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>cancelLabel</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-    </tag>
-    <tag>
         <tag-name>securityArea</tag-name>
         <component>
             <component-type>com.xpert.faces.component.SecurityArea</component-type>

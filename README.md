@@ -87,7 +87,6 @@ Web Version:
 		- [ActiveInactiveConverter](https://github.com/xpert-framework/xpert-framework/wiki/Conversores#activeinactiveconverter)
 	- [Componentes JSF](https://github.com/xpert-framework/xpert-framework/wiki/Componentes-JSF)
 		- [BooleanSelectItens](https://github.com/xpert-framework/xpert-framework/wiki/BooleanSelectItens)
-		- [Confirmation](https://github.com/xpert-framework/xpert-framework/wiki/Confirmation)
 		- [CPF e CNPJ](https://github.com/xpert-framework/xpert-framework/wiki/CPF-e-CNPJ)
 		- [DataTableActions](https://github.com/xpert-framework/xpert-framework/wiki/DataTableActions)
 		- [DataTableExporter](https://github.com/xpert-framework/xpert-framework/wiki/DataTableExporter)
