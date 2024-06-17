@@ -7,9 +7,7 @@ package com.xpert.faces.primefaces;
  */
 public enum PrimeFacesVersion {
     
-    VERSION_3("Version 3", false, false), 
-    VERSION_4("Version 4", true, true),
-    VERSION_5("Version 5 (or greater)", true, true);
+    VERSION_14("Version 14", true, true);
     
     private final String description;
     /**
@@ -38,6 +36,5 @@ public enum PrimeFacesVersion {
     public String getDescription() {
         return description;
     }
-
     
 }

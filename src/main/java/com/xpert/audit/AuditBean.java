@@ -3,13 +3,11 @@ package com.xpert.audit;
 import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.audit.model.AbstractAuditing;
-import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
 
 /**
@@ -18,7 +16,8 @@ import jakarta.annotation.PostConstruct;
  */
 public class AuditBean implements Serializable{
 
-    private static final Logger logger = Logger.getLogger(AuditBean.class.getName());
+    private static final long serialVersionUID = -2671979402785945505L;
+    
     private Object object;
     private Map<BeanModel, DetailAuditBean> beans = new HashMap<>();
     private BaseDAO baseDAO;
@@ -29,15 +28,6 @@ public class AuditBean implements Serializable{
     public void init() {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
     }
-    
-    public boolean isPrimeFaces3(){
-        return PrimeFacesUtils.isVersion3();
-    }
-    
-    public boolean isPrimeFaces4(){
-        return PrimeFacesUtils.isVersion4();
-    }
-    
 
     public void detail(Object object) {
         this.object = object;
@@ -122,6 +112,5 @@ public class AuditBean implements Serializable{
     public BaseDAO getBaseDAO() {
         return baseDAO;
     }
-    
     
 }

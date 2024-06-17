@@ -14,10 +14,10 @@ public class Xpert {
     public static final String DEFAULT_PAGINATOR_TEMPLATE = "{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}";
     public static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
 
-    public String getVersion(){
+    public String getVersion() {
         return Constants.VERSION;
     }
-    
+
     public String normalizePrimeFacesWidget(String widgetVar) {
         return PrimeFacesUtils.normalizeWidgetVar(widgetVar);
     }

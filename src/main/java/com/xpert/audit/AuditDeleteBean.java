@@ -6,7 +6,6 @@ import com.xpert.audit.model.AbstractAuditing;
 import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
-import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
@@ -28,7 +27,7 @@ import org.primefaces.model.LazyDataModel;
 public class AuditDeleteBean implements Serializable {
 
     private static final long serialVersionUID = -2653891634297925727L;
-    
+
     private static final Logger logger = Logger.getLogger(AuditDeleteBean.class.getName());
     private Class entity;
     private LazyDataModel<AbstractAuditing> auditings;
@@ -37,10 +36,6 @@ public class AuditDeleteBean implements Serializable {
     @PostConstruct
     public void init() {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
-    }
-
-    public boolean isPrimeFaces3() {
-        return PrimeFacesUtils.isVersion3();
     }
 
     public void load(Class entity) {

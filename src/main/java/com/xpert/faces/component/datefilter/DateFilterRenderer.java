@@ -107,9 +107,7 @@ public class DateFilterRenderer extends Renderer {
         DataTable dataTable = (DataTable) column.getParent();
         String widgetVar = dataTable.resolveWidgetVar();
 
-        if (!PrimeFacesUtils.isVersion3()) {
-            widgetVar = "PF('" + widgetVar + "')";
-        }
+        widgetVar = "PF('" + widgetVar + "')";
 
         String filterScript = "Xpert.dateFilter('" + column.getClientId() + "');" + widgetVar + ".filter(); return false;";
 
