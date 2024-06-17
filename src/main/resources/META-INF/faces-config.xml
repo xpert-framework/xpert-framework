@@ -90,57 +90,6 @@
         <validator-class>com.xpert.faces.validation.RenavamValidator</validator-class>
     </validator>
     
-    <managed-bean>
-        <managed-bean-name>auditBean</managed-bean-name>
-        <managed-bean-class>com.xpert.audit.AuditBean</managed-bean-class>
-        <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>auditDeleteBean</managed-bean-name>
-        <managed-bean-class>com.xpert.audit.AuditDeleteBean</managed-bean-class>
-        <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>beanMaker</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.BeanMaker</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>booleanSelectItens</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.BooleanSelectItens</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>booleanSelectItensEmptyOption</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.BooleanSelectItensEmptyOption</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>localeBean</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.LocaleBean</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>primeFacesVersion</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.PrimeFacesVersion</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>xpert</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.Xpert</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>defaultDataTableExporter</managed-bean-name>
-        <managed-bean-class>com.xpert.faces.bean.DefaultDataTableExporter</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-    <managed-bean eager="true">
-        <managed-bean-name>icons</managed-bean-name>
-        <managed-bean-class>com.xpert.template.Icons</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-    
     <behavior>
         <behavior-id>xpert.faces.DownloadBehavior</behavior-id>
         <behavior-class>com.xpert.faces.behavior.DownloadBehavior</behavior-class>

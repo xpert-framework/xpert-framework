@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.primefaces.model.LazyDataModel;
@@ -24,6 +26,8 @@ import org.primefaces.model.LazyDataModel;
  *
  * @author ayslan
  */
+@Named("auditDeleteBean")
+@ViewScoped
 public class AuditDeleteBean implements Serializable {
 
     private static final long serialVersionUID = -2653891634297925727L;

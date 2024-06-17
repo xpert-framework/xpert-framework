@@ -1,5 +1,9 @@
 package com.xpert.template;
 
+import jakarta.ejb.Startup;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -7,7 +11,12 @@ import java.util.HashMap;
  *
  * @author ayslanms
  */
-public class Icons extends HashMap<String, String> {
+@Named("icons")
+@Singleton
+@Startup
+public class Icons extends HashMap<String, String> implements Serializable {
+
+    private static final long serialVersionUID = 5099651664242215465L;
 
     public Icons() {
         jqueryUi();

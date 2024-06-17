@@ -5,8 +5,11 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.xpert.faces.utils.FacesUtils;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Default Managed Bean to process export. This bean add manipulates the Object
@@ -14,7 +17,11 @@ import java.io.IOException;
  *
  * @author ayslan
  */
-public class DefaultDataTableExporter {
+@Named("defaultDataTableExporter")
+@RequestScoped
+public class DefaultDataTableExporter implements Serializable {
+
+    private static final long serialVersionUID = -1939675915570705879L;
 
     public static final String LOGO_PATH_PNG = "/images/logo.png";
     public static final String LOGO_PATH_JPG = "/images/logo.jpg";

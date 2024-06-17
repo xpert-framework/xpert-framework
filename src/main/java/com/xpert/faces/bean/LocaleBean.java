@@ -1,6 +1,8 @@
 package com.xpert.faces.bean;
 
 import com.xpert.faces.utils.FacesUtils;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -8,13 +10,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author ayslan
  */
+@Named("localeBean")
+@SessionScoped
 public class LocaleBean implements Serializable {
+
+    private static final long serialVersionUID = 2984408355192290314L;
 
     private Locale locale;
     private List<Locale> locales = new ArrayList<>();

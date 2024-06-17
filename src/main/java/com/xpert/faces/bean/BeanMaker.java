@@ -16,17 +16,24 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 
 /**
  *
  * @author ayslan
  */
+@Named("beanMaker")
+@SessionScoped
 public class BeanMaker implements Serializable {
 
+    private static final long serialVersionUID = -4555192255671152263L;
+
     private static final Logger logger = Logger.getLogger(BeanMaker.class.getName());
+
     private final SimpleDateFormat ZIP_NAME_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH'h'-mm'm'");
     private EntityManager entityManager;
     private List<MappedBean> mappedBeans;
@@ -96,11 +103,12 @@ public class BeanMaker implements Serializable {
         nameSelectedClasses = new ArrayList<>();
         mappedBeans = new ArrayList<>();
     }
-    
-    public PrimeFacesVersion[] getPrimeFacesVersions(){
+
+    public PrimeFacesVersion[] getPrimeFacesVersions() {
         return PrimeFacesVersion.values();
     }
-    public BootstrapVersion[] getBootstrapVersions(){
+
+    public BootstrapVersion[] getBootstrapVersions() {
         return BootstrapVersion.values();
     }
 

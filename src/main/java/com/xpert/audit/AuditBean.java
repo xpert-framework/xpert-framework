@@ -9,12 +9,16 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 
 /**
  *
  * @author ayslan
  */
-public class AuditBean implements Serializable{
+@Named("auditBean")
+@ViewScoped
+public class AuditBean implements Serializable {
 
     private static final long serialVersionUID = -2671979402785945505L;
     
