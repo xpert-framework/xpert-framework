@@ -239,7 +239,7 @@ public abstract class AbstractBaseBean<T> {
      */
     public T getEntityNewInstance() {
         try {
-            return (T) getEntityClass().newInstance();
+            return (T) getEntityClass().getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
             return null;

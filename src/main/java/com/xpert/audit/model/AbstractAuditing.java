@@ -7,13 +7,14 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
+import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
 
 /**
  * Abstract class to represent a audit event.
- * 
+ *
  * @author ayslan
  */
 @MappedSuperclass
@@ -21,16 +22,16 @@ public abstract class AbstractAuditing {
 
     @Transient
     private Class auditClass;
-    
+
     private String entity;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date eventDate;
-    
+
     private Long identifier;
-    
+
     private String ip;
-    
+
     @Column(length = 10)
     @Enumerated(EnumType.STRING)
     private AuditingType auditingType;
@@ -38,11 +39,14 @@ public abstract class AbstractAuditing {
     public abstract Object getId();
 
     public abstract List getMetadatas();
-    
+
     public abstract String getUserName();
-    
+
     public abstract void setMetadatas(List metadatas);
-    
+
+    @Transient
+    public List metadatasLazy = new ArrayList();
+
     public Long getIdentifier() {
         return identifier;
     }
@@ -58,8 +62,7 @@ public abstract class AbstractAuditing {
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
     }
-    
-    
+
     public String getEntity() {
         return entity;
     }
@@ -67,7 +70,7 @@ public abstract class AbstractAuditing {
     public void setEntity(String entity) {
         this.entity = entity;
     }
-    
+
     public AuditingType getAuditingType() {
         return auditingType;
     }
@@ -91,6 +94,13 @@ public abstract class AbstractAuditing {
     public void setAuditClass(Class auditClass) {
         this.auditClass = auditClass;
     }
-    
-    
+
+    public List getMetadatasLazy() {
+        return metadatasLazy;
+    }
+
+    public void setMetadatasLazy(List metadatasLazy) {
+        this.metadatasLazy = metadatasLazy;
+    }
+
 }

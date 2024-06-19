@@ -3,6 +3,7 @@ package com.xpert.audit;
 import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.audit.model.AbstractAuditing;
+import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import java.util.List;
 
 /**
  *
@@ -27,10 +29,12 @@ public class AuditBean implements Serializable {
     private BaseDAO baseDAO;
     private BeanModel lastBean;
     private DetailAuditBean lastModel;
+    private boolean enableAudit;
 
     @PostConstruct
     public void init() {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
+        this.enableAudit = false;
     }
 
     public void detail(Object object) {
@@ -46,6 +50,7 @@ public class AuditBean implements Serializable {
             detail.load();
             beans.put(beanModel, detail);
         }
+        this.enableAudit = true;
     }
 
     private BeanModel getBeanModel(Object object) {
@@ -96,6 +101,11 @@ public class AuditBean implements Serializable {
         }
         return false;
     }
+    
+    public void loadMetadatas(Object object) {
+        AbstractAuditing auditing = ((AbstractAuditing) object);
+        auditing.setMetadatasLazy((List) baseDAO.getInitialized(auditing.getMetadatas()));
+    }
 
     public Map<BeanModel, DetailAuditBean> getBeans() {
         return beans;
@@ -115,6 +125,14 @@ public class AuditBean implements Serializable {
 
     public BaseDAO getBaseDAO() {
         return baseDAO;
+    }
+
+    public boolean isEnableAudit() {
+        return enableAudit;
+    }
+
+    public void setEnableAudit(boolean enableAudit) {
+        this.enableAudit = enableAudit;
     }
     
 }

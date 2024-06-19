@@ -11,15 +11,20 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
@@ -379,12 +384,14 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         }
 
         String orderByField = "";
-        if (sortBy != null) {
+        if (sortBy != null && !sortBy.isEmpty()) {
             StringJoiner orderByJoiner = new StringJoiner(", ");
             for (Entry<String, SortMeta> entry : sortByMap.entrySet()) {
                 orderByJoiner.add(getOrderBy(entry.getValue().getField(), entry.getValue().getOrder()));
             }
             orderByField = orderByJoiner.toString();
+        } else {
+            orderByField = StringUtils.isNotBlank(defaultOrder) ? defaultOrder : "";
         }
 
         if (debug) {
@@ -459,6 +466,25 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
             if (id != null) {
                 return getDao().find(id);
             }
+        }
+        return null;
+    }
+
+    @Override
+    public String getRowKey(Object object) {
+        return object == null ? null : keyConverter(object).toString();
+    }
+
+    private Object keyConverter(Object object) {
+        try {
+            Object key = dao.getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(object);
+            if (key != null) {
+                return key;
+            } else {
+                return (T) ConstructorUtils.invokeConstructor(getDao().getEntityClass());
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException ex) {
+            Logger.getLogger(LazyDataModelImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
