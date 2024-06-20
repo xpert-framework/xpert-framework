@@ -45,10 +45,10 @@
             <p:commandButton type="button" value="${sharp}{xmsg['close']}" onclick="${entity.widgetVarDetail}.hide()" />
             <#if configuration.generatesSecurityArea == true >
             <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
+                <x:audit entity="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </x:securityArea>
             <#else>
-            <x:audit for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
+            <x:audit entity="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entity}"/>
             </#if>
         </div>
     </h:form>

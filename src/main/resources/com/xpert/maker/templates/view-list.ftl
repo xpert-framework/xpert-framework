@@ -119,10 +119,10 @@
             <div class="uix-audit-delete">
             <#if configuration.generatesSecurityArea == true >
                 <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                    <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                    <x:auditDelete entityClass="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                 </x:securityArea>
             <#else>
-                <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                <x:auditDelete entityClass="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
             </#if>
             </div>  
         </h:form>

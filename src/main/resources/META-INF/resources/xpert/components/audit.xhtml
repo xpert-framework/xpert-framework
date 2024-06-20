@@ -9,8 +9,8 @@
 
     <!-- INTERFACE -->
     <cc:interface>
-        <cc:attribute name="for" required="true" />
-        <cc:attribute name="forClass" required="java.lang.Class" />
+        <cc:attribute name="entity" required="true" type="java.lang.Object"/>
+        <cc:attribute name="entityClass" type="java.lang.Class"/>
         <cc:attribute name="collapsed" type="java.lang.Boolean" default="true" />
         <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
         <cc:attribute name="panelStyleClass" type="java.lang.String"  />
@@ -24,30 +24,30 @@
 
             <h:inputHidden id="x-valueCollapsed" value="#{cc.attrs.collapsed}"/>
 
-            <h:panelGroup id="x-auditingPanelId" layout="block" rendered="#{auditBean.isPersisted(cc.attrs.for)}">
+            <h:panelGroup id="x-auditingPanelId" layout="block" rendered="#{auditBean.isPersisted(cc.attrs.entity)}">
 
                 <p:commandButton id="x-button-auditing"
                                  process="@this" 
-                                 update="#{cc.clientId}:x-panel-detail-auditing-id"
+                                 update="x-panel-detail-auditing-id"
                                  action="#{auditBean.detail}" 
                                  icon="#{cc.attrs.buttonIcon}"
                                  rendered="#{cc.attrs.collapsed}"
-                                 styleClass="#{cc.attrs.buttonStyleClass}"
+                                 styleClass="x-button-detail-auditing #{cc.attrs.buttonStyleClass}"
                                  value="#{xmsg.auditing}"
-                                 oncomplete="xPanelAuditing();">
-                    <f:setPropertyActionListener value="#{cc.attrs.for}" target="#{auditBean.object}" />
+                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').hide(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').show();">
+                    <f:setPropertyActionListener value="#{cc.attrs.entity}" target="#{auditBean.object}" />
                 </p:commandButton>
 
                 <h:panelGroup rendered="#{not cc.attrs.collapsed}">
-                    <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.for)}" />
+                    <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.entity)}" />
                 </h:panelGroup>
 
-                <h:panelGroup id="x-panel-detail-auditing-id" styleClass="#{cc.attrs.panelStyleClass}" layout="block">
-                    
-                    <ui:param name="xpertAuditingDetail" value="#{auditBean.getDetailAuditBean(cc.attrs.for)}"/>
-                    
-                    <p:accordionPanel prependId="false" rendered="#{auditBean.enableAudit}">
-                        
+                <h:panelGroup id="x-panel-detail-auditing-id" styleClass="x-panel-detail-auditing #{cc.attrs.panelStyleClass}" layout="block">
+
+                    <ui:param name="xpertAuditingDetail" value="#{auditBean.getDetailAuditBean(cc.attrs.entity)}"/>
+
+                    <p:accordionPanel prependId="false" rendered="#{auditBean.enableAudit}" onTabClose="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').show(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').hide();">
+
                         <p:tab title="#{xmsg.auditingDetail}" >
 
                             <p:dataTable id="x-dataTableAudit"
@@ -85,7 +85,7 @@
                                             <h:outputText value="#{indexMetadata+1}" />
                                         </p:column>
                                         <p:column headerText="#{xmsg.field}">
-                                            <h:outputText value="#{metadata.getFieldName(empty cc.attrs.forClass ? cc.attrs.for.getClass() : cc.attrs.forClass)}" />
+                                            <h:outputText value="#{metadata.getFieldName(empty cc.attrs.entityClass ? cc.attrs.entity.getClass() : cc.attrs.entityClass)}" />
                                         </p:column>
                                         <p:column headerText="#{xmsg.oldValue}">
                                             <h:outputText value="#{metadata.oldValue}" />
@@ -104,25 +104,14 @@
 
                 <script>
                     /*<![CDATA[*/
-                    var button = $("[id='#{cc.clientId}:x-button-auditing']");
-                    var panel = $("[id='#{cc.clientId}:x-panel-detail-auditing-id']");
 
                     $(document).ready(function () {
                         var collapsed = $("[id='#{cc.clientId}:x-valueCollapsed']");
                         if (collapsed.val() === 'true') {
-                            panel.hide();
+                            $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').hide();
                         }
                     });
 
-                    function xPanelAuditing() {
-                        if (panel.is(':visible')) {
-                            panel.hide();
-                            button.show();
-                        } else {
-                            panel.show();
-                            button.hide();
-                        }
-                    }
                     /*]]>*/
                 </script>
 

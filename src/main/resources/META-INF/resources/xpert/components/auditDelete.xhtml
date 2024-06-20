@@ -10,7 +10,7 @@
 
     <!-- INTERFACE -->
     <cc:interface>
-        <cc:attribute name="for" required="true" type="java.lang.Class"/>
+        <cc:attribute name="entityClass" required="true" type="java.lang.Class"/>
         <cc:attribute name="collapsed" type="java.lang.Boolean" default="true" />
         <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
         <cc:attribute name="panelStyleClass" type="java.lang.String"  />
@@ -25,38 +25,38 @@
 
                 <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="#{cc.attrs.buttonIcon}"
                                  rendered="#{cc.attrs.collapsed}"
-                                 styleClass="button-detail-auditing-delete #{cc.attrs.buttonStyleClass}" style="margin-bottom: 2px;"
-                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.button-detail-auditing-delete').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.panel-detail-auditing-delete').show()"
+                                 styleClass="x-button-detail-auditing-delete #{cc.attrs.buttonStyleClass}"
+                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').show()"
                                  update="accordionDetail" value="#{xmsg.listDeletions}" >
-                    <f:setPropertyActionListener value="#{cc.attrs.for}" target="#{auditDeleteBean.entity}" />
+                    <f:setPropertyActionListener value="#{cc.attrs.entityClass}" target="#{auditDeleteBean.entityClass}" />
                 </p:commandButton>
 
                 <h:panelGroup rendered="#{not cc.attrs.collapsed}">
-                    <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.for)}" />
+                    <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.entityClass)}" />
                 </h:panelGroup>
 
-                <h:panelGroup styleClass="panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
-                    <p:accordionPanel id="accordionDetail" >
+                <h:panelGroup styleClass="x-panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
+                    <p:accordionPanel id="accordionDetail" prependId="false" onTabClose="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').show();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide()">
                         <p:tab title="#{xmsg.deletions}">
 
                             <p:dataTable var="audit" value="#{auditDeleteBean.auditings}" styleClass="datatable-auditing"
                                          emptyMessage="#{xmsg.noRecordFound}"  
                                          rowsPerPageTemplate="10,20,30" rowIndexVar="index"
                                          lazy="true"
-                                         paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          currentPageReportTemplate=" "
                                          style="font-weight: normal;"
                                          rows="10" paginatorPosition="bottom" >
                                 <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}">
                                     <h:outputText value="#{audit.eventDate}" >
-                                        <f:convertDateTime dateStyle="medium" type="both"/>
+                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="#{xmsg['object']}">
                                     <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
                                         <x:initializer entityManager="#{auditDeleteBean.baseDAO.entityManager}"/>
                                         <h:outputText value=", " rendered="#{status.index gt 0}"/>    
-                                        <h:outputText value="#{metadata.getFieldName(cc.attrs.for)}: " style="font-weight: bold;"/>    
+                                        <h:outputText value="#{metadata.getFieldName(cc.attrs.entityClass)}: " style="font-weight: bold;"/>    
                                         <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    
                                     </ui:repeat>
                                 </p:column>
@@ -67,7 +67,7 @@
                                     <h:outputText value="#{audit.ip}" />
                                 </p:column>
                                 <p:column>  
-                                    <x:audit for="#{audit}" forClass="#{cc.attrs.for}"/>
+                                    <x:audit entity="#{audit}" entityClass="#{cc.attrs.entityClass}"/>
                                 </p:column>
                             </p:dataTable>
                         </p:tab>

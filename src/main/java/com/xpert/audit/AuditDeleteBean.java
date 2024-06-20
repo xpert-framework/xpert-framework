@@ -19,6 +19,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Collectors;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.primefaces.model.LazyDataModel;
 
@@ -33,7 +34,7 @@ public class AuditDeleteBean implements Serializable {
     private static final long serialVersionUID = -2653891634297925727L;
 
     private static final Logger logger = Logger.getLogger(AuditDeleteBean.class.getName());
-    private Class entity;
+    private Class entityClass;
     private LazyDataModel<AbstractAuditing> auditings;
     private BaseDAO baseDAO;
 
@@ -42,15 +43,15 @@ public class AuditDeleteBean implements Serializable {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
     }
 
-    public void load(Class entity) {
-        this.entity = entity;
+    public void load(Class clazz) {
+        this.entityClass = clazz;
         load();
     }
 
     public void load() {
-        if (entity != null) {
+        if (entityClass != null) {
             List<Restriction> restrictions = new ArrayList<>();
-            restrictions.add(new Restriction("entity", Audit.getEntityName(entity)));
+            restrictions.add(new Restriction("entity", Audit.getEntityName(entityClass)));
             restrictions.add(new Restriction("auditingType", AuditingType.DELETE));
             auditings = new LazyDataModelImpl<>("eventDate DESC", restrictions, baseDAO);
         }
@@ -73,8 +74,8 @@ public class AuditDeleteBean implements Serializable {
     public Object newBeanInstance(AbstractAuditing auditingDelete) {
         try {
 
-            Object newInstance = entity.getDeclaredConstructor().newInstance();
-            PropertyUtils.setProperty(newInstance, EntityUtils.getIdFieldName(entity), auditingDelete.getIdentifier());
+            Object newInstance = entityClass.getDeclaredConstructor().newInstance();
+            PropertyUtils.setProperty(newInstance, EntityUtils.getIdFieldName(entityClass), auditingDelete.getIdentifier());
 
             return newInstance;
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
@@ -84,34 +85,20 @@ public class AuditDeleteBean implements Serializable {
     }
 
     public String getObjectDescripton(List<AbstractMetadata> metadatas) {
-        StringBuilder builder = new StringBuilder();
-
-        if (metadatas != null && !metadatas.isEmpty()) {
-            builder.append("[");
-            boolean comma = false;
-            for (AbstractMetadata metadata : metadatas) {
-                if (comma) {
-                    builder.append(", ");
-                }
-                builder.append("<b>").append(metadata.getField());
-                builder.append(": ").append("</b>");
-                builder.append(metadata.getNewValue());
-                if (comma == false) {
-                    comma = true;
-                }
-            }
-            builder.append("[");
+        if (metadatas == null || metadatas.isEmpty()) {
+            return "";
         }
-
-        return builder.toString();
+        return metadatas.stream()
+                .map(metadata -> String.format("<b>%s: </b>%s", metadata.getField(), metadata.getNewValue()))
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 
-    public Class getEntity() {
-        return entity;
+    public Class getEntityClass() {
+        return entityClass;
     }
 
-    public void setEntity(Class entity) {
-        this.entity = entity;
+    public void setEntityClass(Class entity) {
+        this.entityClass = entity;
     }
 
     public LazyDataModel<AbstractAuditing> getAuditings() {

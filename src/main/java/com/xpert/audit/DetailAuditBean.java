@@ -8,7 +8,6 @@ import com.xpert.persistence.utils.EntityUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -19,7 +18,6 @@ public class DetailAuditBean implements Serializable {
 
     private static final long serialVersionUID = 7498075390454510513L;
     
-    private static final Logger logger = Logger.getLogger(AuditBean.class.getName());
     private BeanModel beanModel;
     private LazyDataModel<AbstractAuditing> auditings;
     private BaseDAO baseDAO;
