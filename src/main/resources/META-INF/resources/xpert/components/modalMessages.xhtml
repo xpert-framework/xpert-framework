@@ -13,7 +13,7 @@
         <cc:attribute name="showSummary" default="true" type="java.lang.Boolean"/>
         <cc:attribute name="globalOnly" default="false" type="java.lang.Boolean"/>
         <cc:attribute name="onconfirm" />
-        <cc:attribute name="styleMessages" default="width: 300px; max-width: 350px;"/>
+        <cc:attribute name="styleMessages" default="width: 100%;"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -21,7 +21,7 @@
         <div id="#{cc.attrs.clientId}" >
             <h:panelGroup rendered="#{not empty facesContext.messageList}">
                 <p:dialog showHeader="false" closable="false" modal="true" appendTo="@(body)" closeOnEscape="#{cc.attrs.escape}"
-                          onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)"
+                          onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)" width="320"
                           resizable="false" widgetVar="xpertModalDialogMessages" responsive="true" visible="true">
                     <p:messages escape="#{cc.attrs.escape}" showDetail="#{cc.attrs.showDetail}" 
                                 showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}" style="#{cc.attrs.styleMessages}">
