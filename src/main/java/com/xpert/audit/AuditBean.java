@@ -3,7 +3,6 @@ package com.xpert.audit;
 import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.audit.model.AbstractAuditing;
-import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.Serializable;
