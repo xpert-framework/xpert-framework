@@ -60,13 +60,13 @@ public class EntityUtils {
             if (idType == null) {
                 throw new IllegalArgumentException("Id not found in entity " + entityClass.getName());
             } else if (idType.equals(Long.class) || idType.equals(long.class)) {
-                return Long.parseLong(StringUtils.getOnlyIntegerNumbers(id));
+                return Long.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
-                return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(id));
+                return Integer.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(BigInteger.class)) {
                 return new BigInteger(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(Short.class) || idType.equals(short.class)) {
-                return Short.parseShort(StringUtils.getOnlyIntegerNumbers(id));
+                return Short.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(BigDecimal.class)) {
                 return new BigDecimal(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(String.class)) {
@@ -367,4 +367,5 @@ public class EntityUtils {
         }
         return false;
     }
+
 }

@@ -11,18 +11,26 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.query.Restrictions;
 import com.xpert.persistence.utils.EntityUtils;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.function.Function;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.primefaces.model.FilterMeta;
@@ -228,60 +236,66 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         logDebug(filterMeta);
 
+        if (filterMeta == null || filterMeta.getFilterValue() == null) {
+            return;
+        }
+
         String property = getProperty(filterMeta);
         Object filterValue = filterMeta.getFilterValue();
 
-        if (filterValue == null) {
-            return;
+        if (filterValue instanceof Collection<?> || filterValue.getClass().isArray()) {
+            filterValue = converterFilterMetaToListObjectValue(filterMeta);
+        } else {
+            filterValue = converterFilterMetaToObjectValue(filterMeta);
         }
 
         switch (filterMeta.getMatchMode()) {
             case STARTS_WITH:
-                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.BEGIN));
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue, LikeType.BEGIN));
                 break;
             case NOT_STARTS_WITH:
-                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.BEGIN));
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue, LikeType.BEGIN));
                 break;
             case ENDS_WITH:
-                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.END));
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue, LikeType.END));
                 break;
             case NOT_ENDS_WITH:
-                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.END));
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue, LikeType.END));
                 break;
             case CONTAINS:
-                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue.toString(), LikeType.BOTH));
+                filteres.add(new Restriction(property, RestrictionType.LIKE, filterValue, LikeType.BOTH));
                 break;
             case NOT_CONTAINS:
-                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue.toString(), LikeType.BOTH));
+                filteres.add(new Restriction(property, RestrictionType.NOT_LIKE, filterValue, LikeType.BOTH));
                 break;
             case EXACT:
             case EQUALS:
-                filteres.add(new Restriction(property, RestrictionType.EQUALS, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.EQUALS, filterValue));
                 break;
             case NOT_EXACT:
             case NOT_EQUALS:
-                filteres.add(new Restriction(property, RestrictionType.NOT_EQUALS, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.NOT_EQUALS, filterValue));
                 break;
             case LESS_THAN:
-                filteres.add(new Restriction(property, RestrictionType.LESS_THAN, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.LESS_THAN, filterValue));
                 break;
             case LESS_THAN_EQUALS:
-                filteres.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, filterValue));
                 break;
             case GREATER_THAN:
-                filteres.add(new Restriction(property, RestrictionType.GREATER_THAN, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.GREATER_THAN, filterValue));
                 break;
             case GREATER_THAN_EQUALS:
-                filteres.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, filterValue.toString()));
+                filteres.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, filterValue));
                 break;
             case IN:
-                filteres.add(new Restriction(property, RestrictionType.IN, filterArrayToList(filterValue)));
+                filteres.add(new Restriction(property, RestrictionType.IN, filterValue));
                 break;
             case NOT_IN:
-                filteres.add(new Restriction(property, RestrictionType.NOT_IN, filterArrayToList(filterValue)));
+                filteres.add(new Restriction(property, RestrictionType.NOT_IN, filterValue));
                 break;
             case BETWEEN:
-                List list = filterArrayToList(filterValue);
+                List list = (List) filterValue;
                 filteres.add(new Restriction(property, RestrictionType.GREATER_EQUALS_THAN, list.get(0)));
                 filteres.add(new Restriction(property, RestrictionType.LESS_EQUALS_THAN, list.get(1)));
                 break;
@@ -305,14 +319,27 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return property;
     }
 
-    private ArrayList<Object> filterArrayToList(Object filterValue) {
-        if (filterValue instanceof Collection<?> collection) {
-            return new ArrayList<>(collection);
-        } else if (filterValue != null && filterValue.getClass().isArray()) {
-            return new ArrayList<>(Arrays.asList(filterValue));
+    private List<Object> converterFilterMetaToListObjectValue(FilterMeta filterMeta) {
+
+        List<Object> newList = null;
+        if (filterMeta.getFilterValue() instanceof Collection<?>) {
+            Collection<?> collection = (Collection<?>) filterMeta.getFilterValue();
+            newList = new ArrayList<>(collection);
+        } else if (filterMeta.getFilterValue().getClass().isArray()) {
+            Object[] array = (Object[]) filterMeta.getFilterValue();
+            newList = Arrays.asList(array);
         } else {
             throw new IllegalArgumentException("O objeto deve ser uma Collection ou um array.");
         }
+
+        Map.Entry<Class<?>, String> classMap = resolveClassField(filterMeta.getField()).entrySet().iterator().next();
+        Class<?> typeAttribute = typeAttribute(classMap.getKey(), classMap.getValue());
+
+        return (List<Object>) newList.stream()
+                .map(o -> {
+                    return converterToValueObject(typeAttribute, o);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -643,6 +670,90 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
     public void addParameters(List<QueryParameter> parameters) {
         if (parameters != null) {
             this.parameters.addAll(parameters);
+        }
+    }
+
+    private Object converterFilterMetaToObjectValue(FilterMeta filterMeta) {
+
+        Map.Entry<Class<?>, String> classMap = resolveClassField(filterMeta.getField()).entrySet().iterator().next();
+        Class<?> typeAttribute = typeAttribute(classMap.getKey(), classMap.getValue());
+
+        return converterToValueObject(typeAttribute, filterMeta.getFilterValue());
+    }
+
+    public Map<Class<?>, String> resolveClassField(String fieldName) {
+
+        Class clazz = dao.getEntityClass();
+
+        while (fieldName.contains(".")) {
+
+            String partial = fieldName.substring(0, fieldName.indexOf("."));
+            fieldName = fieldName.substring(partial.length() + 1);
+
+            clazz = typeAttribute(clazz, partial);
+        }
+
+        return Map.of(clazz, fieldName);
+    }
+
+    private static Object converterToValueObject(Class type, Object value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+
+            if (type.isEnum()) {
+                return Enum.valueOf(type.asSubclass(Enum.class), value.toString());
+            } else if (type == String.class) {
+                return value.toString();
+            } else if (type == int.class || type == Integer.class) {
+                return (value instanceof Number) ? ((Number) value).intValue() : Integer.valueOf(value.toString());
+            } else if (type == boolean.class || type == Boolean.class) {
+                return (value instanceof Boolean) ? value : Boolean.valueOf(value.toString());
+            } else if (type == long.class || type == Long.class) {
+                return (value instanceof Number) ? ((Number) value).longValue() : Long.valueOf(value.toString());
+            } else if (type == double.class || type == Double.class) {
+                return (value instanceof Number) ? ((Number) value).doubleValue() : Double.valueOf(value.toString());
+            } else if (type == float.class || type == Float.class) {
+                return (value instanceof Number) ? ((Number) value).floatValue() : Float.valueOf(value.toString());
+            } else if (type == char.class || type == Character.class) {
+                return (value instanceof Character) ? value : value.toString().charAt(0);
+            } else if (type == short.class || type == Short.class) {
+                return (value instanceof Number) ? ((Number) value).shortValue() : Short.valueOf(value.toString());
+            } else if (type == BigDecimal.class) {
+                return (value instanceof BigDecimal) ? value : new BigDecimal(value.toString());
+            } else if (type == BigInteger.class) {
+                return (value instanceof BigInteger) ? value : new BigInteger(value.toString());
+            } else if (type == java.util.Date.class) {
+                if (value instanceof java.util.Date) {
+                    return value;
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                return sdf.parse(value.toString());
+            } else if (type == LocalDate.class) {
+                return (value instanceof LocalDate) ? value : LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+            } else if (type == LocalDateTime.class) {
+                return (value instanceof LocalDateTime) ? value : LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            } else if (type == UUID.class) {
+                return (value instanceof UUID) ? value : UUID.fromString(value.toString());
+            } else {
+                throw new IllegalArgumentException("Unsupported type: " + type.getName());
+            }
+
+        } catch (IllegalArgumentException | ParseException e) {
+            throw new IllegalArgumentException("Error converting value: " + value + " to type: " + type.getName(), e);
+        }
+
+    }
+
+    private Class<?> typeAttribute(Class<?> clazz, String attribute) {
+        try {
+            Field field = clazz.getDeclaredField(attribute);
+            field.setAccessible(true);
+            return field.getType();
+        } catch (NoSuchFieldException | SecurityException ex) {
+            logger.log(Level.SEVERE, "Error resolving class field", ex);
+            throw new IllegalArgumentException("Error resolving class field: " + attribute + " for class: " + clazz.getName(), ex);
         }
     }
 
