@@ -15,14 +15,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
@@ -323,11 +322,9 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
 
         List<Object> newList = null;
         if (filterMeta.getFilterValue() instanceof Collection<?>) {
-            Collection<?> collection = (Collection<?>) filterMeta.getFilterValue();
-            newList = new ArrayList<>(collection);
+            newList = new ArrayList<>((Collection<?>) filterMeta.getFilterValue());
         } else if (filterMeta.getFilterValue().getClass().isArray()) {
-            Object[] array = (Object[]) filterMeta.getFilterValue();
-            newList = Arrays.asList(array);
+            newList = Arrays.asList((Object[]) filterMeta.getFilterValue());
         } else {
             throw new IllegalArgumentException("O objeto deve ser uma Collection ou um array.");
         }
@@ -381,8 +378,7 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         if (countType.equals(LazyCountType.ONLY_ONCE)) {
             this.setRowCount(currentRowCount);
         } else if (countType.equals(LazyCountType.NONE)) {
-//            currentRowCount = dados.size();
-            this.setRowCount(Integer.MAX_VALUE);
+            this.setRowCount(NumberUtils.INTEGER_ZERO);
         }
 
         return currentRowCount;
@@ -696,52 +692,48 @@ public class LazyDataModelImpl<T> extends LazyDataModel {
         return Map.of(clazz, fieldName);
     }
 
-    private static Object converterToValueObject(Class type, Object value) {
-        if (value == null) {
+    private static Object converterToValueObject(Class<?> typeClass, Object value) {
+        
+        if (value == null || typeClass == null) {
             return null;
         }
-        try {
 
-            if (type.isEnum()) {
-                return Enum.valueOf(type.asSubclass(Enum.class), value.toString());
-            } else if (type == String.class) {
-                return value.toString();
-            } else if (type == int.class || type == Integer.class) {
-                return (value instanceof Number) ? ((Number) value).intValue() : Integer.valueOf(value.toString());
-            } else if (type == boolean.class || type == Boolean.class) {
-                return (value instanceof Boolean) ? value : Boolean.valueOf(value.toString());
-            } else if (type == long.class || type == Long.class) {
-                return (value instanceof Number) ? ((Number) value).longValue() : Long.valueOf(value.toString());
-            } else if (type == double.class || type == Double.class) {
-                return (value instanceof Number) ? ((Number) value).doubleValue() : Double.valueOf(value.toString());
-            } else if (type == float.class || type == Float.class) {
-                return (value instanceof Number) ? ((Number) value).floatValue() : Float.valueOf(value.toString());
-            } else if (type == char.class || type == Character.class) {
-                return (value instanceof Character) ? value : value.toString().charAt(0);
-            } else if (type == short.class || type == Short.class) {
-                return (value instanceof Number) ? ((Number) value).shortValue() : Short.valueOf(value.toString());
-            } else if (type == BigDecimal.class) {
-                return (value instanceof BigDecimal) ? value : new BigDecimal(value.toString());
-            } else if (type == BigInteger.class) {
-                return (value instanceof BigInteger) ? value : new BigInteger(value.toString());
-            } else if (type == java.util.Date.class) {
-                if (value instanceof java.util.Date) {
-                    return value;
-                }
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                return sdf.parse(value.toString());
-            } else if (type == LocalDate.class) {
-                return (value instanceof LocalDate) ? value : LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-            } else if (type == LocalDateTime.class) {
-                return (value instanceof LocalDateTime) ? value : LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            } else if (type == UUID.class) {
-                return (value instanceof UUID) ? value : UUID.fromString(value.toString());
-            } else {
-                throw new IllegalArgumentException("Unsupported type: " + type.getName());
-            }
-
-        } catch (IllegalArgumentException | ParseException e) {
-            throw new IllegalArgumentException("Error converting value: " + value + " to type: " + type.getName(), e);
+        if(typeClass.equals(value.getClass())){
+            return value;
+        }
+        
+        if (typeClass.isEnum()) {
+            return Enum.valueOf(typeClass.asSubclass(Enum.class), value.toString());
+        } else if (typeClass == String.class) {
+            return value.toString();
+        } else if (typeClass == int.class || typeClass == Integer.class) {
+            return (value instanceof Number) ? ((Number) value).intValue() : Integer.valueOf(value.toString());
+        } else if (typeClass == boolean.class || typeClass == Boolean.class) {
+            return (value instanceof Boolean) ? value : Boolean.valueOf(value.toString());
+        } else if (typeClass == long.class || typeClass == Long.class) {
+            return (value instanceof Number) ? ((Number) value).longValue() : Long.valueOf(value.toString());
+        } else if (typeClass == double.class || typeClass == Double.class) {
+            return (value instanceof Number) ? ((Number) value).doubleValue() : Double.valueOf(value.toString());
+        } else if (typeClass == float.class || typeClass == Float.class) {
+            return (value instanceof Number) ? ((Number) value).floatValue() : Float.valueOf(value.toString());
+        } else if (typeClass == char.class || typeClass == Character.class) {
+            return (value instanceof Character) ? value : value.toString().charAt(0);
+        } else if (typeClass == short.class || typeClass == Short.class) {
+            return (value instanceof Number) ? ((Number) value).shortValue() : Short.valueOf(value.toString());
+        } else if (typeClass == BigDecimal.class) {
+            return (value instanceof BigDecimal) ? value : new BigDecimal(value.toString());
+        } else if (typeClass == BigInteger.class) {
+            return (value instanceof BigInteger) ? value : new BigInteger(value.toString());
+        } else if (typeClass == java.util.Date.class) {
+            return (Date) value;
+        } else if (typeClass == LocalDate.class) {
+            return (LocalDate) value;
+        } else if (typeClass == LocalDateTime.class) {
+            return (LocalDateTime) value;
+        } else if (typeClass == UUID.class) {
+            return (value instanceof UUID) ? value : UUID.fromString(value.toString());
+        } else {
+            return value;
         }
 
     }

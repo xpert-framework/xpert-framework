@@ -347,10 +347,10 @@ public abstract class AbstractBaseBean<T> {
 
     /**
      *
-     * @return LazyCountType used in LazyDataModel, defaul is ALWAYS
+     * @return LazyCountType used in LazyDataModel, defaul is ONLY_ONCE
      */
     public LazyCountType getDataModelLazyCountType() {
-        return LazyCountType.ALWAYS;
+        return LazyCountType.ONLY_ONCE;
     }
 
     public String getEntitySimpleName() {
