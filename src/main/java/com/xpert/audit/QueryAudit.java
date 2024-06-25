@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.xpert.Configuration;
+import com.xpert.adapter.LocalDateTimeTypeAdapter;
+import com.xpert.adapter.LocalDateTypeAdapter;
+import com.xpert.adapter.LocalTimeTypeAdapter;
+import com.xpert.adapter.ZonedDateTimeTypeAdapter;
 import com.xpert.audit.model.AbstractQueryAuditing;
 import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.faces.utils.FacesUtils;
@@ -28,6 +32,10 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.Parameter;
 import jakarta.persistence.Query;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 /**
@@ -315,7 +323,13 @@ public class QueryAudit implements Serializable {
     public String getJsonParameters(List<QueryAudit.QueryParameter> parameters) {
 
         //create JSON object
-        Gson gson = new GsonBuilder().setPrettyPrinting().setDateFormat("dd/MM/yyyy").create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
+                .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                .setPrettyPrinting()
+                .setDateFormat("dd/MM/yyyy").create();
         Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
         }.getType();
 
