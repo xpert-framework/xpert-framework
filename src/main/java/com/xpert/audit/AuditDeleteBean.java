@@ -93,6 +93,12 @@ public class AuditDeleteBean implements Serializable {
                 .collect(Collectors.joining(", ", "[", "]"));
     }
 
+    public void detailAll(AbstractAuditing audit) {
+        if (!audit.isDetail()) {
+            audit.setDetail(true);
+        }
+    }
+
     public Class getEntityClass() {
         return entityClass;
     }

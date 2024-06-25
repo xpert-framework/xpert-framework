@@ -46,6 +46,9 @@ public abstract class AbstractAuditing {
 
     @Transient
     public List metadatasLazy = new ArrayList();
+    
+    @Transient
+    private boolean detail;
 
     public Long getIdentifier() {
         return identifier;
@@ -101,6 +104,14 @@ public abstract class AbstractAuditing {
 
     public void setMetadatasLazy(List metadatasLazy) {
         this.metadatasLazy = metadatasLazy;
+    }
+
+    public boolean isDetail() {
+        return detail;
+    }
+
+    public void setDetail(boolean detail) {
+        this.detail = detail;
     }
 
 }

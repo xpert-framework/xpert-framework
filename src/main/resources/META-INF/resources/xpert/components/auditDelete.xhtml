@@ -21,6 +21,9 @@
     <cc:implementation>
         <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <span id="#{cc.attrs.clientId}">
+
+            <h:inputHidden id="x-valueCollapsed-delete" value="#{cc.attrs.collapsed}"/>
+
             <h:panelGroup id="detail">
 
                 <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="#{cc.attrs.buttonIcon}"
@@ -35,7 +38,7 @@
                     <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.entityClass)}" />
                 </h:panelGroup>
 
-                <h:panelGroup styleClass="x-panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" style="#{cc.attrs.collapsed ? 'display: none;' : ''}">
+                <h:panelGroup styleClass="x-panel-detail-auditing-delete #{cc.attrs.panelStyleClass}">
                     <p:accordionPanel id="accordionDetail" prependId="false" onTabClose="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').show();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide()">
                         <p:tab title="#{xmsg.deletions}">
 
@@ -47,6 +50,9 @@
                                          currentPageReportTemplate=" "
                                          style="font-weight: normal;"
                                          rows="10" paginatorPosition="bottom" >
+                                <p:column style="width:2rem" ariaHeaderText="#{xmsg['detail']}">
+                                    <p:rowToggler/>
+                                </p:column>
                                 <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}">
                                     <h:outputText value="#{audit.eventDate}" >
                                         <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
@@ -66,14 +72,29 @@
                                 <p:column headerText="#{xmsg['ip']}">
                                     <h:outputText value="#{audit.ip}" />
                                 </p:column>
-                                <p:column>  
-                                    <x:audit entity="#{audit}" entityClass="#{cc.attrs.entityClass}"/>
-                                </p:column>
+                                <p:ajax event="rowToggle" process="@this" listener="#{auditDeleteBean.detailAll(audit)}"/>
+                                <p:rowExpansion>
+                                    <x:audit entity="#{audit}" entityClass="#{cc.attrs.entityClass}" collapsed="false" rendered="#{audit.detail}"/>
+                                </p:rowExpansion>
                             </p:dataTable>
                         </p:tab>
                     </p:accordionPanel>
                 </h:panelGroup>
             </h:panelGroup>
+
+            <script>
+                /*<![CDATA[*/
+
+                $(document).ready(function () {
+                    var collapsed = $("[id='#{cc.clientId}:x-valueCollapsed-delete']");
+                    if (collapsed.val() === 'true') {
+                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide();
+                    }
+                });
+
+                /*]]>*/
+            </script>
+
         </span>
     </cc:implementation>
 </html>
