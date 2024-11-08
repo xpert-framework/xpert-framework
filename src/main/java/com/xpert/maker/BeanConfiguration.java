@@ -51,7 +51,7 @@ public class BeanConfiguration {
         this.datePattern = BeanCreator.DEFAULT_DATE_PATTERN;
         this.managedBeanSuffix = BeanCreator.SUFFIX_MANAGED_BEAN;
         this.businessObjectSuffix = BeanCreator.SUFFIX_BUSINESS_OBJECT;
-        this.primeFacesVersion = PrimeFacesVersion.VERSION_3;
+        this.primeFacesVersion = PrimeFacesVersion.VERSION_14;
         this.bootstrapVersion = null;
         this.generatesSecurityArea = true;
         this.maskCalendar = true;
@@ -64,10 +64,7 @@ public class BeanConfiguration {
      * @return
      */
     public String getSlotCharName() {
-        if (PrimeFacesVersion.VERSION_5.equals(primeFacesVersion)) {
-            return "slotChar";
-        }
-        return "placeHolder";
+        return "slotChar";
     }
 
     public boolean isHideIdInRequest() {

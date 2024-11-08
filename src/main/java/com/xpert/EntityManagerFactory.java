@@ -1,6 +1,6 @@
 package com.xpert;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  *

@@ -6,11 +6,11 @@ import com.xpert.faces.component.group.model.GroupModel;
 import com.xpert.faces.component.api.SortOrder;
 import java.util.Collections;
 import java.util.List;
-import javax.el.MethodExpression;
-import javax.el.ValueExpression;
-import javax.faces.FacesException;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
+import jakarta.el.MethodExpression;
+import jakarta.el.ValueExpression;
+import jakarta.faces.FacesException;
+import jakarta.faces.model.DataModel;
+import jakarta.faces.model.ListDataModel;
 
 /**
  *
@@ -188,7 +188,7 @@ public class Group extends UIData {
 
         getStateHelper().put(property, value);
 
-        List<String> setAttributes = (List<String>) this.getAttributes().get("javax.faces.component.UIComponentBase.attributesThatAreSet");
+        List<String> setAttributes = (List<String>) this.getAttributes().get("jakarta.faces.component.UIComponentBase.attributesThatAreSet");
 
         if (setAttributes != null && value == null) {
             final String attributeName = property.toString();

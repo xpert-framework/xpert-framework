@@ -6,14 +6,14 @@ import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.query.RestrictionsNormalizer;
 import java.io.IOException;
 import java.util.Map;
-import javax.el.ValueExpression;
-import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UINamingContainer;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.Renderer;
-import org.apache.commons.lang.StringEscapeUtils;
+import jakarta.el.ValueExpression;
+import jakarta.faces.FacesException;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UINamingContainer;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.render.Renderer;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.primefaces.component.api.UIColumn;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.datatable.DataTable;
@@ -68,7 +68,7 @@ public class RestorableFilterRenderer extends Renderer {
                                 String filterId = columnId + separator + "filter";
                                 Object filterValue = filters.get(expressionString);
                                 if (filterValue != null) {
-                                    String escapedValue = StringEscapeUtils.escapeJavaScript(filterValue.toString());
+                                    String escapedValue = StringEscapeUtils.escapeEcmaScript(filterValue.toString());
                                     bodyScript.append("$(PrimeFaces.escapeClientId('").append(filterId).append("')).val('").append(escapedValue).append("');");
                                     UIComponent header = column.getFacet("header");
                                     if (header != null) {

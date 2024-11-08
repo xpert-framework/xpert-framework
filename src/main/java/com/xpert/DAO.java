@@ -1,7 +1,7 @@
 package com.xpert;
 
 import com.xpert.persistence.dao.BaseDAOImpl;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * A generic BaseDAOImpl implementation.

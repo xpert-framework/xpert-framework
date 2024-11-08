@@ -5,7 +5,7 @@ import com.xpert.persistence.dao.BaseDAO;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 

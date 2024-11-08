@@ -3,41 +3,38 @@ package com.xpert.audit;
 import com.xpert.AuditDAO;
 import com.xpert.Configuration;
 import com.xpert.audit.model.AbstractAuditing;
-import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.persistence.dao.BaseDAO;
 import com.xpert.persistence.utils.EntityUtils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+import java.util.List;
 
 /**
  *
  * @author ayslan
  */
-public class AuditBean implements Serializable{
+@Named("auditBean")
+@ViewScoped
+public class AuditBean implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(AuditBean.class.getName());
+    private static final long serialVersionUID = -2671979402785945505L;
+    
     private Object object;
     private Map<BeanModel, DetailAuditBean> beans = new HashMap<>();
     private BaseDAO baseDAO;
     private BeanModel lastBean;
     private DetailAuditBean lastModel;
+    private boolean enableAudit;
 
     @PostConstruct
     public void init() {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
+        this.enableAudit = false;
     }
-    
-    public boolean isPrimeFaces3(){
-        return PrimeFacesUtils.isVersion3();
-    }
-    
-    public boolean isPrimeFaces4(){
-        return PrimeFacesUtils.isVersion4();
-    }
-    
 
     public void detail(Object object) {
         this.object = object;
@@ -52,6 +49,7 @@ public class AuditBean implements Serializable{
             detail.load();
             beans.put(beanModel, detail);
         }
+        this.enableAudit = true;
     }
 
     private BeanModel getBeanModel(Object object) {
@@ -102,6 +100,11 @@ public class AuditBean implements Serializable{
         }
         return false;
     }
+    
+    public void loadMetadatas(Object object) {
+        AbstractAuditing auditing = ((AbstractAuditing) object);
+        auditing.setMetadatasLazy((List) baseDAO.getInitialized(auditing.getMetadatas()));
+    }
 
     public Map<BeanModel, DetailAuditBean> getBeans() {
         return beans;
@@ -122,6 +125,13 @@ public class AuditBean implements Serializable{
     public BaseDAO getBaseDAO() {
         return baseDAO;
     }
-    
+
+    public boolean isEnableAudit() {
+        return enableAudit;
+    }
+
+    public void setEnableAudit(boolean enableAudit) {
+        this.enableAudit = enableAudit;
+    }
     
 }

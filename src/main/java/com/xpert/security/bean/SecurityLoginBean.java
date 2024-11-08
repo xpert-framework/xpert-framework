@@ -8,11 +8,11 @@ import com.xpert.security.model.User;
 import com.xpert.security.session.AbstractUserSession;
 import com.xpert.utils.Encryption;
 import java.security.NoSuchAlgorithmException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 
 /**
  * A generic bean to do the login in security control
@@ -24,7 +24,7 @@ public abstract class SecurityLoginBean {
     private String userLogin;
     private String userPassword;
 
-    public EncryptionType getEncryptionType() {
+    protected EncryptionType getEncryptionType() {
         return EncryptionType.SHA256;
     }
 
@@ -35,7 +35,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public boolean isLoginIgnoreCase() {
+    protected boolean isLoginIgnoreCase() {
         return false;
     }
 
@@ -44,7 +44,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public boolean isLoginUpperCase() {
+    protected boolean isLoginUpperCase() {
         return true;
     }
 
@@ -53,7 +53,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public boolean isLoginLowerCase() {
+    protected boolean isLoginLowerCase() {
         return false;
     }
 
@@ -62,7 +62,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public boolean isValidateWhenNoRolesFound() {
+    protected boolean isValidateWhenNoRolesFound() {
         return true;
     }
 
@@ -71,7 +71,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public Class getUserClass() {
+    protected Class getUserClass() {
         return null;
     }
 
@@ -81,9 +81,9 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public abstract AbstractUserSession getUserSession();
+    protected abstract AbstractUserSession getUserSession();
 
-    public abstract EntityManager getEntityManager();
+    protected abstract EntityManager getEntityManager();
 
     /**
      * Define something when login is successful like add a message "Welcome
@@ -91,14 +91,14 @@ public abstract class SecurityLoginBean {
      *
      * @param user
      */
-    public void onSucess(User user) {
+    protected void onSucess(User user) {
     }
 
     /**
      * Define something when login is unsuccessful
      *
      */
-    public void onError() {
+    protected void onError() {
     }
 
     /**
@@ -106,25 +106,25 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public abstract String getRedirectPageWhenSucess();
+    protected abstract String getRedirectPageWhenSucess();
 
     /**
      * Redirect to this page when user logout
      *
      * @return
      */
-    public abstract String getRedirectPageWhenLogout();
+    protected abstract String getRedirectPageWhenLogout();
 
     /**
      * Message when user was not found.
      *
      * @return
      */
-    public String getUserNotFoundMessage() {
+    protected String getUserNotFoundMessage() {
         return "User not found";
     }
 
-    public String getUserWithoutPassword() {
+    protected String getUserWithoutPassword() {
         return "User with no password in database";
     }
 
@@ -133,7 +133,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public String getInactiveUserMessage() {
+    protected String getInactiveUserMessage() {
         return "Inactive User";
     }
 
@@ -142,7 +142,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public String getNoRolesFoundMessage() {
+    protected String getNoRolesFoundMessage() {
         return "No roles found for this user";
     }
 
@@ -151,7 +151,7 @@ public abstract class SecurityLoginBean {
      *
      * @return
      */
-    public boolean validate() {
+    protected boolean validate() {
         boolean valid = true;
         if (userLogin == null || userLogin.trim().isEmpty()) {
             addErrorMessage("User is required");
@@ -171,11 +171,11 @@ public abstract class SecurityLoginBean {
      * @return
      * @throws com.xpert.core.exception.BusinessException
      */
-    public boolean validate(User user) throws BusinessException {
+    protected boolean validate(User user) throws BusinessException {
         return true;
     }
 
-    public void logout() {
+    protected void logout() {
         FacesUtils.invalidateSession();
         FacesUtils.redirect(getRedirectPageWhenLogout());
     }
@@ -184,7 +184,7 @@ public abstract class SecurityLoginBean {
      *
      * @return Query String to find User
      */
-    public String getUserLoginQueryString() {
+    protected String getUserLoginQueryString() {
         String queryString = " FROM " + getUserClass().getName();
         if (isLoginIgnoreCase()) {
             queryString = queryString + " WHERE UPPER(userLogin) = UPPER(:userLogin) ";
@@ -201,11 +201,11 @@ public abstract class SecurityLoginBean {
      * @param login User Login
      * @return
      */
-    public Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
+    protected Query getUserLoginQuery(EntityManager entityManager, String queryString, String login) {
         return entityManager.createQuery(queryString).setParameter("userLogin", login);
     }
 
-    public User getUser(String login, String password) {
+    protected User getUser(String login, String password) {
 
         User user = null;
         EntityManager entityManager = getEntityManager();
@@ -242,7 +242,7 @@ public abstract class SecurityLoginBean {
      * @param password
      * @return
      */
-    public User authenticateUserPassword(User user, String password) {
+    protected User authenticateUserPassword(User user, String password) {
         //compare password encryptedPassword
         if (user != null && user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
             try {
@@ -328,7 +328,7 @@ public abstract class SecurityLoginBean {
      *
      * @param message
      */
-    public void addErrorMessage(String message) {
+    protected void addErrorMessage(String message) {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
     }

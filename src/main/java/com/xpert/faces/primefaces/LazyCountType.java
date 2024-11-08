@@ -2,13 +2,14 @@ package com.xpert.faces.primefaces;
 
 /**
  * Define a count type for LazyDataModelImpl, used in query to count records
- * 
+ *
  * @author ayslan
  */
 public enum LazyCountType {
 
-      /**
-     * Always count data (Execute count even in paging event, but only when filters change).It's the default value on LazyDataModelImpl
+    /**
+     * Always count data (Execute count even in paging event, but only when
+     * filters change).It's the default value on LazyDataModelImpl
      */
     ALWAYS,
     /**

@@ -7,8 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.hibernate.Session;
 
 /**
@@ -22,14 +22,14 @@ public interface BaseDAO<T> {
     /**
      * Returns the current EntityManager with audit feature
      *
-     * @return current javax.persistence.EntityManager
+     * @return current jakarta.persistence.EntityManager
      */
     public EntityManager getEntityManagerQueryAudit();
 
     /**
      * Returns the current EntityManager
      *
-     * @return current javax.persistence.EntityManager
+     * @return current jakarta.persistence.EntityManager
      */
     public EntityManager getEntityManager();
 

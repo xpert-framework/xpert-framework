@@ -82,7 +82,7 @@ public class MakerSwingFrame extends javax.swing.JFrame {
     }
 
     public PrimeFacesVersion getPrimeFacesVersion() {
-        return PrimeFacesVersion.VERSION_3;
+        return PrimeFacesVersion.VERSION_14;
     }
 
     public BootstrapVersion getBootstrapVersion() {

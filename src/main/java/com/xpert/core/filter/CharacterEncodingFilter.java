@@ -2,19 +2,18 @@ package com.xpert.core.filter;
 
 import java.io.IOException;
 import java.util.logging.Logger;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 /**
  * Filter to set request and response to UTF-8 encoding.
- * 
- * request.setCharacterEncoding(UTF-8);
- * response.setCharacterEncoding(UTF-8);
- * 
+ *
+ * request.setCharacterEncoding(UTF-8); response.setCharacterEncoding(UTF-8);
+ *
  * @author ayslan
  */
 public class CharacterEncodingFilter implements Filter {
@@ -36,6 +35,5 @@ public class CharacterEncodingFilter implements Filter {
 
     @Override
     public void destroy() {
-        //DO nothing
     }
 }

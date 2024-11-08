@@ -3,21 +3,28 @@ package com.xpert.faces.bean;
 import com.xpert.Constants;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.i18n.XpertResourceBundle;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import java.io.Serializable;
 
 /**
  * Generic managed bean to acess utils methods and funtions from xpert-framework
  *
  * @author ayslan
  */
-public class Xpert {
+@Named("xpert")
+@RequestScoped
+public class Xpert implements Serializable {
 
-    public static final String DEFAULT_PAGINATOR_TEMPLATE = "{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
+    private static final long serialVersionUID = 1065050959497205171L;
+
+    public static final String DEFAULT_PAGINATOR_TEMPLATE = "{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}";
     public static final String UNKNOW_COUNT_PAGINATOR_TEMPLATE = "{PreviousPageLink} {NextPageLink} {RowsPerPageDropdown} {CurrentPageReport}";
 
-    public String getVersion(){
+    public String getVersion() {
         return Constants.VERSION;
     }
-    
+
     public String normalizePrimeFacesWidget(String widgetVar) {
         return PrimeFacesUtils.normalizeWidgetVar(widgetVar);
     }

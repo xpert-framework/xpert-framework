@@ -26,7 +26,7 @@ public class CustomUserAgentCallback extends ITextUserAgent  {
     private boolean replaceHttps = true;
 
     public CustomUserAgentCallback(ITextOutputDevice outputDevice) {
-        super(outputDevice);
+        super(outputDevice, 72);
     }
     
     public static void clearCache() {
@@ -77,8 +77,5 @@ public class CustomUserAgentCallback extends ITextUserAgent  {
     public void setReplaceHttps(boolean replaceHttps) {
         this.replaceHttps = replaceHttps;
     }
-    
-    
-    
 
 }

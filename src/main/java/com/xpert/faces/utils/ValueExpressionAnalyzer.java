@@ -40,11 +40,16 @@
 
 package com.xpert.faces.utils;
 
-import java.beans.FeatureDescriptor;
-import java.util.Iterator;
+import jakarta.el.ELContext;
+import jakarta.el.ELException;
+import jakarta.el.ELResolver;
+import jakarta.el.FunctionMapper;
+import jakarta.el.ValueExpression;
+import jakarta.el.ValueReference;
+import jakarta.el.VariableMapper;
+import jakarta.faces.el.CompositeComponentExpressionHolder;
+
 import java.util.Locale;
-import javax.el.*;
-import javax.faces.el.CompositeComponentExpressionHolder;
 
 /**
  * Analyzes a {@link ValueExpression} and provides access to the base object and property
@@ -169,11 +174,6 @@ public class ValueExpressionAnalyzer {
         @Override
         public boolean isReadOnly(ELContext context, Object base, Object property) {
             return delegate.isReadOnly(context, base, property);
-        }
-
-        @Override
-        public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
-            return delegate.getFeatureDescriptors(context, base);
         }
 
         @Override

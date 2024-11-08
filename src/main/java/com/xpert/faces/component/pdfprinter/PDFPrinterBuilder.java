@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -101,7 +102,6 @@ public class PDFPrinterBuilder {
             CustomUserAgentCallback customUserAgentCallback = new CustomUserAgentCallback(iTextRenderer.getOutputDevice());
             customUserAgentCallback.setLoadFromCache(cacheCss);
             customUserAgentCallback.setReplaceHttps(replaceHttp);
-            customUserAgentCallback.setSharedContext(sharedContext);
             sharedContext.setUserAgentCallback(customUserAgentCallback);
             iTextRenderer.setDocumentFromString(content);
 

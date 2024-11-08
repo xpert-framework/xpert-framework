@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.el.ValueExpression;
-import javax.el.ValueReference;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import jakarta.annotation.PostConstruct;
+import jakarta.el.ValueExpression;
+import jakarta.el.ValueReference;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.model.SelectItem;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**

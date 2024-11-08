@@ -104,14 +104,14 @@
                         <p:commandButton icon="${sharp}{icons.delete}" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                          action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                             <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
-                            <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
+                            <p:confirm message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                         </p:commandButton>
                     </x:securityArea>
                     <#else>
                     <p:commandButton icon="${sharp}{icons.delete}" title="${sharp}{xmsg['delete']}" process="@form" update="@form" 
                                      action="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.delete}" >
                         <f:setPropertyActionListener value="${sharp}{${entity.nameLower}.${entity.idFieldName}}" target="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.id}" />
-                        <x:confirmation message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
+                        <p:confirm message="${sharp}{xmsg['confirmDelete']} - ${sharp}{${entity.nameLower}}" />
                     </p:commandButton>
                     </#if>
                 </p:column>
@@ -119,10 +119,10 @@
             <div class="uix-audit-delete">
             <#if configuration.generatesSecurityArea == true >
                 <x:securityArea rolesAllowed="${entity.nameLower}.audit">
-                    <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                    <x:auditDelete entityClass="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
                 </x:securityArea>
             <#else>
-                <x:auditDelete for="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
+                <x:auditDelete entityClass="${sharp}{${entity.nameLower}${configuration.managedBeanSuffix}.entityClass}"/>
             </#if>
             </div>  
         </h:form>

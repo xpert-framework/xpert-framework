@@ -1,6 +1,5 @@
 package com.xpert.faces.primefaces;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.primefaces.PrimeFaces;
@@ -13,25 +12,8 @@ import org.primefaces.context.PrimeRequestContext;
  */
 public class PrimeFacesUtils {
 
-    /**
-     * Primefaces 4 and 5 new widget var is like "PF('widgetVar')"
-     *
-     * @param widgetVar
-     * @param primeFacesVersion
-     * @return
-     */
-    public static String normalizeWidgetVar(String widgetVar, PrimeFacesVersion primeFacesVersion) {
-        if (primeFacesVersion.isUsePFWidgetVar()) {
-            return "PF('" + widgetVar + "')";
-        }
-        return widgetVar;
-    }
-
     public static String normalizeWidgetVar(String dialog) {
-        if (dialog != null && !PrimeFacesUtils.isVersion3()) {
-            return "PF('" + dialog + "')";
-        }
-        return dialog;
+        return "PF('" + dialog + "')";
     }
 
     public static void closeDialog(String dialog) {
@@ -84,17 +66,7 @@ public class PrimeFacesUtils {
             Object requestContext = getRequestContextInstance();
             Method methodExecute = requestContext.getClass().getDeclaredMethod(methodName, methodSignature);
             methodExecute.invoke(requestContext, arguments);
-        } catch (NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -107,19 +79,10 @@ public class PrimeFacesUtils {
         }
     }
 
-    private static Boolean IS_VERSION_3;
     /*
     Primefaces versions greater or equeals 6.x deprecated RequestContext;
      */
     private static Boolean USE_REQUEST_CONTEXT;
-
-    public static boolean isVersion4() {
-        if (isVersion3()) {
-            return false;
-        }
-
-        return getPrimefacesBuildVersion().startsWith("4");
-    }
 
     /**
      * For lagacy primafaces the correct use is:
@@ -177,17 +140,7 @@ public class PrimeFacesUtils {
                 String buildVersion = (String) methodGetBuildVersion.invoke(config);
 
                 return buildVersion;
-            } catch (NoSuchMethodException ex) {
-                throw new RuntimeException(ex);
-            } catch (SecurityException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalArgumentException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
@@ -196,38 +149,4 @@ public class PrimeFacesUtils {
         }
     }
 
-    public static boolean isVersion5() {
-        if (isVersion3()) {
-            return false;
-        }
-        return getPrimefacesBuildVersion().startsWith("5");
-    }
-
-    public static boolean isVersion3() {
-        if (IS_VERSION_3 != null) {
-            return IS_VERSION_3;
-        } else {
-            try {
-                Class classConstants = Class.forName("org.primefaces.util.Constants");
-                Field fieldVersion;
-                fieldVersion = classConstants.getDeclaredField("VERSION");
-                if (fieldVersion.get(null).toString().startsWith("3")) {
-                    IS_VERSION_3 = true;
-                }
-            } catch (Exception ex) {
-                IS_VERSION_3 = false;
-            }
-
-        }
-        return IS_VERSION_3;
-    }
-
-    /**
-     * @param targets
-     * @deprecated use update instead
-     */
-    @Deprecated
-    public static void addPartialUpdateTarget(String... targets) {
-        update(targets);
-    }
 }

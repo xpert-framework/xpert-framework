@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.xpert.Configuration;
+import com.xpert.adapter.LocalDateTimeTypeAdapter;
+import com.xpert.adapter.LocalDateTypeAdapter;
+import com.xpert.adapter.LocalTimeTypeAdapter;
+import com.xpert.adapter.ZonedDateTimeTypeAdapter;
 import com.xpert.audit.model.AbstractQueryAuditing;
 import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.faces.utils.FacesUtils;
@@ -22,27 +26,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Parameter;
-import javax.persistence.Query;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.Query;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 /**
  *
  * @author ayslanms
  */
-public class QueryAudit {
-    
+public class QueryAudit implements Serializable {
+
+    private static final long serialVersionUID = -4771340894403893184L;
+
     public static final boolean debug = false;
     private static final Logger logger = Logger.getLogger(QueryAudit.class.getName());
-    
+
     private QueryAuditConfig queryAuditConfig;
-    
+
     public QueryAudit() {
     }
-    
+
     public QueryAudit(QueryAuditConfig queryAuditConfig) {
         this.queryAuditConfig = queryAuditConfig;
     }
@@ -79,7 +90,7 @@ public class QueryAudit {
     public Query proxy(QueryAuditConfig config) {
         return (Query) Proxy.newProxyInstance(Query.class.getClassLoader(), new Class[]{Query.class}, new QueryAuditProxy(config));
     }
-    
+
     public static QueryAuditingType getQueryAuditingType(Method method) {
         if (method.getName().equals("find")) {
             return QueryAuditingType.FIND_BY_ID;
@@ -92,9 +103,9 @@ public class QueryAudit {
         }
         return QueryAuditingType.OTHER;
     }
-    
+
     public Object persistQuery(Object wrapped, Method method, Object[] args) throws Throwable {
-        
+
         if (debug) {
             logger.log(Level.INFO, "Wrapped: {0}, Invoke: {1}, Args: {2}", new Object[]{wrapped.getClass().getName(), method.getName(), Arrays.toString(args)});
         }
@@ -104,17 +115,17 @@ public class QueryAudit {
         queryAuditConfig.setQueryAuditing(queryAuditing);
         queryAuditing.setAuditingType(queryAuditConfig.getAuditingType());
         queryAuditing.setStartDate(new Date());
-        
+
         Object result = null;
         try {
             result = method.invoke(wrapped, args);
         } catch (NoResultException ex) {
             result = null;
         }
-        
+
         queryAuditing.setEndDate(new Date());
         queryAuditing.calculateTime();
-        
+
         if (debug) {
             logger.log(Level.INFO, "Query executed in {0} milliseconds", queryAuditing.getTimeMilliseconds());
         }
@@ -130,7 +141,7 @@ public class QueryAudit {
                 queryAuditing.setIdentifier(((Number) args[1]).longValue());
             }
         }
-        
+
         if (queryAuditConfig.getQuery() != null) {
             queryAuditing.setFirstResult(queryAuditConfig.getQuery().getFirstResult());
             if (queryAuditConfig.getQuery().getMaxResults() != Integer.MAX_VALUE) {
@@ -140,14 +151,21 @@ public class QueryAudit {
                 queryAuditing.setPaginatedQuery(true);
             }
         }
-        
+
         QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
         buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
 
         //get SQL Query (HQL/JPQL or native)
         if (queryAuditConfig.getQuery() != null) {
             //Format SQL
-            String sql = getQueryString(queryAuditConfig.getQuery().unwrap(org.hibernate.Query.class).getQueryString(), queryAuditPersister);
+            Query query = queryAuditConfig.getQuery();
+            String queryString = query.toString();
+            if (query instanceof org.hibernate.query.Query) {
+                queryString = ((org.hibernate.query.Query<?>) query).getQueryString();
+            }
+
+            String sql = getQueryString(queryString, queryAuditPersister);
+
             queryAuditing.setSqlQuery(sql);
         }
 
@@ -163,18 +181,18 @@ public class QueryAudit {
                 }
             }
         }
-        
+
         if (debug) {
             logger.log(Level.INFO, "SQL Query: {0}", queryAuditing.getSqlQuery());
         }
-        
+
         queryAuditing.setRowsTotal(getRows(result));
-        
+
         if (FacesContext.getCurrentInstance() != null) {
             queryAuditing.setIp(FacesUtils.getIP());
         }
         queryAuditPersister.persist(queryAuditing);
-        
+
         return result;
     }
 
@@ -186,7 +204,7 @@ public class QueryAudit {
      * @param queryAuditPersister
      */
     public void buildParameters(Query query, AbstractQueryAuditing queryAuditing, QueryAuditPersister queryAuditPersister) {
-        
+
         List<QueryAudit.QueryParameter> parameters = new ArrayList<>();
 
         //if has id, then is "find" method, set the idenfier
@@ -201,7 +219,7 @@ public class QueryAudit {
         } else {
             if (query != null && query.getParameters() != null) {
                 for (Parameter<?> parameter : query.getParameters()) {
-                    
+
                     Integer position = parameter.getPosition();
                     String name = parameter.getName();
                     String type = (parameter.getParameterType() == null ? null : parameter.getParameterType().getName());
@@ -212,28 +230,28 @@ public class QueryAudit {
                         if (type == null) {
                             type = value.getClass().getName();
                         }
-                        
+
                         value = getQueryValue(value);
                         if (value instanceof Collection || value instanceof Object[]) {
                             listOfValues = true;
                         }
                     }
-                    
+
                     QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(position, name, type, value, listOfValues);
-                    
+
                     parameters.add(queryParameter);
-                    
+
                 }
             }
         }
         //sort
         Collections.sort(parameters);
         String json = getJsonParameters(parameters);
-        
+
         if (debug) {
             logger.log(Level.INFO, "JSON Parameters: {0}", json);
         }
-        
+
         queryAuditing.setParametersSize(parameters.size());
         if (parameters.size() > 0) {
             queryAuditing.setHasQueryParameter(true);
@@ -248,10 +266,10 @@ public class QueryAudit {
      * @return
      */
     public String getTableFromQuery(String queryString) {
-        
+
         Pattern pattern = Pattern.compile("from\\s+(?:\\w+\\.)*(\\w+)($|\\s+[WHERE,JOIN,START\\s+WITH,ORDER\\s+BY,GROUP\\s+BY])", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(queryString);
-        
+
         while (matcher.find()) {
             return matcher.group(1);
         }
@@ -279,7 +297,7 @@ public class QueryAudit {
             }
         }
         return value;
-        
+
     }
 
     /**
@@ -290,9 +308,9 @@ public class QueryAudit {
      * @return
      */
     public String getQueryString(String query, QueryAuditPersister queryAuditPersister) {
-        
+
         String sql = new BasicFormatterImpl().format(query);
-        
+
         return getValueWithMaxSize(sql, queryAuditPersister.getSqlStringMaxSize());
     }
 
@@ -305,10 +323,16 @@ public class QueryAudit {
     public String getJsonParameters(List<QueryAudit.QueryParameter> parameters) {
 
         //create JSON object
-        Gson gson = new GsonBuilder().setPrettyPrinting().setDateFormat("dd/MM/yyyy").create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
+                .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                .setPrettyPrinting()
+                .setDateFormat("dd/MM/yyyy").create();
         Type listType = new TypeToken<List<QueryAudit.QueryParameter>>() {
         }.getType();
-        
+
         return parameters.isEmpty() ? null : gson.toJson(parameters, listType);
     }
 
@@ -345,27 +369,27 @@ public class QueryAudit {
         }
         return value.substring(0, maxSize - 3) + "...";
     }
-    
+
     public class EntityType {
-        
+
         private final Object id;
         private final String value;
-        
+
         public EntityType(Object id, String value) {
             this.id = id;
             this.value = value;
         }
-        
+
     }
-    
+
     public class QueryParameter implements Comparable<QueryParameter> {
-        
+
         private final Integer position;
         private final String name;
         private final String type;
         private final boolean listOfValues;
         private final Object value;
-        
+
         public QueryParameter(Integer position, String name, String type, Object value, boolean listOfValues) {
             this.position = position;
             this.name = name;
@@ -373,7 +397,7 @@ public class QueryAudit {
             this.value = value;
             this.listOfValues = listOfValues;
         }
-        
+
         @Override
         public int compareTo(QueryParameter other) {
             if (this.position != null && other.position != null) {
@@ -381,7 +405,7 @@ public class QueryAudit {
             }
             return 0;
         }
-        
+
     }
-    
+
 }

@@ -2,10 +2,10 @@ package com.xpert.faces.component.inputnumber;
 
 import java.io.IOException;
 import java.text.DecimalFormatSymbols;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.convert.NumberConverter;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.convert.NumberConverter;
 import org.primefaces.component.inputtext.InputTextRenderer;
 
 /**

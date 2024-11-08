@@ -1,6 +1,8 @@
 package com.xpert.persistence.query;
 
-import static com.xpert.persistence.query.Sql.*;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,7 +13,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.beanutils.PropertyUtils;
+
+import static com.xpert.persistence.query.Sql.avg;
+import static com.xpert.persistence.query.Sql.count;
+import static com.xpert.persistence.query.Sql.max;
+import static com.xpert.persistence.query.Sql.min;
+import static com.xpert.persistence.query.Sql.sum;
 
 /**
  *
@@ -46,36 +53,37 @@ public class QueryBuilderUtils {
 
         StringBuilder queryString = new StringBuilder();
 
-        if (type.equals(QueryType.COUNT)) {
-            if (select != null && !select.trim().isEmpty()) {
-                queryString.append("SELECT ").append(count(select)).append(" ");
-            } else {
-                queryString.append("SELECT ").append(count("*")).append(" ");
+        switch (type) {
+            case COUNT -> {
+                if (StringUtils.isNotBlank(select)) {
+                    queryString.append("SELECT ").append(count(select)).append(" ");
+                } else {
+                    queryString.append("SELECT ").append(count("*")).append(" ");
+                }
             }
-        } else if (type.equals(QueryType.MAX)) {
-            queryString.append("SELECT ").append(max(select)).append(" ");
-        } else if (type.equals(QueryType.MIN)) {
-            queryString.append("SELECT ").append(min(select)).append(" ");
-        } else if (type.equals(QueryType.SUM)) {
-            queryString.append("SELECT ").append(sum(select)).append(" ");
-        } else if (type.equals(QueryType.AVG)) {
-            queryString.append("SELECT ").append(avg(select)).append(" ");
-        } else if (type.equals(QueryType.SELECT)) {
-
-            boolean hasSelect = select != null && !select.isEmpty();
-            boolean hasAggregate = aggregate != null && !aggregate.isEmpty();
-
-            if (hasSelect || hasAggregate) {
-                queryString.append("SELECT ");
+            case MAX -> queryString.append("SELECT ").append(max(select)).append(" ");
+            case MIN -> queryString.append("SELECT ").append(min(select)).append(" ");
+            case SUM -> queryString.append("SELECT ").append(sum(select)).append(" ");
+            case AVG -> queryString.append("SELECT ").append(avg(select)).append(" ");
+            case SELECT -> {
+                
+                boolean hasSelect = StringUtils.isNotBlank(select);
+                boolean hasAggregate = StringUtils.isNotBlank(aggregate);
+                
+                if (hasSelect || hasAggregate) {
+                    queryString.append("SELECT ");
+                }
+                if (hasSelect) {
+                    queryString.append(select).append(" ");
+                }
+                if (hasSelect && hasAggregate) {
+                    queryString.append(", ");
+                }
+                if (aggregate != null && !aggregate.isEmpty()) {
+                    queryString.append(aggregate).append(" ");
+                }
             }
-            if (hasSelect) {
-                queryString.append(select).append(" ");
-            }
-            if (hasSelect && hasAggregate) {
-                queryString.append(", ");
-            }
-            if (aggregate != null && !aggregate.isEmpty()) {
-                queryString.append(aggregate).append(" ");
+            default -> {
             }
         }
 

@@ -1,7 +1,7 @@
 package com.xpert.persistence.dao;
 
-import com.xpert.audit.Audit;
 import com.xpert.Configuration;
+import com.xpert.audit.Audit;
 import com.xpert.audit.QueryAudit;
 import com.xpert.persistence.exception.DeleteException;
 import com.xpert.persistence.query.QueryBuilder;
@@ -9,31 +9,42 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.ReflectionUtils;
 import com.xpert.utils.StringUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Query;
+import jakarta.validation.ConstraintViolationException;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLazinessInterceptor;
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.engine.internal.ManagedTypeHelper;
+import org.hibernate.engine.spi.PersistentAttributeInterceptor;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
+
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.OrderBy;
-import javax.persistence.Query;
-import javax.validation.ConstraintViolationException;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.collection.internal.PersistentBag;
-import org.hibernate.collection.internal.PersistentSet;
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.LazyInitializer;
 
-public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
+import static org.hibernate.engine.internal.ManagedTypeHelper.asPersistentAttributeInterceptable;
+import static org.hibernate.engine.internal.ManagedTypeHelper.isPersistentAttributeInterceptable;
+
+public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
+
+    private static final long serialVersionUID = 2097589326637061615L;
 
     private Class entityClass;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
@@ -87,7 +98,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
     @Override
     public Connection getConnection() throws SQLException {
         SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) getSession().getSessionFactory();
-        return sessionFactoryImpl.getConnectionProvider().getConnection();
+        return sessionFactoryImpl.getJdbcServices().getBootstrapJdbcConnectionAccess().obtainConnection();
     }
 
     @Override
@@ -881,88 +892,78 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T> {
 
     @Override
     public <U> U getInitialized(U object) {
-        if (object != null) {
-            if (object instanceof HibernateProxy || object instanceof PersistentBag || object instanceof PersistentSet) {
 
-                if (object instanceof HibernateProxy) {
+        if (object == null) {
+            return null;
+        }
 
-                    LazyInitializer lazyInitializer = ((HibernateProxy) object).getHibernateLazyInitializer();
+        if (Hibernate.isInitialized(object)) {
+            return handleInitializedObject(object);
+        } else {
+            return handleUninitializedObject(object);
+        }
 
-                    if (Hibernate.isInitialized(object)) {
-                        return (U) lazyInitializer.getImplementation();
-                    }
-                    Object initilized = getEntityManager().find(lazyInitializer.getPersistentClass(), lazyInitializer.getIdentifier());
-                    //if find returns a proxy, then call getImplementation() to return the real object
-                    if (initilized instanceof HibernateProxy) {
-                        lazyInitializer = ((HibernateProxy) initilized).getHibernateLazyInitializer();
-                        return (U) lazyInitializer.getImplementation();
-                    } else {
-                        return (U) initilized;
-                    }
-                }
+    }
 
-                if (object instanceof PersistentCollection) {
-
-                    String role = ((PersistentCollection) object).getRole();
-                    Object owner = ((PersistentCollection) object).getOwner();
-
-                    Collection collection = null;
-                    if (object instanceof PersistentBag) {
-                        collection = new ArrayList();
-                        if (Hibernate.isInitialized(object)) {
-                            collection.addAll((PersistentBag) object);
-                            return (U) collection;
-                        }
-                    }
-                    if (object instanceof PersistentSet) {
-                        collection = new HashSet();
-                        if (Hibernate.isInitialized(object)) {
-                            collection.addAll((PersistentSet) object);
-                            return (U) collection;
-                        }
-                    }
-
-                    //if collections is null create generic case
-                    if (collection == null) {
-                        collection = new ArrayList();
-                    }
-
-                    String fieldName = role.substring(role.lastIndexOf(".") + 1, role.length());
-                    String orderBy = null;
-
-                    //generate "SELECT o FROM Object o JOIN o.itens c WHERE o = ?1 ORDER BY {something}"
-                    StringBuilder queryString = new StringBuilder();
-                    queryString.append(" SELECT ").append(" c ");
-                    queryString.append(" FROM ").append(owner.getClass().getName()).append(" o ");
-                    queryString.append(" JOIN ").append("o.").append(fieldName).append(" c ");
-                    queryString.append(" WHERE o = ?1 ");
-
-                    orderBy = getOrderBy(fieldName, owner.getClass());
-
-                    if (orderBy != null && !orderBy.isEmpty()) {
-                        //alias of attribute is "c"
-                        queryString.append(" ORDER BY ").append(getOrderByWithAlias("c", orderBy));
-                    }
-
-                    Query query = getEntityManager().createQuery(queryString.toString());
-                    query.setParameter(1, owner);
-
-                    for (Object result : query.getResultList()) {
-                        //prevent to add a proxy
-                        if (result instanceof HibernateProxy) {
-                            LazyInitializer lazyInitializer = ((HibernateProxy) result).getHibernateLazyInitializer();
-                            collection.add(lazyInitializer.getImplementation());
-                        } else {
-                            collection.add(result);
-                        }
-                    }
-
-                    return (U) collection;
-                }
-
+    @SuppressWarnings("unchecked")
+    private <U> U handleInitializedObject(U object) {
+        if (ManagedTypeHelper.isHibernateProxy(object)) {
+            HibernateProxy hibernateProxy = ManagedTypeHelper.asHibernateProxy(object);
+            if (hibernateProxy != null) {
+                LazyInitializer lazyInitializer = hibernateProxy.getHibernateLazyInitializer();
+                return (U) lazyInitializer.getImplementation();
             }
         }
         return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <U> U handleUninitializedObject(U object) {
+
+        if (isPersistentAttributeInterceptable(object)) {
+            final PersistentAttributeInterceptor interceptor = asPersistentAttributeInterceptable(object).$$_hibernate_getInterceptor();
+            if (interceptor instanceof EnhancementAsProxyLazinessInterceptor lazinessInterceptor) {
+                Object identifier = lazinessInterceptor.getEntityKey().getIdentifier();
+                Class<?> entity = lazinessInterceptor.getEntityKey().getPersister().getMappedClass();
+                return (U) getEntityManager().find(entity, identifier);
+            }
+        }
+
+        if (object instanceof PersistentCollection persistentCollection) {
+            return (U) handlePersistentCollection(persistentCollection);
+        }
+
+        return object;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <U> U handlePersistentCollection(PersistentCollection collection) {
+        
+        String role = collection.getRole();
+        Object owner = collection.getOwner();
+        String fieldName = role.substring(role.lastIndexOf(".") + 1);
+        String orderBy = getOrderBy(fieldName, owner.getClass());
+
+        String queryString = buildQueryString(owner.getClass().getName(), fieldName, orderBy);
+        Query query = getEntityManager().createQuery(queryString);
+        query.setParameter(1, owner);
+
+        return (U) query.getResultList();
+    }
+
+    private String buildQueryString(String ownerClassName, String fieldName, String orderBy) {
+
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT c ");
+        query.append(" FROM ").append(ownerClassName).append(" o ");
+        query.append(" JOIN o.").append(fieldName).append(" c ");
+        query.append(" WHERE o = ?1 ");
+
+        if (orderBy != null && !orderBy.isEmpty()) {
+            query.append(" ORDER BY ").append(getOrderByWithAlias("c", orderBy));
+        }
+
+        return query.toString();
     }
 
     /**

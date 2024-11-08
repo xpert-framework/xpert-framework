@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Generic Managed Bean to create CRUD
@@ -239,7 +239,7 @@ public abstract class AbstractBaseBean<T> {
      */
     public T getEntityNewInstance() {
         try {
-            return (T) getEntityClass().newInstance();
+            return (T) getEntityClass().getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
             return null;
@@ -347,10 +347,10 @@ public abstract class AbstractBaseBean<T> {
 
     /**
      *
-     * @return LazyCountType used in LazyDataModel, defaul is ALWAYS
+     * @return LazyCountType used in LazyDataModel, defaul is ONLY_ONCE
      */
     public LazyCountType getDataModelLazyCountType() {
-        return LazyCountType.ALWAYS;
+        return LazyCountType.ONLY_ONCE;
     }
 
     public String getEntitySimpleName() {

@@ -1,5 +1,9 @@
 package com.xpert.template;
 
+import jakarta.ejb.Startup;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -7,10 +11,15 @@ import java.util.HashMap;
  *
  * @author ayslanms
  */
-public class Icons extends HashMap<String, String> {
+@Named("icons")
+@Singleton
+@Startup
+public final class Icons extends HashMap<String, String> implements Serializable {
+
+    private static final long serialVersionUID = 5099651664242215465L;
 
     public Icons() {
-        jqueryUi();
+        fontAwesome();
     }
 
     /**
@@ -20,43 +29,19 @@ public class Icons extends HashMap<String, String> {
      */
     public Icons primeFaces() {
 
-        this.audit("pi pi-plus")
+        this.audit("pi pi-clock")
                 .refresh("pi pi-refresh")
                 .close("pi pi-times")
                 .plus("pi pi-plus")
                 .create("pi pi-plus")
                 .delete("pi pi-trash")
                 .detail("pi pi-search-plus")
-                .edit("pi pi-pencil")
-                .exportOptions("pi pi-chevron-down")
+                .edit("pi pi-pen-to-square")
+                .exportOptions("pi pi-file-export")
                 .search("pi pi-search")
                 .excel("pi pi-file-excel")
-                .csv("pi pi-file")
+                .csv("pi pi-file-o")
                 .pdf("pi pi-file-pdf");
-
-        return this;
-    }
-
-    /**
-     * Configure default icons for jquery-ui (legacy primefaces icons)
-     *
-     * @return
-     */
-    public final Icons jqueryUi() {
-
-        this.audit("ui-icon-plus")
-                .refresh("ui-icon-refresh")
-                .close("ui-icon-close")
-                .plus("ui-icon-plus")
-                .create("ui-icon-plus")
-                .delete("ui-icon-trash")
-                .detail("ui-icon-zoomin")
-                .edit("ui-icon-pencil")
-                .exportOptions("ui-icon-arrowthickstop-1-s")
-                .search("ui-icon-search")
-                .excel("ui-icon-triangle-1-e")
-                .csv("ui-icon-triangle-1-e")
-                .pdf("ui-icon-triangle-1-e");
 
         return this;
     }
@@ -68,19 +53,19 @@ public class Icons extends HashMap<String, String> {
      */
     public Icons fontAwesome() {
 
-        this.audit("fas fa-plus")
-                .refresh("pi pi-refresh")
-                .close("pi pi-times")
-                .plus("fas fa-plus")
-                .create("fas fa-plus")
-                .delete("fa fa-trash")
-                .detail("fas fa-search-plus")
-                .edit("fas fa-edit")
-                .exportOptions("fas fa-file-export")
-                .search("fas fa-search")
-                .excel("fas fa-file-excel")
-                .csv("fas fa-file-csv")
-                .pdf("fas fa-file-pdf");
+        this.audit("fa fa-fw fa-clock-rotate-left")
+                .refresh("fa fa-fw fa-arrows-rotate")
+                .close("fa fa-fw fa-xmark")
+                .plus("fa fa-fw fa-plus")
+                .create("fa fa-fw fa-plus")
+                .delete("fa-regular fa-fw fa-trash-can")
+                .detail("fa fa-fw fa-magnifying-glass")
+                .edit("fa fa-fw fa-pen-to-square")
+                .exportOptions("fa fa-fw fa-file-export")
+                .search("fa fa-fw fa-magnifying-glass")
+                .excel("fa-regular fa-fw fa-file-excel")
+                .csv("fa fa-fw fa-file-csv")
+                .pdf("fa-regular fa-fw fa-file-pdf");
 
         return this;
     }
@@ -220,7 +205,7 @@ public class Icons extends HashMap<String, String> {
     /**
      * Configure "exportOptions" icon
      *
-     * @param exportOptions
+     * @param pdf
      * @return
      */
     public Icons pdf(String pdf) {

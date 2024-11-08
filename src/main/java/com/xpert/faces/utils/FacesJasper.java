@@ -6,16 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.EntityManager;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
-import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 /**
  * Generic class to create Jasper Reports
@@ -134,14 +136,17 @@ public class FacesJasper {
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            JRXlsxExporter xlsxExporter = new JRXlsxExporter();
-            xlsxExporter.setParameter(JExcelApiExporterParameter.JASPER_PRINT, jasperPrint);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.OUTPUT_STREAM, outputStream);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.TRUE);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.FALSE);
-            xlsxExporter.setParameter(JExcelApiExporterParameter.CHARACTER_ENCODING, "UTF-8");
+            JRXlsExporter xlsxExporter = new JRXlsExporter();
+            xlsxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+
+            SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+            configuration.setOnePagePerSheet(true);
+            configuration.setDetectCellType(true);
+            configuration.setIgnoreCellBorder(false);
+            configuration.setWhitePageBackground(true);
+
+            xlsxExporter.setConfiguration(configuration);
             xlsxExporter.exportReport();
 
             FacesUtils.download(outputStream.toByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName.endsWith(".xlsx") ? fileName : fileName + ".xlsx");

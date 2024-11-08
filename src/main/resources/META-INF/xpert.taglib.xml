@@ -71,46 +71,7 @@
         <attribute>
             <name>entityManager</name>
             <required>false</required>
-            <type>javax.persistence.EntityManager</type>
-        </attribute>
-    </tag>
-    <tag>
-        <tag-name>filterOnEnter</tag-name>
-        <component>
-            <component-type>com.xpert.faces.component.FilterOnEnter</component-type>
-            <renderer-type>com.xpert.faces.component.FilterOnEnterRenderer</renderer-type>
-        </component>
-        <attribute>
-            <name>target</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>selector</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-    </tag>
-    <tag>
-        <tag-name>confirmation</tag-name>
-        <component>
-            <component-type>com.xpert.faces.component.Confirmation</component-type>
-            <renderer-type>com.xpert.faces.component.ConfirmationRenderer</renderer-type>
-        </component>
-        <attribute>
-            <name>message</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>confirmLabel</name>
-            <required>false</required>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>cancelLabel</name>
-            <required>false</required>
-            <type>java.lang.String</type>
+            <type>jakarta.persistence.EntityManager</type>
         </attribute>
     </tag>
     <tag>
@@ -244,7 +205,7 @@
             <description><![CDATA[Custom pluggable sortFunction.]]></description>
             <name>itemSortFunction</name>
             <required>false</required>
-            <type>javax.el.MethodExpression</type>
+            <type>jakarta.el.MethodExpression</type>
         </attribute>
         <attribute>
             <description>Sets item sorting order. Can be "ascending" or "descending". Default is "ascending"</description>
@@ -264,7 +225,7 @@
             <description><![CDATA[Custom pluggable sortFunction.]]></description>
             <name>sortFunction</name>
             <required>false</required>
-            <type>javax.el.MethodExpression</type>
+            <type>jakarta.el.MethodExpression</type>
         </attribute>
         <attribute>
             <name>rowIndexVar</name>
@@ -345,7 +306,7 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
-            <description>javax.persistence.TemporalType of JPA, to be used in date operations. Types can be "time", "timestamp" and "date". Default value is null. </description>
+            <description>jakarta.persistence.TemporalType of JPA, to be used in date operations. Types can be "time", "timestamp" and "date". Default value is null. </description>
             <name>temporalType</name>
             <required>false</required>
             <type>java.lang.String</type>
@@ -409,7 +370,7 @@
             </description>
             <name>binding</name>
             <required>false</required>
-            <type>javax.faces.component.UIComponent</type>
+            <type>jakarta.faces.component.UIComponent</type>
         </attribute>
         <attribute>
             <description><![CDATA[Value of the component.]]>
@@ -446,14 +407,14 @@
             </description>
             <name>validator</name>
             <required>false</required>
-            <type>javax.faces.validator.Validator</type>
+            <type>jakarta.faces.validator.Validator</type>
         </attribute>
         <attribute>
             <description><![CDATA[A method binding expression referring to a method for handling a valuchangeevent.]]>
             </description>
             <name>valueChangeListener</name>
             <required>false</required>
-            <type>javax.faces.event.ValueChangeListener</type>
+            <type>jakarta.faces.event.ValueChangeListener</type>
         </attribute>
         <attribute>
             <description><![CDATA[Message to display when required field validation fails.]]>
@@ -715,7 +676,7 @@
             <description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
             <name>binding</name>
             <required>false</required>
-            <type>javax.faces.component.UIComponent</type>
+            <type>jakarta.faces.component.UIComponent</type>
         </attribute>
         <attribute>
             <description><![CDATA[Value of the component.]]></description>
@@ -746,13 +707,13 @@
             <description><![CDATA[A method expression referring to a method validationg the input.]]></description>
             <name>validator</name>
             <required>false</required>
-            <type>javax.faces.validator.Validator</type>
+            <type>jakarta.faces.validator.Validator</type>
         </attribute>
         <attribute>
             <description><![CDATA[A method binding expression referring to a method for handling a valuchangeevent.]]></description>
             <name>valueChangeListener</name>
             <required>false</required>
-            <type>javax.faces.event.ValueChangeListener</type>
+            <type>jakarta.faces.event.ValueChangeListener</type>
         </attribute>
         <attribute>
             <description><![CDATA[Message to display when required field validation fails.]]></description>
@@ -989,7 +950,7 @@
             <description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
             <name>binding</name>
             <required>false</required>
-            <type>javax.faces.component.UIComponent</type>
+            <type>jakarta.faces.component.UIComponent</type>
         </attribute>
         <attribute>
             <description><![CDATA[Value of the component.]]></description>
@@ -1020,13 +981,13 @@
             <description><![CDATA[A method expression referring to a method validationg the input.]]></description>
             <name>validator</name>
             <required>false</required>
-            <type>javax.faces.validator.Validator</type>
+            <type>jakarta.faces.validator.Validator</type>
         </attribute>
         <attribute>
             <description><![CDATA[A method binding expression referring to a method for handling a valuchangeevent.]]></description>
             <name>valueChangeListener</name>
             <required>false</required>
-            <type>javax.faces.event.ValueChangeListener</type>
+            <type>jakarta.faces.event.ValueChangeListener</type>
         </attribute>
         <attribute>
             <description><![CDATA[Message to display when required field validation fails.]]></description>

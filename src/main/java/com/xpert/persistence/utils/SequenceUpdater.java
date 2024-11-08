@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import javax.sql.DataSource;
 
 /**
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * Abstract class to update sequences based on max value in current Entity, the
  * sequence name is get with reflections searching for annotation
  *
- * @SequenceGenerator
+ * @SequenceUpdater
  *
  * @author ayslan, arnaldo
  */

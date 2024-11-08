@@ -13,15 +13,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
@@ -60,13 +60,13 @@ public class EntityUtils {
             if (idType == null) {
                 throw new IllegalArgumentException("Id not found in entity " + entityClass.getName());
             } else if (idType.equals(Long.class) || idType.equals(long.class)) {
-                return Long.parseLong(StringUtils.getOnlyIntegerNumbers(id));
+                return Long.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(Integer.class) || idType.equals(int.class)) {
-                return Integer.parseInt(StringUtils.getOnlyIntegerNumbers(id));
+                return Integer.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(BigInteger.class)) {
                 return new BigInteger(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(Short.class) || idType.equals(short.class)) {
-                return Short.parseShort(StringUtils.getOnlyIntegerNumbers(id));
+                return Short.valueOf(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(BigDecimal.class)) {
                 return new BigDecimal(StringUtils.getOnlyIntegerNumbers(id));
             } else if (idType.equals(String.class)) {
@@ -367,4 +367,5 @@ public class EntityUtils {
         }
         return false;
     }
+
 }

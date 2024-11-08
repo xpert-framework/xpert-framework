@@ -1,16 +1,16 @@
 package com.xpert.faces.component.pdfprinter;
 
 import com.xpert.faces.utils.FacesUtils;
-import javax.el.ELContext;
-import javax.el.ValueExpression;
-import javax.faces.FacesException;
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.StateHolder;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+import jakarta.el.ELContext;
+import jakarta.el.ValueExpression;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ResourceDependencies;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.component.StateHolder;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ActionListener;
 
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),

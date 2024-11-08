@@ -1,7 +1,7 @@
 package com.xpert.audit.model;
 
 import com.xpert.i18n.I18N;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * Abstract class to represent the fields of an audit event. Each metadata is a

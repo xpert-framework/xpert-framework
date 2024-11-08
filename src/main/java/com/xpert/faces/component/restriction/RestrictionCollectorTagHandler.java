@@ -2,17 +2,17 @@ package com.xpert.faces.component.restriction;
 
 import java.io.IOException;
 
-import javax.el.ELException;
-import javax.el.ValueExpression;
-import javax.faces.FacesException;
-import javax.faces.component.ActionSource;
-import javax.faces.component.UIComponent;
-import javax.faces.view.facelets.ComponentHandler;
-import javax.faces.view.facelets.FaceletContext;
-import javax.faces.view.facelets.FaceletException;
-import javax.faces.view.facelets.TagAttribute;
-import javax.faces.view.facelets.TagConfig;
-import javax.faces.view.facelets.TagHandler;
+import jakarta.el.ELException;
+import jakarta.el.ValueExpression;
+import jakarta.faces.FacesException;
+import jakarta.faces.component.ActionSource;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.view.facelets.ComponentHandler;
+import jakarta.faces.view.facelets.FaceletContext;
+import jakarta.faces.view.facelets.FaceletException;
+import jakarta.faces.view.facelets.TagAttribute;
+import jakarta.faces.view.facelets.TagConfig;
+import jakarta.faces.view.facelets.TagHandler;
 
 /**
  * TagHandler for the component "x:restrictionCollector".

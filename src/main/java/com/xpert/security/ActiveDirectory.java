@@ -1,8 +1,5 @@
 package com.xpert.security;
 
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Properties;
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -10,20 +7,26 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
+import javax.naming.directory.InvalidAttributeValueException;
+import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
-import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.InitialLdapContext;
-
-//Imports for changing password
-import javax.naming.directory.ModificationItem;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.InvalidAttributeValueException;
-import javax.naming.ldap.StartTlsResponse;
+import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.StartTlsRequest;
-import javax.net.ssl.*;
+import javax.naming.ldap.StartTlsResponse;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.util.Properties;
+
+import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
 /**
  * Provides static methods to authenticate users, change passwords, etc. Its

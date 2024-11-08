@@ -3,7 +3,7 @@ package ${package};
 <#list classes as clazz>
 import ${clazz.name};
 </#list>
-import javax.faces.bean.ManagedBean;
+import jakarta.faces.bean.ManagedBean;
 
 @ManagedBean
 public class Class${configuration.managedBeanSuffix} {

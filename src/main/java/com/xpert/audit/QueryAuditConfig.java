@@ -3,8 +3,8 @@ package com.xpert.audit;
 import com.xpert.audit.model.AbstractQueryAuditing;
 import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.persistence.query.QueryBuilder;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 /**
  *
