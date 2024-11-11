@@ -1,6 +1,7 @@
 package com.xpert.faces.component.pdfprinter;
 
 import com.itextpdf.awt.PdfGraphics2D;
+import com.itextpdf.text.PageSize;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import org.w3c.dom.Document;
@@ -14,13 +15,13 @@ import org.xhtmlrenderer.render.RenderingContext;
 
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
-import com.lowagie.text.PageSize;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -100,9 +101,8 @@ public class SVGReplacedElement implements ITextReplacedElement {
 
             String result = sw.toString();
             result = result.replace("xmlns:ns0=\"http://www.w3.org/2000/svg\"", "").replace("ns0:svg=\"\"", "");
-//            return result;
             return result.replace("<svg", "<svg xmlns=\"http://www.w3.org/2000/svg\" ");
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException | TransformerException ex) {
             throw new RuntimeException("Error converting to String", ex);
         }
     }
@@ -131,9 +131,9 @@ public class SVGReplacedElement implements ITextReplacedElement {
         g2d.dispose();
 
         PageBox page = renderingContext.getPage();
-        float x = (float) blockBox.getAbsX() + page.getMarginBorderPadding(renderingContext, CalculatedStyle.LEFT);
+        float x = (float) blockBox.getAbsX() + page.getMarginBorderPadding(renderingContext, CalculatedStyle.Edge.LEFT);
         float y = (float) (page.getBottom() - (blockBox.getAbsY() + cssHeight)) + page.getMarginBorderPadding(
-                renderingContext, CalculatedStyle.BOTTOM);
+                renderingContext, CalculatedStyle.Edge.BOTTOM);
         x /= outputDevice.getDotsPerPoint();
         y /= outputDevice.getDotsPerPoint();
 

@@ -26,7 +26,7 @@
                 <p:menuitem value="#{xmsg['refresh']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.filter();" icon="#{icons.refresh}" url="#"/>
                 <p:menuitem value="#{xmsg['clearFilters']}" onclick="#{xpert.normalizePrimeFacesWidget(cc.attrs.widgetVar)}.clearFilters();" icon="#{icons.close}" url="#"/>
             </p:menuButton>
-            <x:dataTableExporter rendered="#{cc.attrs.export}" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" landscape="#{cc.attrs.landscape}"/>
+            <x:dataTableExporter rendered="#{cc.attrs.export}" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
         </div>
 
     </cc:implementation>

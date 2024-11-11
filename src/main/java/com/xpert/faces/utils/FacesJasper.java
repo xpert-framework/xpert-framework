@@ -14,10 +14,10 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 /**
  * Generic class to create Jasper Reports
@@ -136,11 +136,11 @@ public class FacesJasper {
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            JRXlsExporter xlsxExporter = new JRXlsExporter();
+            JRXlsxExporter xlsxExporter = new JRXlsxExporter();
             xlsxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
             xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
 
-            SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+            SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
             configuration.setOnePagePerSheet(true);
             configuration.setDetectCellType(true);
             configuration.setIgnoreCellBorder(false);

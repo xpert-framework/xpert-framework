@@ -4,9 +4,6 @@
       xmlns:cc="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:x="http://xpert.com/faces"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <!-- INTERFACE -->
@@ -14,13 +11,14 @@
         <cc:attribute name="target"/>
         <cc:attribute name="widgetVar"/>
         <cc:attribute name="fileName"/>
-        <cc:attribute name="landscape" default="true"/>
         <cc:attribute name="printable" default="true"/>
         <cc:attribute name="columns" default="true"/>
         <cc:attribute name="downloads" default="true"/>
         <cc:attribute name="clear" default="true"/>
         <cc:attribute name="refresh" default="true"/>
         <cc:attribute name="styleClass" default=""/>
+        <cc:attribute name="pdfOptions" default="#{defaultDataTableExporter.pdfOptions}"/>
+        <cc:attribute name="excelOptions" default="#{defaultDataTableExporter.excelOpt}"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -41,10 +39,10 @@
                 <p:menu overlay="true" trigger="btnDataTableDownload" my="left top" at="left bottom" >
                     <p:submenu label="Página Atual">
                         <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
-                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" />
+                            <p:dataExporter type="xlsxstream" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" options="#{cc.attrs.excelOptions}"/>
                         </p:menuitem>
                         <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o" ajax="false" immediate="true">
-                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true"/>
+                            <p:dataExporter type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" options="#{cc.attrs.pdfOptions}" preProcessor="#{defaultDataTableExporter.preProcessorPDF}"/>
                         </p:menuitem>
                         <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
                             <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" pageOnly="true" />
@@ -55,10 +53,10 @@
                     </p:submenu>
                     <p:submenu label="Tudo">
                         <p:menuitem value="Excel" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
-                            <p:dataExporter type="xls" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                            <p:dataExporter type="xlsxstream" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" options="#{cc.attrs.excelOptions}"/>
                         </p:menuitem>
                         <p:menuitem value="PDF" icon="fa fa-fw fa-file-pdf-o" ajax="false" immediate="true">
-                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" cellFontSize="7" facetFontSize="7" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}.pdf"/>
+                            <p:dataExporter type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}.pdf" options="#{cc.attrs.pdfOptions}" preProcessor="#{defaultDataTableExporter.preProcessorPDF}"/>
                         </p:menuitem>
                         <p:menuitem value="CSV" icon="fa fa-fw fa-file-excel-o" ajax="false" immediate="true">
                             <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" />
@@ -89,13 +87,11 @@
                 <p:overlayPanel for="buttonExport">
                     <p:menuButton value="#{xmsg['currentPage']}">
                         <p:menuitem value="Excel" immediate="true" ajax="false">
-                            <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" skipComponents="jakarta.faces.component.UIPanel"/>
+                            <p:dataExporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" options="#{cc.attrs.excelOptions}"/>
                         </p:menuitem>
                         <p:menuitem value="PDF" immediate="true" ajax="false">
-                            <pe:exporter pageOnly="true" cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
-                                         orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" 
-                                         skipComponents="jakarta.faces.component.UIPanel"
-                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                            <p:dataExporter pageOnly="true" options="#{cc.attrs.pdfOptions}"
+                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}"
                                          type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                         </p:menuitem>
                         <p:menuitem value="CSV" immediate="true" ajax="false">
@@ -104,14 +100,11 @@
                     </p:menuButton>
                     <p:menuButton value="#{xmsg['allPages']}">
                         <p:menuitem value="Excel" immediate="true" ajax="false">
-                            <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
-                                          skipComponents="jakarta.faces.component.UIPanel"/>
+                            <p:dataExporter  type="xlsxstream" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}" options="#{cc.attrs.excelOptions}"/>
                         </p:menuitem>
                         <p:menuitem value="PDF" immediate="true" ajax="false">
-                            <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" 
-                                         cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
-                                         skipComponents="jakarta.faces.component.UIPanel"
-                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                            <p:dataExporter type="pdf" options="#{cc.attrs.pdfOptions}"
+                                         preProcessor="#{defaultDataTableExporter.preProcessorPDF}"
                                          target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                         </p:menuitem>
                         <p:menuitem value="CSV" immediate="true" ajax="false">

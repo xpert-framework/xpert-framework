@@ -18,18 +18,25 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation> 
-        <div id="#{cc.attrs.clientId}" >
+        <style>
+            .uix-modal-messages {
+                margin-bottom: -6px;
+            }
+        </style>
+        <div id="#{cc.attrs.clientId}">
             <h:panelGroup rendered="#{not empty facesContext.messageList}">
                 <p:dialog showHeader="false" closable="false" modal="true" appendTo="@(body)" closeOnEscape="#{cc.attrs.escape}"
                           onShow="setTimeout(function(){$('.button-confirm-modal').focus();}, 300)" width="340"
                           resizable="false" widgetVar="xpertModalDialogMessages" responsive="true" visible="true">
-                    <p:messages escape="#{cc.attrs.escape}" showDetail="#{cc.attrs.showDetail}" 
-                                showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}" style="#{cc.attrs.styleMessages}">
-                        <p:autoUpdate rendered="#{cc.attrs.autoUpdate}"/>
-                    </p:messages>
-                    <div align="center">
-                        <p:commandButton onclick="PF('xpertModalDialogMessages').hide(); #{cc.attrs.onconfirm};"
-                                         styleClass="button-confirm-modal" type="button" value="Ok" />
+                    <div class="uix-modal-messages">
+                        <p:messages escape="#{cc.attrs.escape}" showDetail="#{cc.attrs.showDetail}" 
+                                    showSummary="#{cc.attrs.showSummary}" globalOnly="#{cc.attrs.globalOnly}" style="#{cc.attrs.styleMessages}">
+                            <p:autoUpdate rendered="#{cc.attrs.autoUpdate}"/>
+                        </p:messages>
+                        <div align="center">
+                            <p:commandButton onclick="PF('xpertModalDialogMessages').hide(); #{cc.attrs.onconfirm};"
+                                             styleClass="button-confirm-modal" type="button" value="Ok" />
+                        </div>
                     </div>
                 </p:dialog>
             </h:panelGroup>

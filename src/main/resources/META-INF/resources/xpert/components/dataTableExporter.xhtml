@@ -2,18 +2,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://java.sun.com/jsf/composite"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:p="http://primefaces.org/ui">
 
     <!-- INTERFACE -->
     <cc:interface>
         <cc:attribute name="target"/>
         <cc:attribute name="fileName"/>
-        <cc:attribute name="fontSize" default="7" />
-        <cc:attribute name="landscape" default="true"/>
+        <cc:attribute name="pdfOptions" default="#{defaultDataTableExporter.pdfOptions}"/>
+        <cc:attribute name="excelOptions" default="#{defaultDataTableExporter.excelOpt}"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -23,14 +19,12 @@
                 <p:menuitem value="#{xmsg['currentPage']}" url="#" styleClass="uix-export-submenu" />
                 <p:separator/>
                 <p:menuitem value="Excel" immediate="true" ajax="false" icon="#{icons.excel}">
-                    <pe:exporter pageOnly="true" type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
-                                 skipComponents="jakarta.faces.component.UIPanel"/>
+                    <p:dataExporter pageOnly="true" type="xlsxstream" target="#{cc.attrs.target}" 
+                                    fileName="#{cc.attrs.fileName}" options="#{cc.attrs.excelOptions}"/>
                 </p:menuitem>
                 <p:menuitem value="PDF" immediate="true" ajax="false" icon="#{icons.pdf}">
-                    <pe:exporter pageOnly="true" cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
-                                 orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" 
-                                 skipComponents="jakarta.faces.component.UIPanel"
-                                 preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
+                    <p:dataExporter pageOnly="true" options="#{cc.attrs.pdfOptions}"
+                                 preProcessor="#{defaultDataTableExporter.preProcessorPDF}"
                                  type="pdf" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                 </p:menuitem>
                 <p:menuitem value="CSV" immediate="true" ajax="false" icon="#{icons.csv}">
@@ -39,15 +33,13 @@
                 <p:menuitem value="#{xmsg['allPages']}" url="#" styleClass="uix-export-submenu" />
                 <p:separator/>
                 <p:menuitem value="Excel" immediate="true" ajax="false"  icon="#{icons.excel}">
-                    <pe:exporter  type="xlsx" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"
-                                  skipComponents="jakarta.faces.component.UIPanel"/>
+                    <p:dataExporter type="xlsxstream" target="#{cc.attrs.target}" 
+                                    fileName="#{cc.attrs.fileName}" options="#{cc.attrs.excelOptions}"/>
                 </p:menuitem>
                 <p:menuitem value="PDF" immediate="true" ajax="false"  icon="#{icons.pdf}">
-                    <pe:exporter orientation="#{cc.attrs.landscape ? 'Landscape' : 'Portrait'}" type="pdf" 
-                                 cellFontSize="#{cc.attrs.fontSize}" facetFontSize="#{cc.attrs.fontSize}" 
-                                 skipComponents="jakarta.faces.component.UIPanel"
-                                 preProcessor="#{defaultDataTableExporter.preProcessorPDF}" postProcessor="#{defaultDataTableExporter.postProcessorPDF}"
-                                 target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
+                    <p:dataExporter type="pdf" options="#{cc.attrs.pdfOptions}"
+                                    preProcessor="#{defaultDataTableExporter.preProcessorPDF}"
+                                    target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
                 </p:menuitem>
                 <p:menuitem value="CSV" immediate="true" ajax="false" icon="#{icons.csv}">
                     <p:dataExporter type="csv" target="#{cc.attrs.target}" fileName="#{cc.attrs.fileName}"/>
