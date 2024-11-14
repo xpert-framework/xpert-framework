@@ -240,7 +240,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
             query.setParameter(1, id);
             query.executeUpdate();
         } catch (Exception ex) {
-            if (ex instanceof ConstraintViolationException || ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+            if (ex instanceof ConstraintViolationException || ex instanceof org.hibernate.exception.ConstraintViolationException || ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
                 throw new DeleteException("Object from class " + entityClass + " with ID: " + id + " cannot be deleted");
             } else {
                 throw new RuntimeException(ex);
