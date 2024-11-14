@@ -1,12 +1,15 @@
 package com.xpert.maker.model;
 
 import com.xpert.utils.StringUtils;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class ViewField {
+public class ViewField implements Serializable {
+
+    private static final long serialVersionUID = 3589435433914993726L;
 
     private String name;
     private String label;

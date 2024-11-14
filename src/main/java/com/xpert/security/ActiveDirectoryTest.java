@@ -1,5 +1,6 @@
 package com.xpert.security;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.AuthenticationException;
@@ -12,7 +13,9 @@ import javax.naming.ldap.LdapContext;
  *
  * @author ayslan
  */
-public class ActiveDirectoryTest {
+public class ActiveDirectoryTest implements Serializable {
+
+    private static final long serialVersionUID = 7690715185495674651L;
 
     public static void testConnection(String username, String password) {
         try {

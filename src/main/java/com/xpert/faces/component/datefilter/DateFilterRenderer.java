@@ -11,6 +11,7 @@ import jakarta.faces.component.behavior.ClientBehavior;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.calendar.CalendarRenderer;
 import org.primefaces.component.column.Column;
@@ -20,7 +21,9 @@ import org.primefaces.component.datatable.DataTable;
  *
  * @author ayslan
  */
-public class DateFilterRenderer extends Renderer {
+public class DateFilterRenderer extends Renderer implements Serializable {
+
+    private static final long serialVersionUID = 206051849411890137L;
 
     @Override
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {

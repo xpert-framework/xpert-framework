@@ -17,6 +17,7 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.transform.OutputKeys;
@@ -32,7 +33,9 @@ import org.apache.batik.transcoder.print.PrintTranscoder;
  *
  * @author ayslan
  */
-public class SVGReplacedElement implements ITextReplacedElement {
+public class SVGReplacedElement implements ITextReplacedElement, Serializable {
+
+    private static final long serialVersionUID = 3304448976038866636L;
 
     private Point location = new Point(0, 0);
     private Document svg;

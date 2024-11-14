@@ -5,6 +5,7 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 import org.primefaces.component.calendar.Calendar;
 
 /**
@@ -12,7 +13,9 @@ import org.primefaces.component.calendar.Calendar;
  *
  * @author ayslan
  */
-public class MaskRenderer extends Renderer {
+public class MaskRenderer extends Renderer implements Serializable {
+
+    private static final long serialVersionUID = -706157459250161253L;
 
     @Override
     public void encodeEnd(final FacesContext context, final UIComponent component) throws IOException {

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 import javax.sql.DataSource;
 
 /**
@@ -14,7 +15,9 @@ import javax.sql.DataSource;
  *
  * @author ayslan, arnaldo
  */
-public class OracleSequenceUpdater extends SequenceUpdater {
+public class OracleSequenceUpdater extends SequenceUpdater implements Serializable {
+
+    private static final long serialVersionUID = -5329620832665889911L;
 
     private final EntityManager entityManager;
     private DataSource dataSource;

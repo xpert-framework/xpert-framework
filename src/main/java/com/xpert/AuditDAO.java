@@ -2,13 +2,16 @@ package com.xpert;
 
 import com.xpert.persistence.dao.BaseDAOImpl;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  * @param <T> Type of DAO
  */
-public class AuditDAO<T> extends BaseDAOImpl<T> {
+public class AuditDAO<T> extends BaseDAOImpl<T> implements Serializable {
+
+    private static final long serialVersionUID = 2560837941435098665L;
 
     private EntityManager entityManager;
 

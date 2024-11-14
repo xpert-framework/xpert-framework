@@ -20,6 +20,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AbortProcessingException;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.event.ActionListener;
+import java.io.Serializable;
 
 /**
  * This class is a ActionListener used to add restrictions to a List or a
@@ -27,8 +28,9 @@ import jakarta.faces.event.ActionListener;
  *
  * @author ayslan
  */
-public class RestrictionCollector implements ActionListener, StateHolder {
+public class RestrictionCollector implements ActionListener, StateHolder, Serializable {
 
+    private static final long serialVersionUID = 5235852210841670659L;
     private static final Logger logger = Logger.getLogger(RestrictionCollector.class.getName());
     public static final String IGNORE_RESTRICTIONS = RestrictionCollector.class.getName() + "_ignoreCurrentRestrictions";
     public static final String RESTRICTIONS = RestrictionCollector.class.getName() + "_restrictions";

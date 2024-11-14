@@ -15,6 +15,8 @@ import jakarta.persistence.EntityManager;
  */
 public class InitializerEventListener implements ComponentSystemEventListener, Serializable {
 
+    private static final long serialVersionUID = 7878146874719254327L;
+
     private String property;
     private ValueExpression valueExpression;
     private FaceletContext faceletContext;

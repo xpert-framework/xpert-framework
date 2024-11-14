@@ -1,5 +1,6 @@
 package com.xpert.i18n;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
@@ -9,7 +10,9 @@ import java.util.ResourceBundle;
  *
  * @author ayslan
  */
-public class CustomResourceBundle extends ResourceBundle {
+public class CustomResourceBundle extends ResourceBundle implements Serializable {
+
+    private static final long serialVersionUID = 7975035544471795737L;
 
     public CustomResourceBundle() {
     }

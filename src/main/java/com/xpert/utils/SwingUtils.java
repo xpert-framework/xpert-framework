@@ -9,6 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JFrame;
@@ -21,7 +22,9 @@ import javax.swing.JTextField;
  *
  * @author ayslan
  */
-public class SwingUtils {
+public class SwingUtils implements Serializable {
+
+    private static final long serialVersionUID = -1534216055901347333L;
 
     /**
      * Position in center a JFrame

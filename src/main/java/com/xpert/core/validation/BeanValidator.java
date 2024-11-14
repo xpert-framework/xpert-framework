@@ -15,15 +15,16 @@ import jakarta.faces.validator.ValidatorException;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+import java.io.Serializable;
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;
 
@@ -39,8 +40,10 @@ import java.util.logging.Logger;
  *
  * @author ayslan
  */
-public class BeanValidator extends jakarta.faces.validator.BeanValidator {
+public class BeanValidator extends jakarta.faces.validator.BeanValidator implements Serializable {
 
+    private static final long serialVersionUID = -6337327856470074774L;
+    
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(BeanValidator.class.getName());
     private static final List<Class> VALIDATION_TYPES = new ArrayList<>();

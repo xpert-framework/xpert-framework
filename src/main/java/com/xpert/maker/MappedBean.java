@@ -1,12 +1,15 @@
 package com.xpert.maker;
 
 import com.xpert.utils.HumaniseCamelCase;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class MappedBean {
+public class MappedBean implements Serializable {
+
+    private static final long serialVersionUID = 3803659396933173509L;
 
     private Class entityClass;
     private String className;

@@ -5,12 +5,15 @@ import static com.xpert.persistence.query.Sql.avg;
 import static com.xpert.persistence.query.Sql.count;
 import static com.xpert.persistence.query.Sql.select;
 import static com.xpert.persistence.query.Sql.sum;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class TestQueryBuilder {
+public class TestQueryBuilder implements Serializable {
+
+    private static final long serialVersionUID = 4280238104355749209L;
 
     public static void printQueryString(Restrictions restrictions) {
 

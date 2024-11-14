@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
@@ -70,7 +71,9 @@ import java.util.zip.ZipOutputStream;
  *
  * @author ayslan
  */
-public class BeanCreator {
+public class BeanCreator implements Serializable {
+
+    private static final long serialVersionUID = 5144125498862608650L;
 
     private BeanCreator() {
     }

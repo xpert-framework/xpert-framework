@@ -1,6 +1,7 @@
 package com.xpert.faces.bean;
 
 import com.xpert.persistence.query.Restriction;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import java.util.List;
  *
  * @author ayslan
  */
-public class ClassModel {
+public class ClassModel implements Serializable {
+
+    private static final long serialVersionUID = -2692588200166831392L;
     
     private String order;
     private String itemLabel;

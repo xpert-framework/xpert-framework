@@ -14,14 +14,17 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 /**
  * A generic filter to security control
  *
  * @author ayslan
  */
-public abstract class AbstractSecurityFilter implements Filter {
+public abstract class AbstractSecurityFilter implements Filter, Serializable {
 
+    private static final long serialVersionUID = -2429458515040152546L;
+    
     private static final Logger logger = Logger.getLogger(AbstractSecurityFilter.class.getName());
 
     /**

@@ -13,6 +13,7 @@ import jakarta.faces.view.facelets.FaceletException;
 import jakarta.faces.view.facelets.TagAttribute;
 import jakarta.faces.view.facelets.TagConfig;
 import jakarta.faces.view.facelets.TagHandler;
+import java.io.Serializable;
 
 /**
  * TagHandler for the component "x:restrictionCollector".
@@ -20,7 +21,9 @@ import jakarta.faces.view.facelets.TagHandler;
  * 
  * @author ayslan
  */
-public class RestrictionCollectorTagHandler extends TagHandler {
+public class RestrictionCollectorTagHandler extends TagHandler implements Serializable {
+
+    private static final long serialVersionUID = -3954726385053835898L;
 
     private final TagAttribute addTo;
     private final TagAttribute debug;

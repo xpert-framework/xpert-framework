@@ -1,16 +1,18 @@
 package com.xpert.faces.component.security;
 
-import com.xpert.security.SecuritySessionManager;
 import java.io.IOException;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class SecurityAreaRenderer extends Renderer {
+public class SecurityAreaRenderer extends Renderer implements Serializable {
+
+    private static final long serialVersionUID = -8712402607305273451L;
 
     @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {

@@ -11,12 +11,15 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.event.ActionListener;
+import java.io.Serializable;
 
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),
     @ResourceDependency(library = "xpert", name = "css/style.css")
 })
-public class PDFPrinter implements ActionListener, StateHolder {
+public class PDFPrinter implements ActionListener, StateHolder, Serializable {
+
+    private static final long serialVersionUID = 8625591411990681229L;
 
     private ValueExpression target;
     private ValueExpression fileName;

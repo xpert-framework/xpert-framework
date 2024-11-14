@@ -1,10 +1,14 @@
 package com.xpert.persistence.query;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ayslanms
  */
-public class Sql {
+public class Sql implements Serializable {
+
+    private static final long serialVersionUID = 501746632193324007L;
 
     /**
      * Create a field with alias. Example field: u.name, alias: userName,

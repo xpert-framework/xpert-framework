@@ -7,8 +7,11 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
+import java.io.Serializable;
 
-public class LongitudeValidator implements Validator {
+public class LongitudeValidator implements Validator, Serializable {
+
+    private static final long serialVersionUID = 5443296696166692855L;
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {

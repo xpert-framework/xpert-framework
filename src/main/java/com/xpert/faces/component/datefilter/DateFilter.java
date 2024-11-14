@@ -3,6 +3,7 @@ package com.xpert.faces.component.datefilter;
 import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.html.HtmlPanelGroup;
+import java.io.Serializable;
 
 /**
  *
@@ -13,9 +14,10 @@ import jakarta.faces.component.html.HtmlPanelGroup;
     ,
     @ResourceDependency(library = "xpert", name = "scripts/core.js")
 })
-public class DateFilter extends HtmlPanelGroup {
+public class DateFilter extends HtmlPanelGroup implements Serializable {
 
     private static final String COMPONENT_FAMILY = "com.xpert.component";
+    private static final long serialVersionUID = -7129396135170108329L;
     private boolean added;
     private Object calendarStartValue;
     private Object calendarEndValue;

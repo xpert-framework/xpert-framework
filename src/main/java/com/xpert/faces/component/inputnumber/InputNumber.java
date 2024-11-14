@@ -3,6 +3,7 @@ package com.xpert.faces.component.inputnumber;
 import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.convert.NumberConverter;
+import java.io.Serializable;
 import org.primefaces.component.inputtext.InputText;
 
 /**
@@ -16,8 +17,10 @@ import org.primefaces.component.inputtext.InputText;
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),
     @ResourceDependency(library = "xpert", name = "scripts/jquery.price_format.js")
 })
-public class InputNumber extends InputText {
+public class InputNumber extends InputText implements Serializable {
 
+    private static final long serialVersionUID = -415690537067882413L;
+    
     public static final String COMPONENT_FAMILY = "com.xpert.component";
     public static final int DEFAULT_LIMIT = 15;
     public static final int DEFAULT_CENTS_LIMIT = 2;

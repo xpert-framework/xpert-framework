@@ -22,6 +22,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.persistence.metamodel.Metamodel;
+import java.io.Serializable;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
@@ -29,8 +30,9 @@ import org.hibernate.proxy.HibernateProxy;
  *
  * @author ayslan
  */
-public class EntityUtils {
+public class EntityUtils implements Serializable {
 
+    private static final long serialVersionUID = -7734702041190250147L;
     private static final Logger logger = Logger.getLogger(EntityUtils.class.getName());
     private static final Map<Class, String> ID_NAME_MAP = new HashMap<>();
     private static final Map<Class, AccessibleObject> ID_ACCESSIBLE_MAP = new HashMap<>();

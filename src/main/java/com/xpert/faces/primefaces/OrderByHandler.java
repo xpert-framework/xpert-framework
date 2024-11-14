@@ -7,6 +7,6 @@ package com.xpert.faces.primefaces;
  */
 public interface OrderByHandler {
     
-    public String getOrderBy(String orderBy);
+    String getOrderBy(String orderBy);
     
 }

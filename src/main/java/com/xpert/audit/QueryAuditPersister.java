@@ -13,19 +13,19 @@ public interface QueryAuditPersister {
      *
      * @param queryAuditing
      */
-    public void persist(AbstractQueryAuditing queryAuditing);
+    void persist(AbstractQueryAuditing queryAuditing);
 
     /**
      * Max size of sql statement. If value less or equals than zero, then its unlimited size
      *
      * @return
      */
-    public int getSqlStringMaxSize();
+    int getSqlStringMaxSize();
 
     /**
      * Max size of parameters of Query. If value less or equals than zero, then its unlimited size
      *
      * @return
      */
-    public int getParametersMaxSize();
+    int getParametersMaxSize();
 }

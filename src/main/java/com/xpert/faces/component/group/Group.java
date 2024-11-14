@@ -11,13 +11,16 @@ import jakarta.el.ValueExpression;
 import jakarta.faces.FacesException;
 import jakarta.faces.model.DataModel;
 import jakarta.faces.model.ListDataModel;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class Group extends UIData {
+public class Group extends UIData implements Serializable {
 
+    private static final long serialVersionUID = -5131370014705617209L;
+    
     public static final String COMPONENT_TYPE = "com.xpert.component.Group";
     public static final String COMPONENT_FAMILY = "com.xpert.component";
     private static final String DEFAULT_RENDERER = "com.xpert.fapces.component.GroupRenderer";

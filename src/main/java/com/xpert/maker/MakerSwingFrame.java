@@ -30,6 +30,8 @@ import javax.swing.JTextArea;
  */
 public class MakerSwingFrame extends javax.swing.JFrame {
     
+    private static final long serialVersionUID = -5851195788670445685L;
+    
     public static final String URL_DOCUMENTATION = "https://github.com/xpert-framework/xpert-framework/wiki";
     public static final String URL_SHOWCASE = "http://showcase.xpertsistemas.com.br/";
     public static final String URL_XPERT_SISTEMAS = "http://showcase.xpertsistemas.com.br/";

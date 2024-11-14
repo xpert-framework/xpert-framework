@@ -2,12 +2,15 @@ package com.xpert.maker;
 
 import com.xpert.maker.model.ViewEntity;
 import com.xpert.utils.StringUtils;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class Bean {
+public class Bean implements Serializable {
+
+    private static final long serialVersionUID = -9183255305110304944L;
 
     private Class entity;
     private BeanType beanType;

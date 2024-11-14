@@ -14,8 +14,11 @@ import jakarta.faces.view.facelets.FaceletException;
 import jakarta.faces.view.facelets.TagAttribute;
 import jakarta.faces.view.facelets.TagConfig;
 import jakarta.faces.view.facelets.TagHandler;
+import java.io.Serializable;
 
-public class PDFPrinterTagHandler extends TagHandler {
+public class PDFPrinterTagHandler extends TagHandler implements Serializable {
+
+    private static final long serialVersionUID = -2831150868083052931L;
 
     private final TagAttribute target;
     private final TagAttribute fileName;

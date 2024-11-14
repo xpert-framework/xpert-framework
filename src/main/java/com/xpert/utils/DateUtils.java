@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -14,7 +15,9 @@ import java.util.GregorianCalendar;
  *
  * @author ayslan
  */
-public class DateUtils {
+public class DateUtils implements Serializable {
+
+    private static final long serialVersionUID = 5968975012762743779L;
 
     /**
      * Get Date with only day, month and year (removing hour, minute, second and

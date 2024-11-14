@@ -1,13 +1,17 @@
 package com.xpert.persistence.dao;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ayslan
  */
-public class ClassField {
+public class ClassField implements Serializable {
 
-    private String field;
-    private Class clazz;
+    private static final long serialVersionUID = -6236435164485637725L;
+
+    private final String field;
+    private final Class clazz;
 
     public ClassField(Class clazz, String field) {
         this.clazz = clazz;

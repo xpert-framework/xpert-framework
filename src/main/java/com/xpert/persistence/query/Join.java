@@ -1,10 +1,14 @@
 package com.xpert.persistence.query;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ayslan
  */
-public class Join {
+public class Join implements Serializable {
+
+    private static final long serialVersionUID = 9033187297875107368L;
 
     private String property;
     private String alias;

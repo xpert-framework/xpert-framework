@@ -5,13 +5,16 @@
  */
 package com.xpert.core.exception;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author ayslanms
  */
-public class TesteExcpetion {
+public class TesteExcpetion implements Serializable {
+
+    private static final long serialVersionUID = 1783281684417781039L;
     
     public static void main(String[] args) {
         

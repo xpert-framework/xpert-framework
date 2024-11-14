@@ -3,12 +3,15 @@ package com.xpert.faces.component.api;
 import java.util.Comparator;
 import jakarta.el.MethodExpression;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class MethodExpressionComparator implements Comparator {
+public class MethodExpressionComparator implements Comparator, Serializable {
+
+    private static final long serialVersionUID = -4456370083061490865L;
 
     private FacesContext context;
     private MethodExpression methodExpression;

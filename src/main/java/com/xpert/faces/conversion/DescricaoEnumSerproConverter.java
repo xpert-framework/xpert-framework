@@ -3,6 +3,7 @@ package com.xpert.faces.conversion;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
@@ -10,7 +11,9 @@ import jakarta.faces.convert.Converter;
  *
  * @author ayslan
  */
-public class DescricaoEnumSerproConverter implements Converter {
+public class DescricaoEnumSerproConverter implements Converter, Serializable {
+
+    private static final long serialVersionUID = -4769163734505901757L;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

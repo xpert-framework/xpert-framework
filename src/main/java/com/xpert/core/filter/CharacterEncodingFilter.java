@@ -8,6 +8,7 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import java.io.Serializable;
 
 /**
  * Filter to set request and response to UTF-8 encoding.
@@ -16,8 +17,9 @@ import jakarta.servlet.ServletResponse;
  *
  * @author ayslan
  */
-public class CharacterEncodingFilter implements Filter {
+public class CharacterEncodingFilter implements Filter, Serializable {
 
+    private static final long serialVersionUID = -3883620855631854552L;
     private static final Logger logger = Logger.getLogger(CharacterEncodingFilter.class.getName());
     private static final String UTF_8 = "UTF-8";
 

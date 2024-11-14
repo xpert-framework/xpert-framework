@@ -5,12 +5,15 @@ import com.xpert.faces.primefaces.LazyDataModelImpl;
 import java.util.Collection;
 import jakarta.faces.FacesException;
 import jakarta.faces.model.DataModel;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class NumberFunctions {
+public class NumberFunctions implements Serializable {
+
+    private static final long serialVersionUID = -2511327475403458739L;
 
     /**
      * If the object is a instanceof DataModel (example: standart DataModel,

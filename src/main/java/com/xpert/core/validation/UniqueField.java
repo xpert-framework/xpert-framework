@@ -2,12 +2,15 @@ package com.xpert.core.validation;
 
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.Restrictions;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class UniqueField {
+public class UniqueField implements Serializable {
+
+    private static final long serialVersionUID = -5642831051221463637L;
 
     private String message;
     private String[] constraints;

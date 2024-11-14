@@ -7,6 +7,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -18,7 +19,9 @@ import java.util.List;
  * @author ayslan
  */
 @MappedSuperclass
-public abstract class AbstractAuditing {
+public abstract class AbstractAuditing implements Serializable {
+
+    private static final long serialVersionUID = -7220507041920125429L;
 
     @Transient
     private Class auditClass;

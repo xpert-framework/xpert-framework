@@ -12,9 +12,10 @@ import jakarta.faces.context.FacesContext;
  */
 public class GroupRenderer extends CoreRenderer {
 
+    private static final long serialVersionUID = -3437482438193749497L;
+
     @Override
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
-        //Do Nothing
     }
 
     @Override

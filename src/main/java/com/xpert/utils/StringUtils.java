@@ -1,6 +1,7 @@
 package com.xpert.utils;
 
 import com.xpert.core.conversion.Conversion;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -12,8 +13,10 @@ import java.util.regex.PatternSyntaxException;
  *
  * @author ayslan
  */
-public class StringUtils {
+public class StringUtils implements Serializable {
 
+    private static final long serialVersionUID = 3965126272187461019L;
+    
     public final static String PATTERN_URL = "\\b(((ht|f)tp(s?)\\:\\/\\/|~\\/|\\/)|www.)"
             + "(\\w+:\\w+@)?(([-\\w]+\\.)+(jpg|jpeg|png|gif|com|org|net|gov"
             + "|mil|biz|info|mobi|name|aero|jobs|museum"

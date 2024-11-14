@@ -19,6 +19,7 @@ import jakarta.el.ValueReference;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
+import java.io.Serializable;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**
@@ -28,8 +29,10 @@ import org.apache.commons.beanutils.PropertyUtils;
  *
  * @author ayslan
  */
-public abstract class FindAllBean {
+public abstract class FindAllBean implements Serializable {
 
+    private static final long serialVersionUID = -6524834779133530104L;
+    
     private static final Logger logger = Logger.getLogger(FindAllBean.class.getName());
 
     /**

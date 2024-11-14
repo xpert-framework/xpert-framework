@@ -9,6 +9,6 @@ import com.xpert.persistence.query.Restrictions;
  */
 public interface FilterByHandler {
     
-    public Restrictions getFilterBy(String property, Object value);
+    Restrictions getFilterBy(String property, Object value);
     
 }

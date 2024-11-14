@@ -6,6 +6,8 @@ package com.xpert.core.exception;
  */
 public class UniqueFieldException extends BusinessException {
 
+    private static final long serialVersionUID = 6126286236361546543L;
+
     private boolean i18n = true;
 
     public boolean isI18n() {

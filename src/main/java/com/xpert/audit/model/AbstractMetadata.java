@@ -2,6 +2,7 @@ package com.xpert.audit.model;
 
 import com.xpert.i18n.I18N;
 import jakarta.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * Abstract class to represent the fields of an audit event. Each metadata is a
@@ -10,7 +11,9 @@ import jakarta.persistence.MappedSuperclass;
  * @author ayslan
  */
 @MappedSuperclass
-public abstract class AbstractMetadata {
+public abstract class AbstractMetadata implements Serializable {
+
+    private static final long serialVersionUID = -2553985519605309577L;
 
     private String field;
     private String oldValue;

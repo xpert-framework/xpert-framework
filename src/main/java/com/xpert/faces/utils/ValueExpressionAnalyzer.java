@@ -48,6 +48,7 @@ import jakarta.el.ValueExpression;
 import jakarta.el.ValueReference;
 import jakarta.el.VariableMapper;
 import jakarta.faces.el.CompositeComponentExpressionHolder;
+import java.io.Serializable;
 
 import java.util.Locale;
 
@@ -55,7 +56,10 @@ import java.util.Locale;
  * Analyzes a {@link ValueExpression} and provides access to the base object and property
  * name to which the expression maps via the getReference() method.
  */
-public class ValueExpressionAnalyzer {
+public class ValueExpressionAnalyzer implements Serializable {
+
+    private static final long serialVersionUID = -6834473511295044358L;
+    
     private ValueExpression expression;
 
     public ValueExpressionAnalyzer(ValueExpression expression) {

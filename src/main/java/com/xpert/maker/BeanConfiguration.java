@@ -2,12 +2,15 @@ package com.xpert.maker;
 
 import com.xpert.faces.bootstrap.BootstrapVersion;
 import com.xpert.faces.primefaces.PrimeFacesVersion;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class BeanConfiguration {
+public class BeanConfiguration implements Serializable {
+
+    private static final long serialVersionUID = -3971038246937421245L;
 
     private String managedBean;
     private String businessObject;

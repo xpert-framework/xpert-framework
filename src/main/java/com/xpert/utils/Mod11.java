@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,9 @@ import java.util.List;
  *
  * @author ayslan
  */
-public class Mod11 {
+public class Mod11 implements Serializable {
+
+    private static final long serialVersionUID = 7932621116004313885L;
 
     /**
      * retorna o dv de um numero

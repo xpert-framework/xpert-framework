@@ -11,7 +11,7 @@ public enum JoinType {
     LEFT_JOIN("LEFT JOIN"), 
     RIGHT_JOIN("RIGHT JOIN");
     
-    private String clausule;
+    private final String clausule;
 
     private JoinType(String clausule) {
         this.clausule = clausule;

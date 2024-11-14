@@ -4,12 +4,15 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslanms
  */
-public class EntityManagerAuditProxy implements InvocationHandler {
+public class EntityManagerAuditProxy implements InvocationHandler, Serializable {
+
+    private static final long serialVersionUID = -1946711674121465197L;
 
     private QueryAuditConfig queryAuditConfig;
 

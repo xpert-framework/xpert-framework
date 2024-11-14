@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
  * Class to "normalize" restrictions. The RestrictionType.DATA_TABLE_FILTER is a
@@ -22,8 +23,10 @@ import jakarta.persistence.TemporalType;
  *
  * @author ayslan
  */
-public class RestrictionsNormalizer {
+public class RestrictionsNormalizer implements Serializable {
 
+    private static final long serialVersionUID = 5631541873433930929L;
+    
     /**
      * Separator to be used in DateFilter is found
      */

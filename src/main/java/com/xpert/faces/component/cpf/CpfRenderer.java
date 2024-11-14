@@ -1,5 +1,6 @@
 package com.xpert.faces.component.cpf;
 
+import java.io.Serializable;
 import org.primefaces.component.inputmask.InputMaskRenderer;
 
 /**
@@ -7,6 +8,8 @@ import org.primefaces.component.inputmask.InputMaskRenderer;
  *
  * @author ayslan
  */
-public class CpfRenderer extends InputMaskRenderer {
+public class CpfRenderer extends InputMaskRenderer implements Serializable {
+
+    private static final long serialVersionUID = 8294437895868541696L;
 
 }

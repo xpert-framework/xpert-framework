@@ -9,6 +9,6 @@ import com.xpert.audit.model.AbstractAuditing;
  */
 public interface AbstractAuditingListener {
     
-    public void onSave(AbstractAuditing abstractAuditing);
+    void onSave(AbstractAuditing abstractAuditing);
     
 }

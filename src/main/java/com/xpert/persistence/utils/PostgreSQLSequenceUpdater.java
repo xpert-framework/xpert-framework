@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 import javax.sql.DataSource;
 
 /**
@@ -12,7 +13,9 @@ import javax.sql.DataSource;
  *
  * @author ayslan, arnaldo
  */
-public class PostgreSQLSequenceUpdater extends SequenceUpdater {
+public class PostgreSQLSequenceUpdater extends SequenceUpdater implements Serializable {
+
+    private static final long serialVersionUID = -4299832597494868642L;
 
     private final EntityManager entityManager;
     private DataSource dataSource;

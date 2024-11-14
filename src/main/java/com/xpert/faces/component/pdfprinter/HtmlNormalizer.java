@@ -1,5 +1,6 @@
 package com.xpert.faces.component.pdfprinter;
 
+import java.io.Serializable;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.SimpleXmlSerializer;
@@ -17,7 +18,9 @@ import org.jsoup.select.Elements;
  *
  * @author ayslan
  */
-public class HtmlNormalizer {
+public class HtmlNormalizer implements Serializable {
+
+    private static final long serialVersionUID = 1706759682607959398L;
 
     /**
      * Format HTML tags as XML, example: br, img, hr will be closed

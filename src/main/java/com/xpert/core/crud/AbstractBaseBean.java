@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.NavigationHandler;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  * Generic Managed Bean to create CRUD
@@ -30,8 +31,9 @@ import jakarta.faces.context.FacesContext;
  * @author ayslan
  * @param <T> type of entity
  */
-public abstract class AbstractBaseBean<T> {
+public abstract class AbstractBaseBean<T> implements Serializable {
 
+    private static final long serialVersionUID = 6695530968492759156L;
     private static final Logger logger = Logger.getLogger(AbstractBaseBean.class.getName());
     private static final String ID_PARAMETER = "id";
     private Object id;

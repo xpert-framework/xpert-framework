@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletContext;
+import java.io.Serializable;
 import javax.xml.XMLConstants;
 import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
@@ -27,7 +28,9 @@ import org.xml.sax.SAXException;
  *
  * @author ayslan
  */
-public class Configuration {
+public class Configuration implements Serializable {
+
+    private static final long serialVersionUID = 8258147178180213479L;
 
     private Configuration() {
     }

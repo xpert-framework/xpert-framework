@@ -39,6 +39,7 @@ import jakarta.faces.model.ListDataModel;
 import jakarta.faces.model.ResultSetDataModel;
 import jakarta.faces.model.ScalarDataModel;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.columngroup.ColumnGroup;
 import org.primefaces.component.columns.Columns;
@@ -52,7 +53,9 @@ import java.util.Map;
 /**
  * UIData from primfaces
  */
-public class UIData extends jakarta.faces.component.UIData {
+public class UIData extends jakarta.faces.component.UIData implements Serializable {
+
+    private static final long serialVersionUID = 2568322413182865531L;
 
     private String clientId = null;
     private StringBuilder idBuilder = new StringBuilder();

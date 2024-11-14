@@ -5,6 +5,7 @@ import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.behavior.ClientBehaviorBase;
 import jakarta.faces.component.behavior.ClientBehaviorContext;
+import java.io.Serializable;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -15,7 +16,9 @@ import org.apache.commons.lang3.StringEscapeUtils;
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),
     @ResourceDependency(library = "xpert", name = "css/style.css")
 })
-public class DownloadBehavior extends ClientBehaviorBase {
+public class DownloadBehavior extends ClientBehaviorBase implements Serializable {
+
+    private static final long serialVersionUID = 6642064376415136064L;
 
     private String oncomplete;
     private String onstart;

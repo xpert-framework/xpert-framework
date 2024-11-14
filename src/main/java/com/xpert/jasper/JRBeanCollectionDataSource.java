@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 
@@ -13,8 +14,9 @@ import net.sf.jasperreports.engine.JRField;
  *
  * @author ayslan
  */
-public class JRBeanCollectionDataSource extends net.sf.jasperreports.engine.data.JRAbstractBeanDataSource {
+public class JRBeanCollectionDataSource extends net.sf.jasperreports.engine.data.JRAbstractBeanDataSource implements Serializable {
 
+    private static final long serialVersionUID = -8106969366614694037L;
     private static final Logger logger = Logger.getLogger(JRBeanCollectionDataSource.class.getName());
     private BaseDAO baseDAO;
     /**

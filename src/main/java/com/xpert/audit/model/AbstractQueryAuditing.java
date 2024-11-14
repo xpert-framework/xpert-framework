@@ -7,6 +7,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
+import java.io.Serializable;
 
 import java.util.Date;
 
@@ -16,8 +17,10 @@ import java.util.Date;
  * @author ayslan
  */
 @MappedSuperclass
-public abstract class AbstractQueryAuditing {
-    
+public abstract class AbstractQueryAuditing implements Serializable {
+
+    private static final long serialVersionUID = -8049049608813826454L;
+
     public static final int SQL_STRING_MAX_SIZE = 2000;
 
     @Transient

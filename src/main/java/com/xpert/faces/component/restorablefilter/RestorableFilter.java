@@ -9,6 +9,7 @@ import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIComponentBase;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 import org.primefaces.component.datatable.DataTable;
 
 /**
@@ -18,8 +19,10 @@ import org.primefaces.component.datatable.DataTable;
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js")
 })
-public class RestorableFilter extends UIComponentBase {
+public class RestorableFilter extends UIComponentBase implements Serializable {
 
+    private static final long serialVersionUID = -238069321742850281L;
+    
     public static final String COMPONENT_FAMILY = "com.xpert.component";
 
     protected enum PropertyKeys {

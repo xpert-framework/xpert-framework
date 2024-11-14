@@ -24,35 +24,35 @@ public interface BaseDAO<T> {
      *
      * @return current jakarta.persistence.EntityManager
      */
-    public EntityManager getEntityManagerQueryAudit();
+    EntityManager getEntityManagerQueryAudit();
 
     /**
      * Returns the current EntityManager
      *
      * @return current jakarta.persistence.EntityManager
      */
-    public EntityManager getEntityManager();
+    EntityManager getEntityManager();
 
     /**
      * Returns the current Hibernate Session
      *
      * @return current org.hibernate.Session
      */
-    public Session getSession();
+    Session getSession();
 
     /**
      * Create a QueryBuilder with current entityManager from DAO
      *
      * @return
      */
-    public QueryBuilder getQueryBuilder();
+    QueryBuilder getQueryBuilder();
 
     /**
      *
      * @return Connection from ConnectionProvider of SessionFactory
      * @throws java.sql.SQLException
      */
-    public Connection getConnection() throws SQLException;
+    Connection getConnection() throws SQLException;
 
     /**
      *
@@ -61,7 +61,7 @@ public interface BaseDAO<T> {
      * @param resultClass
      * @return
      */
-    public Query getNativeQueryFromFile(String path, Class daoClass, Class resultClass);
+    Query getNativeQueryFromFile(String path, Class daoClass, Class resultClass);
 
     /**
      *
@@ -69,23 +69,23 @@ public interface BaseDAO<T> {
      * @param daoClass
      * @return
      */
-    public Query getNativeQueryFromFile(String path, Class daoClass);
+    Query getNativeQueryFromFile(String path, Class daoClass);
 
     /**
      * Retrurn Current Entity Class
      *
      * @return
      */
-    public Class getEntityClass();
+    Class getEntityClass();
 
-    public void setEntityClass(Class entityClass);
+    void setEntityClass(Class entityClass);
 
     /**
      * Save a object. This method call entityManager.persist
      *
      * @param object
      */
-    public void save(T object);
+    void save(T object);
 
     /**
      * Save a object. This method call entityManager.persist
@@ -93,7 +93,7 @@ public interface BaseDAO<T> {
      * @param object
      * @param audit Enable audit feature
      */
-    public void save(T object, boolean audit);
+    void save(T object, boolean audit);
 
     /**
      * Call entityManager.persist if @Id is null or entityManager.merge if is
@@ -101,7 +101,7 @@ public interface BaseDAO<T> {
      *
      * @param object
      */
-    public void saveOrMerge(T object);
+    void saveOrMerge(T object);
 
     /**
      * Call entityManager.persist if @Id is null or entityManager.merge if is
@@ -110,14 +110,14 @@ public interface BaseDAO<T> {
      * @param object
      * @param audit Enable audit feature
      */
-    public void saveOrMerge(T object, boolean audit);
+    void saveOrMerge(T object, boolean audit);
 
     /**
      * Call saveOrUpdate from Session (Hibernate Implementation)
      *
      * @param object
      */
-    public void saveOrUpdate(T object);
+    void saveOrUpdate(T object);
 
     /**
      * Call saveOrUpdate from Session (Hibernate Implementation)
@@ -125,14 +125,14 @@ public interface BaseDAO<T> {
      * @param object
      * @param audit Enable audit feature
      */
-    public void saveOrUpdate(T object, boolean audit);
+    void saveOrUpdate(T object, boolean audit);
 
     /**
      * Call update from Session (Hibernate Implementation)
      *
      * @param object
      */
-    public void update(T object);
+    void update(T object);
 
     /**
      * Call update from Session (Hibernate Implementation)
@@ -140,7 +140,7 @@ public interface BaseDAO<T> {
      * @param object
      * @param audit Enable audit feature
      */
-    public void update(T object, boolean audit);
+    void update(T object, boolean audit);
 
     /**
      * Delete a object from database. This method create a HQL to do the
@@ -149,7 +149,7 @@ public interface BaseDAO<T> {
      * @param id Object Id
      * @throws DeleteException
      */
-    public void delete(Object id) throws DeleteException;
+    void delete(Object id) throws DeleteException;
 
     /**
      * Delete a object from database. This method create a HQL to do the
@@ -159,7 +159,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @throws DeleteException
      */
-    public void delete(Object id, boolean audit) throws DeleteException;
+    void delete(Object id, boolean audit) throws DeleteException;
 
     /**
      * Delete a object from database. This method create a HQL to do the
@@ -169,7 +169,7 @@ public interface BaseDAO<T> {
      * @param id Object Id
      * @throws DeleteException
      */
-    public void delete(Class entityClass, Object id) throws DeleteException;
+    void delete(Class entityClass, Object id) throws DeleteException;
 
     /**
      * Delete a object from database. This method create a HQL to do the
@@ -180,7 +180,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @throws DeleteException
      */
-    public void delete(Class entityClass, Object id, boolean audit) throws DeleteException;
+    void delete(Class entityClass, Object id, boolean audit) throws DeleteException;
 
     /**
      * Delete a object from database. This method call entityManager.remove()
@@ -188,7 +188,7 @@ public interface BaseDAO<T> {
      * @param object
      * @throws DeleteException
      */
-    public void remove(Object object) throws DeleteException;
+    void remove(Object object) throws DeleteException;
 
     /**
      * Delete a object from database. This method call entityManager.remove()
@@ -197,7 +197,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @throws DeleteException
      */
-    public void remove(Object object, boolean audit) throws DeleteException;
+    void remove(Object object, boolean audit) throws DeleteException;
 
     /**
      * Merge a Object. This method call entityManager.remove()
@@ -205,7 +205,7 @@ public interface BaseDAO<T> {
      * @param object
      * @return
      */
-    public T merge(T object);
+    T merge(T object);
 
     /**
      * Merge a Object. This method call entityManager.remove()
@@ -214,14 +214,14 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public T merge(T object, boolean audit);
+    T merge(T object, boolean audit);
 
     /**
      * List all objects from Entity
      *
      * @return
      */
-    public List<T> listAll();
+    List<T> listAll();
 
     /**
      * List all objects from Entity
@@ -229,7 +229,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAll(boolean audit);
+    List<T> listAll(boolean audit);
 
     /**
      * List all objects from Entity
@@ -237,7 +237,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAll(String order);
+    List<T> listAll(String order);
 
     /**
      * List all objects from Entity
@@ -246,7 +246,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAll(String order, boolean audit);
+    List<T> listAll(String order, boolean audit);
 
     /**
      * List all objects from Entity
@@ -255,7 +255,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAll(Class clazz, String order);
+    List<T> listAll(Class clazz, String order);
 
     /**
      * List all objects from Entity
@@ -265,14 +265,14 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAll(Class clazz, String order, boolean audit);
+    List<T> listAll(Class clazz, String order, boolean audit);
 
     /**
      * Count rows from entity
      *
      * @return
      */
-    public Long count();
+    Long count();
 
     /**
      * Count rows from entity
@@ -280,7 +280,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(boolean audit);
+    Long count(boolean audit);
 
     /**
      * Count rows from entity
@@ -288,7 +288,7 @@ public interface BaseDAO<T> {
      * @param clazz
      * @return
      */
-    public Long count(Class clazz);
+    Long count(Class clazz);
 
     /**
      * Count rows from entity
@@ -297,7 +297,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(Class clazz, boolean audit);
+    Long count(Class clazz, boolean audit);
 
     /**
      * Count rows from entity
@@ -305,7 +305,7 @@ public interface BaseDAO<T> {
      * @param parameters
      * @return
      */
-    public Long count(Map<String, Object> parameters);
+    Long count(Map<String, Object> parameters);
 
     /**
      * Count rows from entity
@@ -314,7 +314,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(Map<String, Object> parameters, boolean audit);
+    Long count(Map<String, Object> parameters, boolean audit);
 
     /**
      * Count rows from entity
@@ -322,7 +322,7 @@ public interface BaseDAO<T> {
      * @param restrictions
      * @return
      */
-    public Long count(List<Restriction> restrictions);
+    Long count(List<Restriction> restrictions);
 
     /**
      * Count rows from entity
@@ -331,7 +331,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(List<Restriction> restrictions, boolean audit);
+    Long count(List<Restriction> restrictions, boolean audit);
 
     /**
      * Count rows from entity
@@ -339,7 +339,7 @@ public interface BaseDAO<T> {
      * @param restriction
      * @return
      */
-    public Long count(Restriction restriction);
+    Long count(Restriction restriction);
 
     /**
      * Count rows from entity
@@ -348,7 +348,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(Restriction restriction, boolean audit);
+    Long count(Restriction restriction, boolean audit);
 
     /**
      * Count rows from entity
@@ -357,7 +357,7 @@ public interface BaseDAO<T> {
      * @param value
      * @return
      */
-    public Long count(String property, Object value);
+    Long count(String property, Object value);
 
     /**
      * Count rows from entity
@@ -367,7 +367,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(String property, Object value, boolean audit);
+    Long count(String property, Object value, boolean audit);
 
     /**
      * Count rows from entity
@@ -376,7 +376,7 @@ public interface BaseDAO<T> {
      * @param clazz
      * @return
      */
-    public Long count(List<Restriction> restrictions, Class clazz);
+    Long count(List<Restriction> restrictions, Class clazz);
 
     /**
      * Count rows from entity
@@ -386,7 +386,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(List<Restriction> restrictions, Class clazz, boolean audit);
+    Long count(List<Restriction> restrictions, Class clazz, boolean audit);
 
     /**
      * Count rows from entity
@@ -395,7 +395,7 @@ public interface BaseDAO<T> {
      * @param clazz
      * @return
      */
-    public Long count(Restriction restriction, Class clazz);
+    Long count(Restriction restriction, Class clazz);
 
     /**
      * Count rows from entity
@@ -405,7 +405,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Long count(Restriction restriction, Class clazz, boolean audit);
+    Long count(Restriction restriction, Class clazz, boolean audit);
 
     /**
      * Return a object from database by id
@@ -413,7 +413,7 @@ public interface BaseDAO<T> {
      * @param id Object id
      * @return
      */
-    public T find(Object id);
+    T find(Object id);
 
     /**
      * Return a object from database by id
@@ -422,7 +422,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public T find(Object id, boolean audit);
+    T find(Object id, boolean audit);
 
     /**
      * Return a object from database by id
@@ -431,7 +431,7 @@ public interface BaseDAO<T> {
      * @param id Object id
      * @return
      */
-    public T find(Class entityClass, Object id);
+    T find(Class entityClass, Object id);
 
     /**
      * Return a object from database by id
@@ -441,7 +441,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public T find(Class entityClass, Object id, boolean audit);
+    T find(Class entityClass, Object id, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -449,7 +449,7 @@ public interface BaseDAO<T> {
      * @param restrictions - Parameters to restrict query results
      * @return a unique object from query
      */
-    public T unique(Map<String, Object> restrictions);
+    T unique(Map<String, Object> restrictions);
 
     /**
      * Returns a unique object from query
@@ -458,7 +458,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return a unique object from query
      */
-    public T unique(Map<String, Object> restrictions, boolean audit);
+    T unique(Map<String, Object> restrictions, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -466,7 +466,7 @@ public interface BaseDAO<T> {
      * @param restrictions - Restrictions query results
      * @return a unique object from query
      */
-    public T unique(List<Restriction> restrictions);
+    T unique(List<Restriction> restrictions);
     
     /**
      * Returns a unique object from query
@@ -475,7 +475,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return a unique object from query
      */
-    public T unique(List<Restriction> restrictions,String order);
+    T unique(List<Restriction> restrictions,String order);
 
     /**
      * Returns a unique object from query
@@ -484,7 +484,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return a unique object from query
      */
-    public T unique(List<Restriction> restrictions, boolean audit);
+    T unique(List<Restriction> restrictions, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -493,7 +493,7 @@ public interface BaseDAO<T> {
      * @param clazz Entity Class
      * @return a unique object from query
      */
-    public T unique(List<Restriction> restrictions, Class clazz);
+    T unique(List<Restriction> restrictions, Class clazz);
 
     /**
      * Returns a unique object from query
@@ -503,7 +503,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return a unique object from query
      */
-    public T unique(List<Restriction> restrictions, Class clazz, boolean audit);
+    T unique(List<Restriction> restrictions, Class clazz, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -511,7 +511,7 @@ public interface BaseDAO<T> {
      * @param restriction - Restrictions query results
      * @return a unique object from query
      */
-    public T unique(Restriction restriction);
+    T unique(Restriction restriction);
 
     /**
      * Returns a unique object from query
@@ -520,7 +520,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return a unique object from query
      */
-    public T unique(Restriction restriction, boolean audit);
+    T unique(Restriction restriction, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -529,7 +529,7 @@ public interface BaseDAO<T> {
      * @param clazz Entity Class
      * @return a unique object from query
      */
-    public T unique(Restriction restriction, Class clazz);
+    T unique(Restriction restriction, Class clazz);
 
     /**
      * Returns a unique object from query
@@ -539,7 +539,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return a unique object from query
      */
-    public T unique(Restriction restriction, Class clazz, boolean audit);
+    T unique(Restriction restriction, Class clazz, boolean audit);
 
     /**
      * Returns a unique object from query
@@ -548,7 +548,7 @@ public interface BaseDAO<T> {
      * @param value value to restrict
      * @return
      */
-    public T unique(String property, Object value);
+    T unique(String property, Object value);
 
     /**
      * Returns a unique object from query
@@ -558,7 +558,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public T unique(String property, Object value, boolean audit);
+    T unique(String property, Object value, boolean audit);
 
     /**
      * Returns the value of especified attribute
@@ -567,7 +567,7 @@ public interface BaseDAO<T> {
      * @param id id from object
      * @return
      */
-    public Object findAttribute(String attributeName, Number id);
+    Object findAttribute(String attributeName, Number id);
 
     /**
      * Returns the value of especified attribute
@@ -577,7 +577,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Object findAttribute(String attributeName, Number id, boolean audit);
+    Object findAttribute(String attributeName, Number id, boolean audit);
 
     /**
      * Returns the value of especified attribute
@@ -586,7 +586,7 @@ public interface BaseDAO<T> {
      * @param object
      * @return
      */
-    public Object findAttribute(String attributeName, Object object);
+    Object findAttribute(String attributeName, Object object);
     /**
      * Returns the value of especified attribute
      *
@@ -595,7 +595,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Object findAttribute(String attributeName, Object object, boolean audit);
+    Object findAttribute(String attributeName, Object object, boolean audit);
 
     /**
      * List objects from entity
@@ -604,7 +604,7 @@ public interface BaseDAO<T> {
      * @param id
      * @return
      */
-    public Object findList(String attributeName, Number id);
+    Object findList(String attributeName, Number id);
     /**
      * List objects from entity
      *
@@ -613,7 +613,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Object findList(String attributeName, Number id, boolean audit);
+    Object findList(String attributeName, Number id, boolean audit);
 
     /**
      * List objects from entity
@@ -622,7 +622,7 @@ public interface BaseDAO<T> {
      * @param object
      * @return
      */
-    public Object findList(String attributeName, Object object);
+    Object findList(String attributeName, Object object);
     /**
      * List objects from entity
      *
@@ -631,7 +631,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public Object findList(String attributeName, Object object, boolean audit);
+    Object findList(String attributeName, Object object, boolean audit);
 
     /**
      * List objects from entity
@@ -639,7 +639,7 @@ public interface BaseDAO<T> {
      * @param parameters
      * @return
      */
-    public List<T> list(Map<String, Object> parameters);
+    List<T> list(Map<String, Object> parameters);
     /**
      * List objects from entity
      *
@@ -647,7 +647,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Map<String, Object> parameters, boolean audit);
+    List<T> list(Map<String, Object> parameters, boolean audit);
 
     /**
      * List objects from entity
@@ -656,7 +656,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(Map<String, Object> parameters, String order);
+    List<T> list(Map<String, Object> parameters, String order);
     /**
      * List objects from entity
      *
@@ -665,7 +665,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Map<String, Object> parameters, String order, boolean audit);
+    List<T> list(Map<String, Object> parameters, String order, boolean audit);
 
     /**
      * List objects from entity
@@ -673,7 +673,7 @@ public interface BaseDAO<T> {
      * @param restrictions
      * @return
      */
-    public List<T> list(List<Restriction> restrictions);
+    List<T> list(List<Restriction> restrictions);
     /**
      * List objects from entity
      *
@@ -681,7 +681,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(List<Restriction> restrictions, boolean audit);
+    List<T> list(List<Restriction> restrictions, boolean audit);
 
     /**
      * List objects from entity
@@ -689,7 +689,7 @@ public interface BaseDAO<T> {
      * @param restriction
      * @return
      */
-    public List<T> list(Restriction restriction);
+    List<T> list(Restriction restriction);
     /**
      * List objects from entity
      *
@@ -697,7 +697,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Restriction restriction, boolean audit);
+    List<T> list(Restriction restriction, boolean audit);
 
     /**
      * List objects from entity
@@ -706,7 +706,7 @@ public interface BaseDAO<T> {
      * @param restrictions
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions);
+    List<T> list(Class clazz, List<Restriction> restrictions);
     /**
      * List objects from entity
      *
@@ -714,7 +714,7 @@ public interface BaseDAO<T> {
      * @param restrictions
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, boolean audit);
+    List<T> list(Class clazz, List<Restriction> restrictions, boolean audit);
 
     /**
      * List objects from entity
@@ -723,7 +723,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(List<Restriction> restrictions, String order);
+    List<T> list(List<Restriction> restrictions, String order);
     /**
      * List objects from entity
      *
@@ -732,7 +732,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(List<Restriction> restrictions, String order, boolean audit);
+    List<T> list(List<Restriction> restrictions, String order, boolean audit);
 
     /**
      * List objects from entity
@@ -741,7 +741,7 @@ public interface BaseDAO<T> {
      * @param restriction
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction);
+    List<T> list(Class clazz, Restriction restriction);
 
     /**
      * List objects from entity
@@ -751,7 +751,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, boolean audit);
+    List<T> list(Class clazz, Restriction restriction, boolean audit);
 
     /**
      * List objects from entity
@@ -760,7 +760,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(Restriction restriction, String order);
+    List<T> list(Restriction restriction, String order);
     /**
      * List objects from entity
      *
@@ -769,7 +769,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Restriction restriction, String order, boolean audit);
+    List<T> list(Restriction restriction, String order, boolean audit);
 
     /**
      * List objects from entity
@@ -779,7 +779,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order);
+    List<T> list(Class clazz, List<Restriction> restrictions, String order);
     /**
      * List objects from entity
      *
@@ -789,7 +789,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order, boolean audit);
+    List<T> list(Class clazz, List<Restriction> restrictions, String order, boolean audit);
 
     /**
      * List objects from entity
@@ -799,7 +799,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order);
+    List<T> list(Class clazz, Restriction restriction, String order);
     /**
      * List objects from entity
      *
@@ -809,7 +809,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order, boolean audit);
+    List<T> list(Class clazz, Restriction restriction, String order, boolean audit);
 
     /**
      * List objects from entity
@@ -820,7 +820,7 @@ public interface BaseDAO<T> {
      * @param maxResults
      * @return
      */
-    public List<T> list(Map<String, Object> args, String order, Integer firstResult, Integer maxResults);
+    List<T> list(Map<String, Object> args, String order, Integer firstResult, Integer maxResults);
     /**
      * List objects from entity
      *
@@ -831,7 +831,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Map<String, Object> args, String order, Integer firstResult, Integer maxResults, boolean audit);
+    List<T> list(Map<String, Object> args, String order, Integer firstResult, Integer maxResults, boolean audit);
 
     /**
      * List objects from entity
@@ -843,7 +843,7 @@ public interface BaseDAO<T> {
      * @param maxResults
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults);
+    List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults);
     /**
      * List objects from entity
      *
@@ -855,7 +855,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, boolean audit);
+    List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, boolean audit);
 
     /**
      * List objects from entity
@@ -868,7 +868,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes);
+    List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes);
     /**
      * List objects from entity
      *
@@ -881,7 +881,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit);
+    List<T> list(Class clazz, Restriction restriction, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit);
 
     /**
      * List objects from entity
@@ -892,7 +892,7 @@ public interface BaseDAO<T> {
      * @param maxResults
      * @return
      */
-    public List<T> list(Restriction restrictions, String order, Integer firstResult, Integer maxResults);
+    List<T> list(Restriction restrictions, String order, Integer firstResult, Integer maxResults);
     /**
      * List objects from entity
      *
@@ -903,7 +903,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Restriction restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
+    List<T> list(Restriction restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
 
     /**
      * List objects from entity
@@ -915,7 +915,7 @@ public interface BaseDAO<T> {
      * @param maxResults
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
+    List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
     /**
      * List objects from entity
      *
@@ -927,20 +927,8 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
+    List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
 
-    /**
-     * List objects from entity
-     *
-     * @param clazz
-     * @param restrictions
-     * @param order
-     * @param firstResult
-     * @param maxResults
-     * @param attributes
-     * @return
-     */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes);
     /**
      * List objects from entity
      *
@@ -950,10 +938,22 @@ public interface BaseDAO<T> {
      * @param firstResult
      * @param maxResults
      * @param attributes
+     * @return
+     */
+    List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes);
+    /**
+     * List objects from entity
+     *
+     * @param clazz
+     * @param restrictions
+     * @param order
+     * @param firstResult
+     * @param maxResults
+     * @param attributes
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit);
+    List<T> list(Class clazz, List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, String attributes, boolean audit);
 
     /**
      * List objects from entity
@@ -964,7 +964,7 @@ public interface BaseDAO<T> {
      * @param maxResults
      * @return
      */
-    public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
+    List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults);
     /**
      * List objects from entity
      *
@@ -975,7 +975,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
+    List<T> list(List<Restriction> restrictions, String order, Integer firstResult, Integer maxResults, boolean audit);
 
     /**
      * List objects from entity
@@ -984,7 +984,7 @@ public interface BaseDAO<T> {
      * @param value
      * @return
      */
-    public List<T> list(String property, Object value);
+    List<T> list(String property, Object value);
     /**
      * List objects from entity
      *
@@ -993,7 +993,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(String property, Object value, boolean audit);
+    List<T> list(String property, Object value, boolean audit);
 
     /**
      * List objects from entity
@@ -1003,7 +1003,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> list(String property, Object value, String order);
+    List<T> list(String property, Object value, String order);
     /**
      * List objects from entity
      *
@@ -1013,7 +1013,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> list(String property, Object value, String order, boolean audit);
+    List<T> list(String property, Object value, String order, boolean audit);
 
     /**
      * Return a initialized object, if object is already initialized returns own
@@ -1023,7 +1023,7 @@ public interface BaseDAO<T> {
      * @param object
      * @return
      */
-    public <U> U getInitialized(U object);
+    <U> U getInitialized(U object);
 
     /**
      *
@@ -1032,7 +1032,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> listAttributes(String attributes);
+    List<T> listAttributes(String attributes);
     /**
      *
      * List objects from entity (only the specified attributes)
@@ -1041,7 +1041,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(String attributes, boolean audit);
+    List<T> listAttributes(String attributes, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1050,7 +1050,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAttributes(String attributes, String order);
+    List<T> listAttributes(String attributes, String order);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1059,7 +1059,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(String attributes, String order, boolean audit);
+    List<T> listAttributes(String attributes, String order, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1069,7 +1069,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> listAttributes(String property, Object value, String attributes);
+    List<T> listAttributes(String property, Object value, String attributes);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1079,7 +1079,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(String property, Object value, String attributes, boolean audit);
+    List<T> listAttributes(String property, Object value, String attributes, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1090,7 +1090,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAttributes(String property, Object value, String attributes, String order);
+    List<T> listAttributes(String property, Object value, String attributes, String order);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1101,7 +1101,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(String property, Object value, String attributes, String order, boolean audit);
+    List<T> listAttributes(String property, Object value, String attributes, String order, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1111,7 +1111,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAttributes(Map<String, Object> args, String attributes, String order);
+    List<T> listAttributes(Map<String, Object> args, String attributes, String order);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1121,7 +1121,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(Map<String, Object> args, String attributes, String order, boolean audit);
+    List<T> listAttributes(Map<String, Object> args, String attributes, String order, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1130,7 +1130,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> listAttributes(Map<String, Object> args, String attributes);
+    List<T> listAttributes(Map<String, Object> args, String attributes);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1139,7 +1139,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(Map<String, Object> args, String attributes, boolean audit);
+    List<T> listAttributes(Map<String, Object> args, String attributes, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1149,7 +1149,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order);
+    List<T> listAttributes(List<Restriction> restrictions, String attributes, String order);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1159,7 +1159,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(List<Restriction> restrictions, String attributes, String order, boolean audit);
+    List<T> listAttributes(List<Restriction> restrictions, String attributes, String order, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1168,7 +1168,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> listAttributes(List<Restriction> restrictions, String attributes);
+    List<T> listAttributes(List<Restriction> restrictions, String attributes);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1177,7 +1177,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(List<Restriction> restrictions, String attributes, boolean audit);
+    List<T> listAttributes(List<Restriction> restrictions, String attributes, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1187,7 +1187,7 @@ public interface BaseDAO<T> {
      * @param order
      * @return
      */
-    public List<T> listAttributes(Restriction restriction, String attributes, String order);
+    List<T> listAttributes(Restriction restriction, String attributes, String order);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1197,7 +1197,7 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(Restriction restriction, String attributes, String order, boolean audit);
+    List<T> listAttributes(Restriction restriction, String attributes, String order, boolean audit);
 
     /**
      * List objects from entity (only the specified attributes)
@@ -1206,7 +1206,7 @@ public interface BaseDAO<T> {
      * @param attributes
      * @return
      */
-    public List<T> listAttributes(Restriction restriction, String attributes);
+    List<T> listAttributes(Restriction restriction, String attributes);
     /**
      * List objects from entity (only the specified attributes)
      *
@@ -1215,5 +1215,5 @@ public interface BaseDAO<T> {
      * @param audit Enable audit feature
      * @return
      */
-    public List<T> listAttributes(Restriction restriction, String attributes, boolean audit);
+    List<T> listAttributes(Restriction restriction, String attributes, boolean audit);
 }

@@ -8,6 +8,7 @@ import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.utils.EntityUtils;
 import com.xpert.utils.StringUtils;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -16,7 +17,9 @@ import org.apache.commons.beanutils.PropertyUtils;
  *
  * @author ayslan
  */
-public class UniqueFieldsValidation {
+public class UniqueFieldsValidation implements Serializable {
+
+    private static final long serialVersionUID = -2318436228042260358L;
 
     public static void validateUniqueFields(UniqueField uniqueField, Object object, BaseDAO baseDAO) throws UniqueFieldException {
         if (uniqueField != null) {

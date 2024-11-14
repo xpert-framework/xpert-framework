@@ -3,6 +3,7 @@ package com.xpert.i18n;
 import com.xpert.core.conversion.NumberUtils;
 import com.xpert.utils.DateUtils;
 import com.xpert.utils.StringUtils;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +19,9 @@ import java.util.regex.Pattern;
  *
  * @author ayslan
  */
-public class ResourceBundleUtils {
+public class ResourceBundleUtils implements Serializable {
 
+    private static final long serialVersionUID = -388525140092590339L;
     private static final Logger logger = Logger.getLogger(ResourceBundleUtils.class.getName());
     public static final Locale PT_BR = new Locale("pt", "BR");
     private static final Pattern PATTERN_FIND_NUMBER = Pattern.compile("\\{[0-9]\\}");

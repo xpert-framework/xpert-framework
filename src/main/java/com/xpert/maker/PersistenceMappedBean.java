@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +23,9 @@ import java.util.logging.Logger;
  *
  * @author ayslan
  */
-public class PersistenceMappedBean {
+public class PersistenceMappedBean implements Serializable {
 
+    private static final long serialVersionUID = 3106507930332270388L;
     private static final Logger logger = Logger.getLogger(PersistenceMappedBean.class.getName());
     private EntityManager entityManager;
 

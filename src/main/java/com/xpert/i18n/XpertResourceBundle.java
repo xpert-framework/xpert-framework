@@ -1,13 +1,16 @@
 package com.xpert.i18n;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
  *
  * @author ayslan
  */
-public class XpertResourceBundle {
+public class XpertResourceBundle implements Serializable {
 
+    private static final long serialVersionUID = 2714531149256469172L;
+    
     public static final String CORE_BUNDLE_PATH = "com.xpert.messages";
 
     public static String get(String key) {

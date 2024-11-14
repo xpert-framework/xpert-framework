@@ -1,10 +1,13 @@
 package com.xpert.core.validation;
 
 import com.xpert.utils.Mod11;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Validation {
+public class Validation implements Serializable {
+
+    private static final long serialVersionUID = 4743267133085110026L;
 
     public static boolean validateCPF(String cpf) {
 

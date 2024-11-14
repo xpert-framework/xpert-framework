@@ -4,6 +4,7 @@ import com.xpert.core.conversion.Mask;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
@@ -11,7 +12,9 @@ import jakarta.faces.convert.Converter;
  *
  * @author ayslan
  */
-public class CpfCnpjConverter implements Converter {
+public class CpfCnpjConverter implements Converter, Serializable {
+
+    private static final long serialVersionUID = 1957481896264083424L;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

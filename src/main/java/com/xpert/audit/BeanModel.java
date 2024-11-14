@@ -1,10 +1,14 @@
 package com.xpert.audit;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ayslan
  */
-public class BeanModel {
+public class BeanModel implements Serializable {
+
+    private static final long serialVersionUID = 5315076620377463642L;
     
     private Object id;
     private String entity;

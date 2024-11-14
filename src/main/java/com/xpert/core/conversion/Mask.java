@@ -1,7 +1,11 @@
 package com.xpert.core.conversion;
 
-public class Mask {
+import java.io.Serializable;
 
+public class Mask implements Serializable {
+
+    private static final long serialVersionUID = 2086241681354671181L;
+    
     public static final int CPF_LENGTH = 11;
     public static final int CNPJ_LENGTH = 14;
 

@@ -1,5 +1,6 @@
 package com.xpert.core.validation;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -7,7 +8,9 @@ import java.util.Date;
  *
  * @author arnaldo
  */
-public class DateValidation {
+public class DateValidation implements Serializable {
+
+    private static final long serialVersionUID = -8141147905148517811L;
 
     public static boolean validateDateRange(Date dataStart, Date dataEnd) {
 

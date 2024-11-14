@@ -4,6 +4,7 @@ import com.xpert.i18n.XpertResourceBundle;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
@@ -11,7 +12,9 @@ import jakarta.faces.convert.Converter;
  *
  * @author ayslan
  */
-public class YesNoConverter implements Converter {
+public class YesNoConverter implements Converter, Serializable {
+
+    private static final long serialVersionUID = 1139238986142314122L;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

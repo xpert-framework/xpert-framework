@@ -13,13 +13,16 @@ import jakarta.faces.context.FacesContext;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 
 /**
  * A generic bean to do the login in security control
  *
  * @author ayslan
  */
-public abstract class SecurityLoginBean {
+public abstract class SecurityLoginBean implements Serializable {
+
+    private static final long serialVersionUID = 6339791538163582240L;
 
     private String userLogin;
     private String userPassword;

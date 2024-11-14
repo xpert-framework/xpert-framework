@@ -2,6 +2,7 @@ package com.xpert.faces.component.group.model;
 
 import com.xpert.faces.component.api.SortOrder;
 import com.xpert.utils.CollectionsUtils;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,7 +20,9 @@ import org.apache.commons.beanutils.PropertyUtils;
  * @param <K> Key Type
  * @param <V> Value Type
  */
-public class GroupModel<K, V> {
+public class GroupModel<K, V> implements Serializable {
+
+    private static final long serialVersionUID = 9009437646145537151L;
 
     private String groupBy;
     private String itemSortField;

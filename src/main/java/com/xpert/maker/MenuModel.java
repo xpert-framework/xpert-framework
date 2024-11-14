@@ -1,10 +1,14 @@
 package com.xpert.maker;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ayslan
  */
-public class MenuModel {
+public class MenuModel implements Serializable {
+
+    private static final long serialVersionUID = -4983816238882410695L;
 
     private String label;
     private String url;

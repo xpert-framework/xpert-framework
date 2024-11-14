@@ -1,10 +1,14 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author arnaldo
  */
-public class Mod10 {
+public class Mod10 implements Serializable {
+
+    private static final long serialVersionUID = 9163662740535518016L;
 
     /**
      * Calcular um dígito verificador a partir de uma sequência de números

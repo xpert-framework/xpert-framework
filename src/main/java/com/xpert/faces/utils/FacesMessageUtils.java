@@ -7,13 +7,16 @@ import com.xpert.i18n.XpertResourceBundle;
 import com.xpert.i18n.I18N;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  * Util class to show FacesMessages
  *
  * @author ayslan
  */
-public class FacesMessageUtils {
+public class FacesMessageUtils implements Serializable {
+
+    private static final long serialVersionUID = 7763587829950376886L;
 
     /**
      * Verify if FacesContext has message using getMessageList(): {@code FacesContext.getCurrentInstance().isEmpty()

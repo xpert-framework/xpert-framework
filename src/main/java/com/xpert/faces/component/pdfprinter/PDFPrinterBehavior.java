@@ -4,6 +4,7 @@ import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.behavior.ClientBehaviorBase;
 import jakarta.faces.component.behavior.ClientBehaviorContext;
+import java.io.Serializable;
 
 /**
  *
@@ -13,7 +14,9 @@ import jakarta.faces.component.behavior.ClientBehaviorContext;
     @ResourceDependency(library = "xpert", name = "scripts/core.js"),
     @ResourceDependency(library = "xpert", name = "css/style.css")
 })
-public class PDFPrinterBehavior extends ClientBehaviorBase {
+public class PDFPrinterBehavior extends ClientBehaviorBase implements Serializable {
+
+    private static final long serialVersionUID = 5575809206021508937L;
 
     private String target;
 

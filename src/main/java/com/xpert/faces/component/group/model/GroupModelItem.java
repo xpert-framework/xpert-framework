@@ -1,5 +1,6 @@
 package com.xpert.faces.component.group.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import java.util.List;
  * @param <K> Key Type
  * @param <V> Value Type
  */
-public class GroupModelItem<K, V> {
+public class GroupModelItem<K, V> implements Serializable {
+
+    private static final long serialVersionUID = 5941918850830301563L;
 
     private K key;
     private List<V> value;

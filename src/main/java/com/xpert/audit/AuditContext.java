@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  * Represents que current context of audit, the "audits" form a object must be
@@ -14,8 +15,10 @@ import jakarta.faces.context.FacesContext;
  *
  * @author ayslan
  */
-public class AuditContext {
+public class AuditContext implements Serializable {
 
+    private static final long serialVersionUID = 4309264429827950090L;
+    
     private static final String INSTANCE_KEY = AuditContext.class.getName();
 
     private boolean active = false;

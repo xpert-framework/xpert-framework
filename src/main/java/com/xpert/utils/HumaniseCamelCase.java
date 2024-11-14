@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -7,8 +8,10 @@ import java.util.regex.Matcher;
  * 
  * @author ayslan
  */
-public class HumaniseCamelCase {
+public class HumaniseCamelCase implements Serializable {
 
+    private static final long serialVersionUID = -5492922319590049516L;
+    
     private static final String CAMEL_CASE_PATTERN = "([A-Z]|[a-z])[a-z]*";
     private String humanisedString;
     private String acronym;

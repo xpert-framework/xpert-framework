@@ -26,6 +26,8 @@ import jakarta.persistence.UniqueConstraint;
  */
 public class UniqueFields extends ArrayList<UniqueField> {
 
+    private static final long serialVersionUID = 4765766333852945890L;
+    
     private static final Logger LOG = Logger.getLogger(UniqueFields.class.getName());
 
     private static final Map<Class, Set<String[]>> UNIQUE_CONSTRAINT_CACHE = new HashMap<>();

@@ -9,6 +9,7 @@ import jakarta.el.ValueExpression;
 import jakarta.faces.component.EditableValueHolder;
 import jakarta.faces.component.UIComponent;
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
  * This class is a java bean with some values to be used in restrictions
@@ -16,7 +17,9 @@ import jakarta.persistence.TemporalType;
  *
  * @author ayslan
  */
-public class RestrictionComponent {
+public class RestrictionComponent implements Serializable {
+
+    private static final long serialVersionUID = -5748538755874358960L;
 
     private UIComponent component;
     private ValueExpression addTo;

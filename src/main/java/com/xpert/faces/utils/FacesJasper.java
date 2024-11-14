@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.faces.context.FacesContext;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -24,8 +25,10 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
  *
  * @author ayslan
  */
-public class FacesJasper {
+public class FacesJasper implements Serializable {
 
+    private static final long serialVersionUID = -7072755142916377754L;
+    
     private static final Logger logger = Logger.getLogger(FacesJasper.class.getName());
 
     public static JasperPrint fillReport(List dataSource, Map parameters, String path) throws JRException {

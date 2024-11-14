@@ -1,6 +1,7 @@
 package com.xpert.maker;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -15,10 +16,13 @@ import java.util.zip.ZipInputStream;
  *
  * @author ayslan
  */
-public class ReadClass {
+public class ReadClass implements Serializable {
+
+    private static final long serialVersionUID = -781043070554361719L;
 
     private ReadClass() {
     }
+    
     private static final Logger logger = Logger.getLogger(ReadClass.class.getName());
 
     /**

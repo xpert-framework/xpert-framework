@@ -12,7 +12,7 @@ public enum QueryAuditingType {
     NATIVE_QUERY("native_query"),
     OTHER("other");
 
-    private String description;
+    private final String description;
 
     QueryAuditingType(String description) {
         this.description = description;

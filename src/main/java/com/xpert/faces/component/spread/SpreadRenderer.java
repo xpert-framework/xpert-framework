@@ -5,12 +5,15 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class SpreadRenderer extends Renderer {
+public class SpreadRenderer extends Renderer implements Serializable {
+
+    private static final long serialVersionUID = -786741614075575914L;
 
     @Override
     public void encodeEnd(final FacesContext context, final UIComponent component) throws IOException {

@@ -1,12 +1,15 @@
 package com.xpert.persistence.query;
 
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class QueryParameter {
+public class QueryParameter implements Serializable {
+
+    private static final long serialVersionUID = -7927155825876812948L;
 
     private Integer position;
     private String property;

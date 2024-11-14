@@ -8,13 +8,16 @@ import java.util.Map;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 /**
  * Class to control the user session
  *
  * @author ayslan
  */
-public class SecuritySessionManager {
+public class SecuritySessionManager implements Serializable {
+
+    private static final long serialVersionUID = -6950447637460816712L;
 
     /**
      * Clears the current roles in session

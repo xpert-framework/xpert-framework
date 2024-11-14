@@ -7,8 +7,11 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
+import java.io.Serializable;
 
-public class CnpjValidator implements Validator {
+public class CnpjValidator implements Validator, Serializable {
+
+    private static final long serialVersionUID = -1781746398966326747L;
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {

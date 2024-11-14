@@ -13,6 +13,7 @@ import jakarta.faces.component.UINamingContainer;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.Renderer;
+import java.io.Serializable;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.primefaces.component.api.UIColumn;
 import org.primefaces.component.column.Column;
@@ -22,7 +23,9 @@ import org.primefaces.component.datatable.DataTable;
  *
  * @author ayslan
  */
-public class RestorableFilterRenderer extends Renderer {
+public class RestorableFilterRenderer extends Renderer implements Serializable {
+
+    private static final long serialVersionUID = 7426645515457421376L;
 
     @Override
     public void encodeBegin(final FacesContext context, final UIComponent component) throws IOException {

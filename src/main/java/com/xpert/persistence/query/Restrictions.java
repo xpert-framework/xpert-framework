@@ -12,6 +12,8 @@ import jakarta.persistence.TemporalType;
  */
 public class Restrictions extends ArrayList<Restriction> {
 
+    private static final long serialVersionUID = -5598271515194464887L;
+
     /**
      * Add a RestrictionType.MEMBER_OF (value 'member of' property)
      *

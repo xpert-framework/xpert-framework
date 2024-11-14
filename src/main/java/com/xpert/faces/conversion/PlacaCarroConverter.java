@@ -4,6 +4,7 @@ import com.xpert.core.conversion.Mask;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
@@ -12,7 +13,9 @@ import jakarta.faces.convert.Converter;
  *
  * @author Arnaldo
  */
-public class PlacaCarroConverter implements Converter {
+public class PlacaCarroConverter implements Converter, Serializable {
+
+    private static final long serialVersionUID = 4829444583213397093L;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

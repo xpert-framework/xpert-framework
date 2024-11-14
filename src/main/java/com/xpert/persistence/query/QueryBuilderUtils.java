@@ -19,13 +19,15 @@ import static com.xpert.persistence.query.Sql.count;
 import static com.xpert.persistence.query.Sql.max;
 import static com.xpert.persistence.query.Sql.min;
 import static com.xpert.persistence.query.Sql.sum;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslanms
  */
-public class QueryBuilderUtils {
+public class QueryBuilderUtils implements Serializable {
 
+    private static final long serialVersionUID = 3070806098627734336L;
     private static final Logger logger = Logger.getLogger(QueryBuilderUtils.class.getName());
 
     /**

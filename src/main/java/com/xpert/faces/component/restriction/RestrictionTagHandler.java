@@ -18,6 +18,7 @@ import jakarta.faces.view.facelets.TagAttribute;
 import jakarta.faces.view.facelets.TagConfig;
 import jakarta.faces.view.facelets.TagHandler;
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
  * TagHandler for the component "x:restriction".
@@ -25,7 +26,9 @@ import jakarta.persistence.TemporalType;
  *
  * @author ayslan
  */
-public class RestrictionTagHandler extends TagHandler {
+public class RestrictionTagHandler extends TagHandler implements Serializable {
+
+    private static final long serialVersionUID = 6388414699268743171L;
 
     private final TagAttribute addTo;
     private final TagAttribute property;

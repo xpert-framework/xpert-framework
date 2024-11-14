@@ -1,5 +1,6 @@
 package com.xpert.faces.component.pdfprinter;
 
+import java.io.Serializable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,7 +18,9 @@ import org.xhtmlrenderer.render.BlockBox;
  *
  * @author ayslan
  */
-public class SVGReplacedElementFactory extends ITextReplacedElementFactory {
+public class SVGReplacedElementFactory extends ITextReplacedElementFactory implements Serializable {
+
+    private static final long serialVersionUID = 3150795441911675209L;
 
     public SVGReplacedElementFactory(ITextOutputDevice outputDevice) {
         super(outputDevice);

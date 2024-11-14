@@ -27,13 +27,16 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.Serializable;
 
 /**
  * Collection of utility methods for the JSF API
  *
  * @author ayslan
  */
-public class FacesUtils {
+public class FacesUtils implements Serializable {
+
+    private static final long serialVersionUID = 7581728545622507467L;
 
     private FacesUtils() {
     }

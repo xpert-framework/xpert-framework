@@ -8,6 +8,7 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 import org.hibernate.LazyInitializationException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
@@ -24,8 +25,10 @@ import java.util.regex.Pattern;
  *
  * @author ayslan
  */
-public class InitializerBean {
+public class InitializerBean implements Serializable {
 
+    private static final long serialVersionUID = 810845198330364145L;
+    
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(InitializerBean.class.getName());
     private Map<ClassIdentifier, Object> cache = new HashMap<>();

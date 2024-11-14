@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class StackException extends Exception {
 
+    private static final long serialVersionUID = 8339661199069427559L;
+
     private Object[] parameters;
     private List<StackException> exceptions;
 

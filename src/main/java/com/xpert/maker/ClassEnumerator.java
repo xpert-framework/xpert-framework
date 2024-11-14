@@ -2,6 +2,7 @@ package com.xpert.maker;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -14,7 +15,9 @@ import java.util.jar.JarFile;
  *
  * @author ayslan
  */
-public class ClassEnumerator {
+public class ClassEnumerator implements Serializable {
+
+    private static final long serialVersionUID = 7195422249326118121L;
 
     private static void log(String msg) {
         //System.out.println("ClassDiscovery: " + msg);

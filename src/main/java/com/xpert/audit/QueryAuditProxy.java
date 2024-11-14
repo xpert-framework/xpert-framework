@@ -3,12 +3,15 @@ package com.xpert.audit;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslanms
  */
-public class QueryAuditProxy implements InvocationHandler {
+public class QueryAuditProxy implements InvocationHandler, Serializable {
+
+    private static final long serialVersionUID = -4534360606513200214L;
 
     private final QueryAuditConfig queryAuditConfig;
 

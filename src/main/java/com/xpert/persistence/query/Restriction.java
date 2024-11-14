@@ -4,12 +4,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class Restriction implements Comparable<Restriction> {
+public class Restriction implements Comparable<Restriction>, Serializable {
+
+    private static final long serialVersionUID = 2473423112298203469L;
 
     private String property;
     private String castAs;

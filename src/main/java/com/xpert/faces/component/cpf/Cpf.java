@@ -2,6 +2,7 @@ package com.xpert.faces.component.cpf;
 
 import com.xpert.faces.conversion.CpfConverter;
 import com.xpert.faces.validation.CpfValidator;
+import java.io.Serializable;
 import org.primefaces.component.inputmask.InputMask;
 
 /**
@@ -10,8 +11,10 @@ import org.primefaces.component.inputmask.InputMask;
  *
  * @author ayslan
  */
-public class Cpf extends InputMask {
+public class Cpf extends InputMask implements Serializable {
 
+    private static final long serialVersionUID = 5011947516645659472L;
+    
     private static final String MASK = "999.999.999-99";
 
     public Cpf() {

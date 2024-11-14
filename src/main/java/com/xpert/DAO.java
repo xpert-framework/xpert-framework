@@ -2,6 +2,7 @@ package com.xpert;
 
 import com.xpert.persistence.dao.BaseDAOImpl;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 
 /**
  * A generic BaseDAOImpl implementation.
@@ -9,7 +10,9 @@ import jakarta.persistence.EntityManager;
  * @author ayslan
  * @param <T> Type of DAO
  */
-public class DAO<T> extends BaseDAOImpl<T> {
+public class DAO<T> extends BaseDAOImpl<T> implements Serializable {
+
+    private static final long serialVersionUID = -8752822656925073676L;
 
     private EntityManager entityManager;
 
@@ -40,6 +43,5 @@ public class DAO<T> extends BaseDAOImpl<T> {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    
     
 }

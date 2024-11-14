@@ -8,13 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.logging.Logger;
 import jakarta.faces.context.FacesContext;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class I18N {
+public class I18N implements Serializable {
 
+    private static final long serialVersionUID = 2824813099968404478L;
     private static final Logger logger = Logger.getLogger(I18N.class.getName());
 
     public static String get(String key) {

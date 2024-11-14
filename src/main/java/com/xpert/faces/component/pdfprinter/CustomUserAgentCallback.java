@@ -3,6 +3,7 @@ package com.xpert.faces.component.pdfprinter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -16,8 +17,10 @@ import org.xhtmlrenderer.resource.CSSResource;
  *
  * @author ayslan
  */
-public class CustomUserAgentCallback extends ITextUserAgent  {
+public class CustomUserAgentCallback extends ITextUserAgent implements Serializable {
 
+    private static final long serialVersionUID = 2102336950486828764L;
+    
     private static final Logger logger = Logger.getLogger(CustomUserAgentCallback.class.getName());
 
     private static final Map<String, byte[]> CACHE = new HashMap<>();

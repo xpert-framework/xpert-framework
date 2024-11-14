@@ -24,6 +24,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Properties;
 
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
@@ -34,16 +35,15 @@ import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
  * http://www.javaxt.com/Tutorials/Windows/How_to_Authenticate_Users_with_Active_Directory
  *
  */
-public class ActiveDirectory {
+public class ActiveDirectory implements Serializable {
 
+    private static final long serialVersionUID = -3214628846047306997L;
+    
     private static final String[] userAttributes = {
         "distinguishedName", "cn", "name", "uid",
         "sn", "givenname", "memberOf", "samaccountname",
         "userPrincipalName"
     };
-
-    private ActiveDirectory() {
-    }
 
     /**
      * Used to authenticate a user given a username/password. Domain name is

@@ -23,6 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -45,7 +46,9 @@ import org.hibernate.proxy.HibernateProxy;
  *
  * @author ayslan
  */
-public class Audit {
+public class Audit implements Serializable {
+    
+    private static final long serialVersionUID = 1095044675907216298L;
 
     private static final Logger logger = Logger.getLogger(Audit.class.getName());
     private static final String[] EXCLUDED_FIELDS = {"notifyAll", "notify", "getClass", "wait", "hashCode", "toString", "equals"};

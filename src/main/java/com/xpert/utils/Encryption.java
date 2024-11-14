@@ -1,6 +1,7 @@
 package com.xpert.utils;
 
 import com.xpert.security.EncryptionType;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -9,7 +10,9 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author ayslan
  */
-public class Encryption {
+public class Encryption implements Serializable {
+
+    private static final long serialVersionUID = -8043153141256188452L;
 
     /**
      * Return a string based on java MessageDigest API

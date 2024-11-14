@@ -7,16 +7,19 @@ import java.util.logging.Logger;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class EntityConverterList implements Converter {
+public class EntityConverterList implements Converter, Serializable {
 
+    private static final long serialVersionUID = 345697586099287925L;
     private static final Logger logger = Logger.getLogger(EntityConverterList.class.getName());
     private static final boolean DEBUG = false;
 
+    @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
         if (value == null || value.isEmpty()) {
@@ -49,6 +52,7 @@ public class EntityConverterList implements Converter {
         return null;
     }
 
+    @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         if (value != null) {
             Object id = EntityUtils.getId(value);

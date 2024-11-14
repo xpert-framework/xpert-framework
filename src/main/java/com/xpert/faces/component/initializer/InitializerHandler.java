@@ -13,12 +13,15 @@ import jakarta.faces.view.facelets.TagAttribute;
 import jakarta.faces.view.facelets.TagConfig;
 import jakarta.faces.view.facelets.TagHandler;
 import jakarta.persistence.EntityManager;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslan
  */
-public class InitializerHandler extends TagHandler {
+public class InitializerHandler extends TagHandler implements Serializable {
+
+    private static final long serialVersionUID = -7429182460344800900L;
 
     protected final TagAttribute property;
     protected final TagAttribute value;

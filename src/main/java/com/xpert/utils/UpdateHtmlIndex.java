@@ -3,6 +3,7 @@ package com.xpert.utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -14,8 +15,10 @@ import java.util.logging.Logger;
  *
  * @author ayslan
  */
-public class UpdateHtmlIndex {
+public class UpdateHtmlIndex implements Serializable {
 
+    private static final long serialVersionUID = -4174290335884616304L;
+    
     private static final Logger logger = Logger.getLogger(UpdateHtmlIndex.class.getName());
 
     public static void main(String[] args) throws FileNotFoundException {

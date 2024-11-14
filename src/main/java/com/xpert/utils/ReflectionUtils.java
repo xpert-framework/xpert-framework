@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ import java.util.logging.Logger;
  *
  * @author ayslan
  */
-public class ReflectionUtils {
+public class ReflectionUtils implements Serializable {
 
+    private static final long serialVersionUID = -7860341095754473312L;
+    
     private static final Logger logger = Logger.getLogger(ReflectionUtils.class.getName());
     /**
      * the possible prefixes for read method

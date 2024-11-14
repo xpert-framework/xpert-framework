@@ -4,8 +4,8 @@ import com.xpert.utils.HumaniseCamelCase;
 import com.xpert.utils.StringUtils;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 import jakarta.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Class to create acess control generation. The xpert-framework base project
@@ -13,9 +13,9 @@ import jakarta.persistence.Embeddable;
  *
  * @author ayslan
  */
-public class SecurityCRUDGenerator {
+public class SecurityCRUDGenerator implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(SecurityCRUDGenerator.class.getName());
+    private static final long serialVersionUID = -6252444417173326626L;
 
     public static String create(List<Class> classes, String view) {
         StringBuilder builder = new StringBuilder();

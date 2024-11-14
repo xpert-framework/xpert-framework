@@ -7,6 +7,7 @@ import com.xpert.persistence.exception.DeleteException;
 import com.xpert.core.validation.UniqueField;
 import com.xpert.core.validation.UniqueFieldsValidation;
 import com.xpert.persistence.utils.EntityUtils;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,9 @@ import java.util.List;
  * @author ayslan
  * @param <T>
  */
-public abstract class AbstractBusinessObject<T> {
+public abstract class AbstractBusinessObject<T> implements Serializable {
+
+    private static final long serialVersionUID = 4726748434430529064L;
 
     /**
      * @return The BusinessObject BaseDAO

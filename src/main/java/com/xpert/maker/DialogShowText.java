@@ -12,6 +12,8 @@ import javax.swing.JTextArea;
  */
 public class DialogShowText extends javax.swing.JDialog {
 
+    private static final long serialVersionUID = -5480331442751862049L;
+    
     private static final Color BLUE = new Color(66, 139, 202);
 
     /**

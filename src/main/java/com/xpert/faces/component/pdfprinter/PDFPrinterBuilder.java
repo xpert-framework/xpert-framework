@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,8 +25,10 @@ import org.xml.sax.SAXException;
  *
  * @author ayslan
  */
-public class PDFPrinterBuilder {
+public class PDFPrinterBuilder implements Serializable {
 
+    private static final long serialVersionUID = 6689204338407009435L;
+    
     public static final boolean DEBUG = false;
     private static final String EMPTY_HTML = "<html><head></head><body></body></html>";
     private static final Logger logger = Logger.getLogger(PDFPrinterBuilder.class.getName());

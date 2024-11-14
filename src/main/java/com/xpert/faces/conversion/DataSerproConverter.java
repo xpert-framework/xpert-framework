@@ -1,12 +1,12 @@
 package com.xpert.faces.conversion;
 
-import com.xpert.i18n.XpertResourceBundle;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import java.io.Serializable;
 
 /**
  *
@@ -14,7 +14,9 @@ import jakarta.faces.convert.Converter;
  *
  * @author ayslan
  */
-public class DataSerproConverter implements Converter {
+public class DataSerproConverter implements Converter, Serializable {
+
+    private static final long serialVersionUID = 9019795991481631749L;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

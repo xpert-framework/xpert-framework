@@ -1,5 +1,6 @@
 package com.xpert.faces.primefaces;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.primefaces.PrimeFaces;
@@ -10,7 +11,9 @@ import org.primefaces.context.PrimeRequestContext;
  *
  * @author ayslan
  */
-public class PrimeFacesUtils {
+public class PrimeFacesUtils implements Serializable {
+
+    private static final long serialVersionUID = -3199960848303235681L;
 
     public static String normalizeWidgetVar(String dialog) {
         return "PF('" + dialog + "')";

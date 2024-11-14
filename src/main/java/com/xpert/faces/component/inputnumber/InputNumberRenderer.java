@@ -6,6 +6,7 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.convert.NumberConverter;
+import java.io.Serializable;
 import org.primefaces.component.inputtext.InputTextRenderer;
 
 /**
@@ -13,9 +14,9 @@ import org.primefaces.component.inputtext.InputTextRenderer;
  *
  * @author ayslan
  */
-public class InputNumberRenderer extends InputTextRenderer {
+public class InputNumberRenderer extends InputTextRenderer implements Serializable {
 
-    
+    private static final long serialVersionUID = -1045976140268158887L;
     
     @Override
     public void encodeEnd(final FacesContext context, final UIComponent component) throws IOException {

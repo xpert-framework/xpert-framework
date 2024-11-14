@@ -8,9 +8,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.validation.MessageInterpolator;
+import java.io.Serializable;
 
-public class CustomInterpolator implements MessageInterpolator {
+public class CustomInterpolator implements MessageInterpolator, Serializable {
 
+    private static final long serialVersionUID = 1832335932700889858L;
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(CustomInterpolator.class.getName());
 

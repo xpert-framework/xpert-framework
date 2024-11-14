@@ -1,6 +1,7 @@
 package com.xpert.core.conversion;
 
 import com.xpert.i18n.I18N;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,7 +17,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author ayslan
  */
-public class NumberUtils {
+public class NumberUtils implements Serializable {
+
+    private static final long serialVersionUID = -2413878362590533518L;
 
     public static String convertToMoney(BigDecimal valor) {
 

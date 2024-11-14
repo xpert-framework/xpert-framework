@@ -3,6 +3,7 @@ package com.xpert.maker.model;
 import com.xpert.faces.primefaces.PrimeFacesUtils;
 import com.xpert.faces.primefaces.PrimeFacesVersion;
 import com.xpert.utils.StringUtils;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import java.util.List;
  *
  * @author ayslan
  */
-public class ViewEntity {
+public class ViewEntity implements Serializable {
+
+    private static final long serialVersionUID = 535394560727129430L;
 
     private String name;
     private String idFieldName;

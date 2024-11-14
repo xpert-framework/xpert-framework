@@ -12,6 +12,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Id;
+import java.io.Serializable;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
@@ -22,8 +23,9 @@ import org.hibernate.proxy.HibernateProxy;
  *
  * @author ayslan
  */
-public class EntityConverter implements Converter {
+public class EntityConverter implements Converter, Serializable {
 
+    private static final long serialVersionUID = -2914832160823249869L;
     private static final Logger logger = Logger.getLogger(EntityConverter.class.getName());
     private static final String ID_PREFIX = "entityConverter_";
     private static final Map<Class, Field> FIELDS_CACHE = new HashMap<>();

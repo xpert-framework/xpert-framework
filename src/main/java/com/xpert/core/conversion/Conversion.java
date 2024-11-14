@@ -1,10 +1,13 @@
 package com.xpert.core.conversion;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Conversion {
+public class Conversion implements Serializable {
+
+    private static final long serialVersionUID = -6125794611501856594L;
 
     public static String dateToString(Date date, String pattern) {
         if (date == null) {

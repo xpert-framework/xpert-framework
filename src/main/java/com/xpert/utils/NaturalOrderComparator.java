@@ -1,11 +1,14 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class NaturalOrderComparator implements Comparator {
+public class NaturalOrderComparator implements Comparator, Serializable {
+
+    private static final long serialVersionUID = -6216279173356265039L;
 
     public static int compareRight(String a, String b) {
         int bias = 0;

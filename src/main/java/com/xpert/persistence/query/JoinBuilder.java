@@ -8,6 +8,8 @@ import java.util.ArrayList;
  */
 public class JoinBuilder extends ArrayList<Join> {
 
+    private static final long serialVersionUID = -3463307921108228003L;
+
     private String rootAlias;
     private boolean distinct;
 

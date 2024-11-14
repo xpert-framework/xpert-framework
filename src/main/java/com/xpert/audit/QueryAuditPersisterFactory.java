@@ -11,6 +11,6 @@ public interface QueryAuditPersisterFactory {
      *
      * @return
      */
-    public QueryAuditPersister getPersister();
+    QueryAuditPersister getPersister();
 
 }

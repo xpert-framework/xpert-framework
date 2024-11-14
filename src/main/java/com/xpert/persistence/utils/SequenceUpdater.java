@@ -11,6 +11,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import javax.sql.DataSource;
 
 /**
@@ -22,8 +23,10 @@ import javax.sql.DataSource;
  *
  * @author ayslan, arnaldo
  */
-public abstract class SequenceUpdater {
+public abstract class SequenceUpdater implements Serializable {
 
+    private static final long serialVersionUID = -2120790311341799749L;
+    
     private static final Logger logger = Logger.getLogger(SequenceUpdater.class.getName());
 
     public abstract DataSource getDataSource();

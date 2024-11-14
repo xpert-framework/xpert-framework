@@ -5,6 +5,7 @@ import jakarta.el.ValueExpression;
 import jakarta.faces.application.ResourceDependencies;
 import jakarta.faces.application.ResourceDependency;
 import jakarta.faces.component.UIComponentBase;
+import java.io.Serializable;
 
 /**
  *
@@ -13,8 +14,10 @@ import jakarta.faces.component.UIComponentBase;
 @ResourceDependencies({
     @ResourceDependency(library = "xpert", name = "scripts/core.js")
 })
-public class Spread extends UIComponentBase {
+public class Spread extends UIComponentBase implements Serializable {
 
+    private static final long serialVersionUID = -7824680550790280901L;
+    
     public static final String COMPONENT_FAMILY = "com.xpert.component";
 
     protected enum PropertyKeys {

@@ -11,7 +11,7 @@ public enum AuditingType {
     UPDATE("update"),
     DELETE("delete");
 
-    private String description;
+    private final String description;
 
     AuditingType(String description) {
         this.description = description;

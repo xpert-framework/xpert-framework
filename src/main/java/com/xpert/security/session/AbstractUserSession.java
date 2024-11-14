@@ -3,13 +3,16 @@ package com.xpert.security.session;
 import com.xpert.security.SecuritySessionManager;
 import com.xpert.security.model.Role;
 import com.xpert.security.model.User;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author ayslan
  */
-public abstract class AbstractUserSession {
+public abstract class AbstractUserSession implements Serializable {
+
+    private static final long serialVersionUID = 1551367246829752466L;
 
     public void createSession() {
         SecuritySessionManager.clearRoles();

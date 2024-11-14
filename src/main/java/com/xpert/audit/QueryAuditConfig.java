@@ -5,12 +5,15 @@ import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.persistence.query.QueryBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.io.Serializable;
 
 /**
  *
  * @author ayslanms
  */
-public class QueryAuditConfig {
+public class QueryAuditConfig implements Serializable {
+
+    private static final long serialVersionUID = 2705411883251575813L;
 
     private AbstractQueryAuditing queryAuditing;
     private EntityManager entityManager;

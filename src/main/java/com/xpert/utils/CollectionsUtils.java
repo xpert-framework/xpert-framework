@@ -1,5 +1,6 @@
 package com.xpert.utils;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.beanutils.BeanComparator;
@@ -15,7 +16,9 @@ import org.apache.commons.collections.comparators.NullComparator;
  *
  * @author ayslan
  */
-public class CollectionsUtils {
+public class CollectionsUtils implements Serializable {
+
+    private static final long serialVersionUID = 361094501711533020L;
 
     /**
      * Order "asc" the list
