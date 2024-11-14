@@ -34,10 +34,12 @@
                                  rendered="#{cc.attrs.collapsed}"
                                  styleClass="x-button-detail-auditing #{cc.attrs.buttonStyleClass}"
                                  value="#{xmsg.auditing}"
-                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').hide(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').show();">
+                                 oncomplete="closeAllRowExpansion(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').hide(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').show();">
                     <f:setPropertyActionListener value="#{cc.attrs.entity}" target="#{auditBean.object}" />
                 </p:commandButton>
 
+                <p:remoteCommand name="closeAllRowExpansion" oncomplete="PF('x-widgetDataTableAudit').collapseAllRows()" />
+                
                 <h:panelGroup rendered="#{not cc.attrs.collapsed}">
                     <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.entity)}" />
                 </h:panelGroup>
@@ -57,7 +59,7 @@
                                          lazy="true" rowKey="#{audit.id}"
                                          rowsPerPageTemplate="10,20,30" rowIndexVar="index"
                                          paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         currentPageReportTemplate=" "
+                                         currentPageReportTemplate=" " widgetVar="x-widgetDataTableAudit"
                                          rows="10" paginatorPosition="bottom" styleClass="datatable-auditing">
 
                                 <p:column style="width:2rem" ariaHeaderText="#{xmsg['detail']}">
