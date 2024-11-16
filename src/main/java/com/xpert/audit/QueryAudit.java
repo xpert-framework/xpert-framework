@@ -13,6 +13,7 @@ import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.faces.utils.FacesUtils;
 import com.xpert.persistence.query.QueryBuilder;
 import com.xpert.persistence.utils.EntityUtils;
+import com.xpert.utils.SQLExtractorUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -159,14 +160,12 @@ public class QueryAudit implements Serializable {
         if (queryAuditConfig.getQuery() != null) {
             //Format SQL
             Query query = queryAuditConfig.getQuery();
-            String queryString = query.toString();
-            if (query instanceof org.hibernate.query.Query) {
-                queryString = ((org.hibernate.query.Query<?>) query).getQueryString();
-            }
+            org.hibernate.query.Query queryHibernate = query.unwrap(org.hibernate.query.Query.class);
+            String queryString = SQLExtractorUtils.from(queryHibernate);
 
             String sql = getQueryString(queryString, queryAuditPersister);
-
             queryAuditing.setSqlQuery(sql);
+
         }
 
         //try to get entity from QueryBuilder

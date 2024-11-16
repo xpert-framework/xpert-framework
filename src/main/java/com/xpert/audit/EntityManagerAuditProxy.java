@@ -14,7 +14,7 @@ public class EntityManagerAuditProxy implements InvocationHandler, Serializable 
 
     private static final long serialVersionUID = -1946711674121465197L;
 
-    private QueryAuditConfig queryAuditConfig;
+    private final QueryAuditConfig queryAuditConfig;
 
     public EntityManagerAuditProxy(QueryAuditConfig queryAuditConfig) {
         this.queryAuditConfig = queryAuditConfig;
@@ -26,8 +26,7 @@ public class EntityManagerAuditProxy implements InvocationHandler, Serializable 
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("createQuery")
-                || method.getName().equals("createNativeQuery")) {
+        if (method.getName().equals("createQuery") || method.getName().equals("createNativeQuery")) {
             queryAuditConfig.setAuditingType(QueryAudit.getQueryAuditingType(method));
             return invokeCreateQuery(method, args);
         } else if (method.getName().equals("find")) {
@@ -38,13 +37,12 @@ public class EntityManagerAuditProxy implements InvocationHandler, Serializable 
     }
 
     public Object invokeCreateQuery(Method method, Object[] args) throws Throwable {
-        
+
         //invoke query then Proxy with original EntityManager
         Query query = (Query) method.invoke(getWrapped(), args);
         queryAuditConfig.setQuery(query);
-        
+
         return new QueryAudit().proxy(queryAuditConfig);
     }
-
 
 }

@@ -23,7 +23,7 @@ public class YesNoConverter implements Converter, Serializable {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        Boolean condition = (Boolean) value;
+        Boolean condition = Boolean.TRUE.equals(value);
         if (condition) {
             return XpertResourceBundle.get("yes");
         } else {

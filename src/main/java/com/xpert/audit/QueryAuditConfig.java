@@ -75,6 +75,5 @@ public class QueryAuditConfig implements Serializable {
     public void setAuditingType(QueryAuditingType auditingType) {
         this.auditingType = auditingType;
     }
-    
 
 }
