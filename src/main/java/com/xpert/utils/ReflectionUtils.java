@@ -2,6 +2,7 @@ package com.xpert.utils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public class ReflectionUtils implements Serializable {
 
     private static final long serialVersionUID = -7860341095754473312L;
-    
+
     private static final Logger logger = Logger.getLogger(ReflectionUtils.class.getName());
     /**
      * the possible prefixes for read method
@@ -166,7 +167,6 @@ public class ReflectionUtils implements Serializable {
 
         return field;
     }
-    
 
     /**
      * Return method field name
@@ -182,4 +182,129 @@ public class ReflectionUtils implements Serializable {
         }
         return null;
     }
+
+    /**
+     *
+     * @param <T>
+     * @param target
+     * @param methodName
+     * @param parameters
+     * @return
+     */
+    public static <T> T invokeMethod(Object target, String methodName, Object... parameters) {
+        try {
+            Method method = getMethod(target, methodName, toClassArray(parameters));
+            method.setAccessible(true);
+            return (T) method.invoke(target, parameters);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            logger.log(Level.SEVERE, "Error invoking method: {0}", methodName);
+            throw new RuntimeException("Method invocation failed: " + methodName, e);
+        }
+    }
+
+    /**
+     *
+     * @param <T>
+     * @param target
+     * @param fieldName
+     * @return
+     */
+    public static <T> T getFieldValue(Object target, String fieldName) {
+        try {
+            Field field = getField(target.getClass(), fieldName);
+            field.setAccessible(true);
+            return (T) field.get(target);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param <T>
+     * @param method
+     * @param parameters
+     * @return
+     */
+    public static <T> T invokeStaticMethod(Method method, Object... parameters) {
+        try {
+            method.setAccessible(true);
+            return (T) method.invoke(null, parameters);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            logger.severe("Error invoking static method.");
+            throw new RuntimeException("Static method invocation failed", e);
+        }
+    }
+
+    /**
+     *
+     * @param target
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    public static Method getMethod(Object target, String methodName, Class... parameterTypes) {
+        return getMethod(target.getClass(), methodName, parameterTypes);
+    }
+
+    /**
+     *
+     * @param targetClass
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    public static Method getMethod(Class targetClass, String methodName, Class... parameterTypes) {
+        try {
+            return targetClass.getDeclaredMethod(methodName, parameterTypes);
+        } catch (NoSuchMethodException e) {
+            try {
+                return targetClass.getMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException ignore) {
+            }
+
+            if (!targetClass.getSuperclass().equals(Object.class)) {
+                return getMethod(targetClass.getSuperclass(), methodName, parameterTypes);
+            } else {
+                logger.log(Level.SEVERE, "Method [{0}] not found in class [{1}]", new Object[]{methodName, targetClass.getName()});
+                throw new RuntimeException("Method not found: " + methodName, e);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param targetClass
+     * @param fieldName
+     * @return
+     */
+    public static Field getField(Class targetClass, String fieldName) {
+        try {
+            return targetClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            try {
+                return targetClass.getField(fieldName);
+            } catch (NoSuchFieldException ignore) {
+            }
+
+            if (!targetClass.getSuperclass().equals(Object.class)) {
+                return getField(targetClass.getSuperclass(), fieldName);
+            } else {
+                logger.log(Level.SEVERE, "Field [{0}] not found in class [{1}]", new Object[]{fieldName, targetClass.getName()});
+                throw new RuntimeException("Field not found: " + fieldName, e);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param parameters
+     * @return
+     */
+    public static Class[] toClassArray(Object[] parameters) {
+        return Arrays.stream(parameters)
+                .map(Object::getClass)
+                .toArray(Class[]::new);
+    }
+
 }

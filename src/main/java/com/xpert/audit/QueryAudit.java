@@ -8,6 +8,7 @@ import com.xpert.adapter.LocalDateTimeTypeAdapter;
 import com.xpert.adapter.LocalDateTypeAdapter;
 import com.xpert.adapter.LocalTimeTypeAdapter;
 import com.xpert.adapter.ZonedDateTimeTypeAdapter;
+import com.xpert.audit.interceptor.SqlAuditInterceptor;
 import com.xpert.audit.model.AbstractQueryAuditing;
 import com.xpert.audit.model.QueryAuditingType;
 import com.xpert.faces.utils.FacesUtils;
@@ -37,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 /**
@@ -111,75 +113,56 @@ public class QueryAudit implements Serializable {
             logger.log(Level.INFO, "Wrapped: {0}, Invoke: {1}, Args: {2}", new Object[]{wrapped.getClass().getName(), method.getName(), Arrays.toString(args)});
         }
 
-        //create before Invoke results
-        AbstractQueryAuditing queryAuditing = Configuration.getAbstractQueryAuditing();
+        // Preparar auditoria
+        AbstractQueryAuditing queryAuditing = initializeQueryAuditing(method, args);
+
+        // Configuração inicial da auditoria
         queryAuditConfig.setQueryAuditing(queryAuditing);
         queryAuditing.setAuditingType(queryAuditConfig.getAuditingType());
+
+        boolean bolQuery = queryAuditConfig.getQuery() != null;
+
+        String capturedSql = null;
+        Object result = null;
         queryAuditing.setStartDate(new Date());
 
-        Object result = null;
         try {
+            if (!bolQuery) {
+                SqlAuditInterceptor.startCapturing();
+            }
             result = method.invoke(wrapped, args);
         } catch (NoResultException ex) {
             result = null;
+        } finally {
+            queryAuditing.setEndDate(new Date());
+            queryAuditing.calculateTime();
+            if (!bolQuery) {
+                capturedSql = SqlAuditInterceptor.stopCapturing();
+            }
         }
-
-        queryAuditing.setEndDate(new Date());
-        queryAuditing.calculateTime();
 
         if (debug) {
             logger.log(Level.INFO, "Query executed in {0} milliseconds", queryAuditing.getTimeMilliseconds());
         }
 
-        //find (get Idenfier)
-        //JPA find signature - find(Class<T> entityClass, Object primaryKey)
-        if (method.getName().equals("find")) {
-            if (args.length > 0 && args[0] instanceof Class) {
-                queryAuditing.setAuditClass((Class) args[0]);
-                queryAuditing.setEntity(Audit.getEntityName((Class) args[0]));
-            }
-            if (args.length > 1 && args[1] instanceof Number) {
-                queryAuditing.setIdentifier(((Number) args[1]).longValue());
-            }
-        }
-
-        if (queryAuditConfig.getQuery() != null) {
-            queryAuditing.setFirstResult(queryAuditConfig.getQuery().getFirstResult());
-            if (queryAuditConfig.getQuery().getMaxResults() != Integer.MAX_VALUE) {
-                queryAuditing.setMaxResults(queryAuditConfig.getQuery().getMaxResults());
-            }
-            if (queryAuditing.getMaxResults() != null && queryAuditing.getMaxResults() > 0) {
-                queryAuditing.setPaginatedQuery(true);
-            }
+        // SQL executado pelo Query
+        if (bolQuery) {
+            Query query = queryAuditConfig.getQuery();
+            capturedSql = SQLExtractorUtils.from(query.unwrap(org.hibernate.query.Query.class));
         }
 
         QueryAuditPersister queryAuditPersister = Configuration.getQueryAuditPersisterFactory().getPersister();
+
+        String sql = getQueryString(capturedSql, queryAuditPersister);
+        queryAuditing.setSqlQuery(sql);
+
         buildParameters(queryAuditConfig.getQuery(), queryAuditing, queryAuditPersister);
 
-        //get SQL Query (HQL/JPQL or native)
-        if (queryAuditConfig.getQuery() != null) {
-            //Format SQL
-            Query query = queryAuditConfig.getQuery();
-            org.hibernate.query.Query queryHibernate = query.unwrap(org.hibernate.query.Query.class);
-            String queryString = SQLExtractorUtils.from(queryHibernate);
+        // Atualizar metadados de paginação
+        updatePaginationInfo(queryAuditConfig, queryAuditing);
 
-            String sql = getQueryString(queryString, queryAuditPersister);
-            queryAuditing.setSqlQuery(sql);
-
-        }
-
-        //try to get entity from QueryBuilder
-        if (queryAuditing.getEntity() == null) {
-            if (queryAuditConfig.getQueryBuilder() != null && queryAuditConfig.getQueryBuilder().from() != null) {
-                queryAuditing.setEntity(Audit.getEntityName(queryAuditConfig.getQueryBuilder().from()));
-            } else {
-                //try to get from regex
-                if (queryAuditing.getSqlQuery() != null) {
-                    String tableName = getTableFromQuery(queryAuditing.getSqlQuery());
-                    queryAuditing.setEntity(tableName);
-                }
-            }
-        }
+        // Determinar entidade associada à consulta
+        determineEntity(queryAuditing);
 
         if (debug) {
             logger.log(Level.INFO, "SQL Query: {0}", queryAuditing.getSqlQuery());
@@ -190,9 +173,51 @@ public class QueryAudit implements Serializable {
         if (FacesContext.getCurrentInstance() != null) {
             queryAuditing.setIp(FacesUtils.getIP());
         }
-        queryAuditPersister.persist(queryAuditing);
 
+        queryAuditPersister.persist(queryAuditing);
         return result;
+    }
+
+    private AbstractQueryAuditing initializeQueryAuditing(Method method, Object[] args) {
+        AbstractQueryAuditing queryAuditing = Configuration.getAbstractQueryAuditing();
+
+        if ("find".equals(method.getName())) {
+            if (args.length > 0 && args[0] instanceof Class) {
+                Class<?> entityClass = (Class<?>) args[0];
+                queryAuditing.setAuditClass(entityClass);
+                queryAuditing.setEntity(Audit.getEntityName(entityClass));
+            }
+            if (args.length > 1 && args[1] instanceof Number) {
+                queryAuditing.setIdentifier(((Number) args[1]).longValue());
+            }
+        }
+
+        return queryAuditing;
+    }
+
+    private void updatePaginationInfo(QueryAuditConfig queryAuditConfig, AbstractQueryAuditing queryAuditing) {
+        if (queryAuditConfig.getQuery() != null) {
+            Query query = queryAuditConfig.getQuery();
+            queryAuditing.setFirstResult(query.getFirstResult());
+            int maxResults = query.getMaxResults();
+            if (maxResults != Integer.MAX_VALUE) {
+                queryAuditing.setMaxResults(maxResults);
+            }
+            if (queryAuditing.getMaxResults() != null && queryAuditing.getMaxResults() > 0) {
+                queryAuditing.setPaginatedQuery(true);
+            }
+        }
+    }
+
+    private void determineEntity(AbstractQueryAuditing queryAuditing) {
+        if (queryAuditing.getEntity() == null) {
+            if (queryAuditConfig.getQueryBuilder() != null && queryAuditConfig.getQueryBuilder().from() != null) {
+                queryAuditing.setEntity(Audit.getEntityName(queryAuditConfig.getQueryBuilder().from()));
+            } else if (StringUtils.isNotBlank(queryAuditing.getSqlQuery())) {
+                String tableName = getTableFromQuery(queryAuditing.getSqlQuery());
+                queryAuditing.setEntity(tableName);
+            }
+        }
     }
 
     /**
@@ -210,9 +235,11 @@ public class QueryAudit implements Serializable {
         if (queryAuditing.getIdentifier() != null && queryAuditing.getAuditClass() != null) {
             String idName = EntityUtils.getIdFieldName(queryAuditing.getAuditClass());
             Class idType = EntityUtils.getIdType(queryAuditing.getAuditClass());
-            //force a SQL in FIND BY ID
-            String sql = getQueryString("FROM " + queryAuditing.getAuditClass().getName() + " WHERE " + idName + " =?1 ", queryAuditPersister);
-            queryAuditing.setSqlQuery(sql);
+            if (StringUtils.isBlank(queryAuditing.getSqlQuery())) {
+                //force a SQL in FIND BY ID
+                String sql = getQueryString("FROM " + queryAuditing.getAuditClass().getName() + " WHERE " + idName + " =?1 ", queryAuditPersister);
+                queryAuditing.setSqlQuery(sql);
+            }
             QueryAudit.QueryParameter queryParameter = new QueryAudit().new QueryParameter(1, idName, idType.getName(), queryAuditing.getIdentifier(), false);
             parameters.add(queryParameter);
         } else {
@@ -252,7 +279,7 @@ public class QueryAudit implements Serializable {
         }
 
         queryAuditing.setParametersSize(parameters.size());
-        if (parameters.size() > 0) {
+        if (!parameters.isEmpty()) {
             queryAuditing.setHasQueryParameter(true);
         }
         queryAuditing.setSqlParameters(getValueWithMaxSize(json, queryAuditPersister.getParametersMaxSize()));
@@ -307,10 +334,12 @@ public class QueryAudit implements Serializable {
      * @return
      */
     public String getQueryString(String query, QueryAuditPersister queryAuditPersister) {
+        if (StringUtils.isNotBlank(query)) {
+            String sql = new BasicFormatterImpl().format(query);
 
-        String sql = new BasicFormatterImpl().format(query);
-
-        return getValueWithMaxSize(sql, queryAuditPersister.getSqlStringMaxSize());
+            return getValueWithMaxSize(sql, queryAuditPersister.getSqlStringMaxSize());
+        }
+        return null;
     }
 
     /**
