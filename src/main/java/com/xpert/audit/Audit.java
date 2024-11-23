@@ -257,7 +257,7 @@ public class Audit implements Serializable {
                 Field.setAccessible(fields, true);
 
                 AbstractAuditing auditing = Configuration.getAbstractAuditing();
-                auditing.setIdentifier(Long.valueOf(EntityUtils.getId(object).toString()));
+                auditing.setIdentifier(EntityUtils.getId(object).toString());
                 auditing.setEntity(getEntityName(entityClass));
                 auditing.setAuditingType(auditingType);
                 auditing.setEventDate(new Date());

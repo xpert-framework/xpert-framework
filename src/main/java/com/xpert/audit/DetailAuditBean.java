@@ -17,7 +17,7 @@ import org.primefaces.model.LazyDataModel;
 public class DetailAuditBean implements Serializable {
 
     private static final long serialVersionUID = 7498075390454510513L;
-    
+
     private BeanModel beanModel;
     private LazyDataModel<AbstractAuditing> auditings;
     private BaseDAO baseDAO;
@@ -37,20 +37,28 @@ public class DetailAuditBean implements Serializable {
     }
 
     private List<Restriction> getRestrictions() {
-
         List<Restriction> restrictions = new ArrayList<>();
-        //Long doesnt need conversion
-        if (beanModel.getId() instanceof Long) {
-            restrictions.add(new Restriction("identifier", beanModel.getId()));
-        } else if (beanModel.getId() instanceof Number) {
-            //if is a number try to convert to long
-            restrictions.add(new Restriction("identifier", ((Number) beanModel.getId()).longValue()));
+
+        Object id = beanModel.getId();
+        if (id instanceof String value) {
+            restrictions.add(new Restriction("identifier", value));
+        } else if (id instanceof Long value) {
+            restrictions.add(new Restriction("identifier", value));
+        } else if (id instanceof Number value) {
+            restrictions.add(new Restriction("identifier", value.longValue()));
         } else {
-            throw new IllegalArgumentException("Type of id " + beanModel.getId().getClass().getName() + " from class " + beanModel.getEntity() + " is not supported in audit");
+            throwUnsupportedIdTypeException(id);
         }
+
         restrictions.add(new Restriction("entity", beanModel.getEntity()));
 
         return restrictions;
+    }
+
+    private void throwUnsupportedIdTypeException(Object id) {
+        String entityType = beanModel.getEntity();
+        String idType = id != null ? id.getClass().getName() : "null";
+        throw new IllegalArgumentException(String.format("Unsupported id type '%s' for entity '%s' in audit.", idType, entityType));
     }
 
     public boolean isPersisted(Object object) {
@@ -72,5 +80,5 @@ public class DetailAuditBean implements Serializable {
     public void setBeanModel(BeanModel beanModel) {
         this.beanModel = beanModel;
     }
-    
+
 }

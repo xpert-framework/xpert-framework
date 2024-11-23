@@ -31,7 +31,7 @@ public abstract class AbstractAuditing implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date eventDate;
 
-    private Long identifier;
+    private String identifier;
 
     private String ip;
 
@@ -53,11 +53,11 @@ public abstract class AbstractAuditing implements Serializable {
     @Transient
     private boolean detail;
 
-    public Long getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(Long identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
