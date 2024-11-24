@@ -49,9 +49,12 @@ public abstract class AbstractAuditing implements Serializable {
 
     @Transient
     public List metadatasLazy = new ArrayList();
-    
+
     @Transient
     private boolean detail;
+
+    @Transient
+    private boolean expanded;
 
     public String getIdentifier() {
         return identifier;
@@ -115,6 +118,14 @@ public abstract class AbstractAuditing implements Serializable {
 
     public void setDetail(boolean detail) {
         this.detail = detail;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 
 }

@@ -20,7 +20,7 @@ import java.util.List;
 @Named("auditBean")
 @ViewScoped
 public class AuditBean implements Serializable {
-
+    
     private static final long serialVersionUID = -2671979402785945505L;
     
     private Object object;
@@ -29,18 +29,18 @@ public class AuditBean implements Serializable {
     private BeanModel lastBean;
     private DetailAuditBean lastModel;
     private boolean enableAudit;
-
+    
     @PostConstruct
     public void init() {
         baseDAO = new AuditDAO(Configuration.getAuditingImplClass());
         this.enableAudit = false;
     }
-
+    
     public void detail(Object object) {
         this.object = object;
         detail();
     }
-
+    
     public void detail() {
         BeanModel beanModel = getBeanModel(object);
         DetailAuditBean detail = beans.get(beanModel);
@@ -51,7 +51,7 @@ public class AuditBean implements Serializable {
         }
         this.enableAudit = true;
     }
-
+    
     private BeanModel getBeanModel(Object object) {
         if (object == null) {
             return null;
@@ -67,18 +67,18 @@ public class AuditBean implements Serializable {
         }
         return new BeanModel(id, entity);
     }
-
+    
     public DetailAuditBean getDetailAuditBean(Object object) {
         BeanModel beanModel = getBeanModel(object);
-
+        
         if (beanModel == null && lastBean != null) {
             beanModel = lastBean;
         }
-
+        
         if (lastBean != null && lastModel != null && beanModel != null && beanModel.equals(lastBean)) {
             return lastModel;
         }
-
+        
         if (beanModel != null) {
             DetailAuditBean detail = getBeans().get(beanModel);
             if (detail != null) {
@@ -90,9 +90,9 @@ public class AuditBean implements Serializable {
         //prevent nullpointer
         return new DetailAuditBean();
     }
-
+    
     public boolean isPersisted(Object object) {
-        if(object != null && !Audit.isAudit(object.getClass())){
+        if (object != null && !Audit.isAudit(object.getClass())) {
             return false;
         }
         if (EntityUtils.getId(object) != null) {
@@ -103,33 +103,36 @@ public class AuditBean implements Serializable {
     
     public void loadMetadatas(Object object) {
         AbstractAuditing auditing = ((AbstractAuditing) object);
-        auditing.setMetadatasLazy((List) baseDAO.getInitialized(auditing.getMetadatas()));
+        if (!auditing.isExpanded()) {
+            auditing.setMetadatasLazy((List) baseDAO.getInitialized(auditing.getMetadatas()));
+        }
+        auditing.setExpanded(!auditing.isExpanded());
     }
-
+    
     public Map<BeanModel, DetailAuditBean> getBeans() {
         return beans;
     }
-
+    
     public void setBeans(Map<BeanModel, DetailAuditBean> beans) {
         this.beans = beans;
     }
-
+    
     public Object getObject() {
         return object;
     }
-
+    
     public void setObject(Object object) {
         this.object = object;
     }
-
+    
     public BaseDAO getBaseDAO() {
         return baseDAO;
     }
-
+    
     public boolean isEnableAudit() {
         return enableAudit;
     }
-
+    
     public void setEnableAudit(boolean enableAudit) {
         this.enableAudit = enableAudit;
     }
