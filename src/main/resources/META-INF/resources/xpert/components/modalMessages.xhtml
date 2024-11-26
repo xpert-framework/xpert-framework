@@ -34,7 +34,7 @@
                             <p:autoUpdate rendered="#{cc.attrs.autoUpdate}"/>
                         </p:messages>
                         <div align="center">
-                            <p:commandButton onclick="PF('xpertModalDialogMessages').hide(); #{cc.attrs.onconfirm};"
+                            <p:commandButton onclick="PF('xpertModalDialogMessages').hide(); #{cc.attrs.onconfirm != null ? cc.attrs.onconfirm + ';' : ''}"
                                              styleClass="button-confirm-modal" type="button" value="Ok" />
                         </div>
                     </div>

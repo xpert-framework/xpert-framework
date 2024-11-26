@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <p:dataTable id="x-dataTableAudit"
+                 var="audit" value="#{xpertAuditingDetail.auditings}" 
+                 rendered="#{not empty xpertAuditingDetail.auditings}" 
+                 emptyMessage="#{xmsg['noRecordFound']}"
+                 lazy="true" rowKey="#{audit.id}"
+                 rowsPerPageTemplate="10,20,30" rowIndexVar="index"
+                 paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate=" " widgetVar="x-widgetDataTableAudit"
+                 rows="10" paginatorPosition="bottom" size="small" reflow="true">
+
+        <p:column style="width:2rem">
+            <p:rowToggler/>
+        </p:column>
+
+        <p:column sortBy="#{audit.eventDate}" headerText="#{xmsg['date']}">
+            <h:outputText value="#{audit.eventDate}" >
+                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+            </h:outputText>
+        </p:column>
+        <p:column sortBy="#{audit.auditingType}" headerText="#{xmsg['type']}" >
+            <h:outputText value="#{xmsg[audit.auditingType.description]}" />
+        </p:column>
+        <p:column headerText="#{xmsg['user']}">
+            <h:outputText value="#{audit.userName}" />
+        </p:column>
+        <p:column headerText="#{xmsg['ip']}">
+            <h:outputText value="#{audit.ip}" />
+        </p:column>
+        <p:ajax event="rowToggle" listener="#{auditBean.loadMetadatas(audit)}" />
+        <p:rowExpansion>
+            <p:dataTable var="metadata" emptyMessage="#{xmsg['noRecordFound']}"
+                         value="#{audit.metadatasLazy}" rowIndexVar="indexMetadata" lazy="false"
+                         size="small" reflow="true" styleClass="x-audit-data-table">
+                <p:column headerText="#{xmsg['order']}">
+                    <h:outputText value="#{indexMetadata+1}" />
+                </p:column>
+                <p:column headerText="#{xmsg['field']}">
+                    <h:outputText value="#{metadata.getFieldName(empty cc.attrs.entityClass ? cc.attrs.entity.getClass() : cc.attrs.entityClass)}" />
+                </p:column>
+                <p:column headerText="#{xmsg['oldValue']}">
+                    <h:outputText value="#{metadata.oldValue}" />
+                </p:column>
+                <p:column headerText="#{xmsg['newValue']}">
+                    <h:outputText value="#{metadata.newValue}" />
+                </p:column>
+            </p:dataTable>
+        </p:rowExpansion>
+    </p:dataTable>
+
+</html>

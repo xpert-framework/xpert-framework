@@ -9,12 +9,13 @@
 
     <!-- INTERFACE -->
     <cc:interface>
-        <cc:attribute name="entity" required="true" type="java.lang.Object"/>
-        <cc:attribute name="entityClass" type="java.lang.Class"/>
+        <cc:attribute name="entity" required="true" type="java.lang.Object" />
+        <cc:attribute name="entityClass" type="java.lang.Class" />
         <cc:attribute name="collapsed" type="java.lang.Boolean" default="true" />
         <cc:attribute name="buttonStyleClass" type="java.lang.String"  />
-        <cc:attribute name="panelStyleClass" type="java.lang.String"  />
+        <cc:attribute name="panelStyleClass" type="java.lang.String" />
         <cc:attribute name="buttonIcon" type="java.lang.String" default="#{icons.audit}" />
+        <cc:attribute name="fixedExpanded" type="java.lang.Boolean" default="false" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -31,15 +32,14 @@
                                  update="x-panel-detail-auditing-id"
                                  action="#{auditBean.detail}" 
                                  icon="#{cc.attrs.buttonIcon}"
-                                 rendered="#{cc.attrs.collapsed}"
                                  styleClass="x-button-detail-auditing #{cc.attrs.buttonStyleClass}"
-                                 value="#{xmsg.auditing}"
-                                 oncomplete="closeAllRowExpansion(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').hide(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').show();">
+                                 value="#{xmsg['auditing']}"
+                                 oncomplete="closeAllRowExpansion(); clickButton();">
                     <f:setPropertyActionListener value="#{cc.attrs.entity}" target="#{auditBean.object}" />
                 </p:commandButton>
 
                 <p:remoteCommand name="closeAllRowExpansion" oncomplete="PF('x-widgetDataTableAudit').collapseAllRows()" />
-                
+
                 <h:panelGroup rendered="#{not cc.attrs.collapsed}">
                     <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.entity)}" />
                 </h:panelGroup>
@@ -48,59 +48,15 @@
 
                     <ui:param name="xpertAuditingDetail" value="#{auditBean.getDetailAuditBean(cc.attrs.entity)}"/>
 
-                    <p:accordionPanel prependId="false" rendered="#{auditBean.enableAudit}" onTabClose="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').show(); $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').hide();">
-
-                        <p:tab title="#{xmsg.auditingDetail}" >
-
-                            <p:dataTable id="x-dataTableAudit"
-                                         var="audit" value="#{xpertAuditingDetail.auditings}" 
-                                         rendered="#{not empty xpertAuditingDetail.auditings}" 
-                                         emptyMessage="#{xmsg.noRecordFound}"  
-                                         lazy="true" rowKey="#{audit.id}"
-                                         rowsPerPageTemplate="10,20,30" rowIndexVar="index"
-                                         paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         currentPageReportTemplate=" " widgetVar="x-widgetDataTableAudit"
-                                         rows="10" paginatorPosition="bottom" styleClass="datatable-auditing">
-
-                                <p:column style="width:2rem" ariaHeaderText="#{xmsg['detail']}">
-                                    <p:rowToggler/>
-                                </p:column>
-                                <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}"  >
-                                    <h:outputText value="#{audit.eventDate}" >
-                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column style="text-align: center;" sortBy="#{audit.auditingType}" headerText="#{xmsg.type}" >
-                                    <h:outputText value="#{xmsg[audit.auditingType.description]}" />
-                                </p:column>
-                                <p:column headerText="#{xmsg['user']}">
-                                    <h:outputText value="#{audit.userName}" />
-                                </p:column>
-                                <p:column headerText="#{xmsg['ip']}">
-                                    <h:outputText value="#{audit.ip}" />
-                                </p:column>
-                                <p:ajax event="rowToggle" listener="#{auditBean.loadMetadatas(audit)}" />
-                                <p:rowExpansion>
-                                    <p:dataTable var="metadata" emptyMessage="#{xmsg.noRecordFound}" styleClass="datatable-auditing"
-                                                 value="#{audit.metadatasLazy}" rowIndexVar="indexMetadata" lazy="false">
-                                        <p:column style="text-align: center;">
-                                            <h:outputText value="#{indexMetadata+1}" />
-                                        </p:column>
-                                        <p:column headerText="#{xmsg.field}">
-                                            <h:outputText value="#{metadata.getFieldName(empty cc.attrs.entityClass ? cc.attrs.entity.getClass() : cc.attrs.entityClass)}" />
-                                        </p:column>
-                                        <p:column headerText="#{xmsg.oldValue}">
-                                            <h:outputText value="#{metadata.oldValue}" />
-                                        </p:column>
-                                        <p:column headerText="#{xmsg.newValue}">
-                                            <h:outputText value="#{metadata.newValue}" />
-                                        </p:column>
-                                    </p:dataTable>
-                                </p:rowExpansion>
-                            </p:dataTable>
-
-                        </p:tab>
-                    </p:accordionPanel>
+                    <p:panel id="x-panelAuditToggle" header="Teste" widgetVar="x-widgetAuditToggle" toggleable="true" style="width: 100%" rendered="#{auditBean.enableAudit}">
+                        <f:facet name="header">
+                            <p:commandLink process="@this" update="@none" onclick="PF('x-widgetAuditToggle').toggle(); closeTab();" rendered="#{!cc.attrs.fixedExpanded}">
+                                <h:outputText styleClass="ui-icon pi pi-chevron-down"/>
+                            </p:commandLink>
+                            #{xmsg['auditingDetail']}
+                        </f:facet>
+                        <ui:include src="./auditDetail.xhtml"/>
+                    </p:panel>
 
                 </h:panelGroup>
 
@@ -110,9 +66,21 @@
                     $(document).ready(function () {
                         var collapsed = $("[id='#{cc.clientId}:x-valueCollapsed']");
                         if (collapsed.val() === 'true') {
-                            $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').hide();
+                            closeTab();
+                        } else {
+                            clickButton();
                         }
                     });
+
+                    function clickButton() {
+                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').hide();
+                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').show();
+                    }
+
+                    function closeTab() {
+                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing').show();
+                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing').hide();
+                    }
 
                     /*]]>*/
                 </script>

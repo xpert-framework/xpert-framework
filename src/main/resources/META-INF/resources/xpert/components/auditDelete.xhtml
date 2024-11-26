@@ -19,18 +19,19 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
+        <h:outputStylesheet library="xpert" name="css/style.css" />
         <h:outputScript library="xpert" name="scripts/core.js" target="head" />
         <span id="#{cc.attrs.clientId}">
 
             <h:inputHidden id="x-valueCollapsed-delete" value="#{cc.attrs.collapsed}"/>
 
-            <h:panelGroup id="detail">
+            <h:panelGroup id="x-auditingDeletePanelId" layout="block">
 
                 <p:commandButton process="@this" action="#{auditDeleteBean.load}" icon="#{cc.attrs.buttonIcon}"
                                  rendered="#{cc.attrs.collapsed}"
                                  styleClass="x-button-detail-auditing-delete #{cc.attrs.buttonStyleClass}"
-                                 oncomplete="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').hide();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').show()"
-                                 update="accordionDetail" value="#{xmsg.listDeletions}" >
+                                 oncomplete="clickButtonDelete();"
+                                 update="x-panel-detail-auditing-delete-id" value="#{xmsg['listDeletions']}" >
                     <f:setPropertyActionListener value="#{cc.attrs.entityClass}" target="#{auditDeleteBean.entityClass}" />
                 </p:commandButton>
 
@@ -38,47 +39,51 @@
                     <f:event type="preRenderComponent" listener="#{auditDeleteBean.load(cc.attrs.entityClass)}" />
                 </h:panelGroup>
 
-                <h:panelGroup styleClass="x-panel-detail-auditing-delete #{cc.attrs.panelStyleClass}">
-                    <p:accordionPanel id="accordionDetail" prependId="false" onTabClose="$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').show();$(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide()">
-                        <p:tab title="#{xmsg.deletions}">
+                <h:panelGroup id="x-panel-detail-auditing-delete-id" styleClass="x-panel-detail-auditing-delete #{cc.attrs.panelStyleClass}" layout="block">
 
-                            <p:dataTable var="audit" value="#{auditDeleteBean.auditings}" styleClass="datatable-auditing"
-                                         emptyMessage="#{xmsg.noRecordFound}"  
-                                         rowsPerPageTemplate="10,20,30" rowIndexVar="index"
-                                         lazy="true"
-                                         paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         currentPageReportTemplate=" "
-                                         style="font-weight: normal;"
-                                         rows="10" paginatorPosition="bottom" >
-                                <p:column style="width:2rem" ariaHeaderText="#{xmsg['detail']}">
-                                    <p:rowToggler/>
-                                </p:column>
-                                <p:column style="text-align: center;" sortBy="#{audit.eventDate}" headerText="#{xmsg.date}">
-                                    <h:outputText value="#{audit.eventDate}" >
-                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="#{xmsg['object']}">
-                                    <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
-                                        <x:initializer entityManager="#{auditDeleteBean.baseDAO.entityManager}"/>
-                                        <h:outputText value=", " rendered="#{status.index gt 0}"/>    
-                                        <h:outputText value="#{metadata.getFieldName(cc.attrs.entityClass)}: " style="font-weight: bold;"/>    
-                                        <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    
-                                    </ui:repeat>
-                                </p:column>
-                                <p:column headerText="#{xmsg['user']}">
-                                    <h:outputText value="#{audit.userName}" />
-                                </p:column>
-                                <p:column headerText="#{xmsg['ip']}">
-                                    <h:outputText value="#{audit.ip}" />
-                                </p:column>
-                                <p:ajax event="rowToggle" process="@this" listener="#{auditDeleteBean.detailAll(audit)}"/>
-                                <p:rowExpansion>
-                                    <x:audit entity="#{audit}" entityClass="#{cc.attrs.entityClass}" collapsed="false" rendered="#{audit.detail}"/>
-                                </p:rowExpansion>
-                            </p:dataTable>
-                        </p:tab>
-                    </p:accordionPanel>
+                    <p:panel id="x-panelAuditDeleteToggle" header="Teste" widgetVar="x-widgetAuditDeleteToggle" toggleable="true" style="width: 100%">
+                        <f:facet name="header">
+                            <p:commandLink process="@this" update="@none" onclick="PF('x-widgetAuditDeleteToggle').toggle(); closeTabDelete();">
+                                <h:outputText styleClass="ui-icon pi pi-chevron-down"/>
+                            </p:commandLink>
+                            #{xmsg['deletions']}
+                        </f:facet>
+                        <p:dataTable id="x-dataTableAuditDelete" var="audit" value="#{auditDeleteBean.auditings}"
+                                     emptyMessage="#{xmsg['noRecordFound']}"  
+                                     rowsPerPageTemplate="10,20,30" rowIndexVar="index"
+                                     lazy="true"
+                                     paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate=" "
+                                     size="small" reflow="true"
+                                     rows="10" paginatorPosition="bottom" >
+                            <p:column style="width:2rem">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column sortBy="#{audit.eventDate}" headerText="#{xmsg['date']}">
+                                <h:outputText value="#{audit.eventDate}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{xmsg['object']}" styleClass="ui-md-4 ui-lg-6 ui-xl-6">
+                                <ui:repeat value="#{audit.metadatas}" var="metadata" varStatus="status">
+                                    <x:initializer entityManager="#{auditDeleteBean.baseDAO.entityManager}"/>
+                                    <h:outputText value=", " rendered="#{status.index gt 0}"/>    
+                                    <h:outputText value="#{metadata.getFieldName(cc.attrs.entityClass)}: " style="font-weight: bold;"/>    
+                                    <h:outputText value="#{empty metadata.newValue ? ' - ': metadata.newValue}"/>    
+                                </ui:repeat>
+                            </p:column>
+                            <p:column headerText="#{xmsg['user']}">
+                                <h:outputText value="#{audit.userName}" />
+                            </p:column>
+                            <p:column headerText="#{xmsg['ip']}">
+                                <h:outputText value="#{audit.ip}" />
+                            </p:column>
+                            <p:ajax event="rowToggle" process="@this" listener="#{auditDeleteBean.detailAll(audit)}"/>
+                            <p:rowExpansion>
+                                <x:audit entity="#{audit}" entityClass="#{cc.attrs.entityClass}" collapsed="false" rendered="#{audit.detail}" fixedExpanded="true"/>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </p:panel>
                 </h:panelGroup>
             </h:panelGroup>
 
@@ -88,9 +93,21 @@
                 $(document).ready(function () {
                     var collapsed = $("[id='#{cc.clientId}:x-valueCollapsed-delete']");
                     if (collapsed.val() === 'true') {
-                        $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide();
+                        closeTabDelete();
+                    } else {
+                        clickButtonDelete();
                     }
                 });
+
+                function clickButtonDelete() {
+                    $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').hide();
+                    $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').show();
+                }
+
+                function closeTabDelete() {
+                    $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-button-detail-auditing-delete').show();
+                    $(PrimeFaces.escapeClientId('#{cc.attrs.clientId}')).find('.x-panel-detail-auditing-delete').hide();
+                }
 
                 /*]]>*/
             </script>
