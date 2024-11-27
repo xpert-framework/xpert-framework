@@ -7,6 +7,7 @@ import com.xpert.audit.model.AbstractMetadata;
 import com.xpert.audit.model.AuditingType;
 import com.xpert.faces.primefaces.LazyDataModelImpl;
 import com.xpert.persistence.dao.BaseDAO;
+import com.xpert.persistence.query.JoinBuilder;
 import com.xpert.persistence.query.Restriction;
 import com.xpert.persistence.query.RestrictionType;
 import com.xpert.persistence.utils.EntityUtils;
@@ -50,10 +51,13 @@ public class AuditDeleteBean implements Serializable {
 
     public void load() {
         if (entityClass != null) {
+            JoinBuilder joinBuilder = new JoinBuilder("a");
+            joinBuilder.innerJoinFetch("a.metadatas", "m");
+
             List<Restriction> restrictions = new ArrayList<>();
-            restrictions.add(new Restriction("entity", Audit.getEntityName(entityClass)));
-            restrictions.add(new Restriction("auditingType", AuditingType.DELETE));
-            auditings = new LazyDataModelImpl<>("eventDate DESC", restrictions, baseDAO);
+            restrictions.add(new Restriction("a.entity", Audit.getEntityName(entityClass)));
+            restrictions.add(new Restriction("a.auditingType", AuditingType.DELETE));
+            auditings = new LazyDataModelImpl<>("a.eventDate DESC", restrictions, baseDAO, joinBuilder);
         }
     }
 
