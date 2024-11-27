@@ -1,8 +1,9 @@
-
-<facelet-taglib id="x" xmlns="http://java.sun.com/xml/ns/javaee"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
-                version="2.0">
+<facelet-taglib
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_3_0.xsd"
+    version="3.0">
+    
     <namespace>http://xpert.com/faces</namespace>
     <composite-library-name>xpert/components</composite-library-name>
     
