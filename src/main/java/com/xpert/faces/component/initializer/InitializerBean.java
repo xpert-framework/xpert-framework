@@ -92,6 +92,10 @@ public class InitializerBean implements Serializable {
                 value = FacesUtils.getBeanByEl(expression);
             }
         }
+        
+        if(value == null){
+            return;
+        }
 
         LazyInitializer lazyInitializer = null;
 
@@ -180,7 +184,9 @@ public class InitializerBean implements Serializable {
         this.dao = dao;
     }
 
-    public class ClassIdentifier {
+    public class ClassIdentifier implements Serializable {
+
+        private static final long serialVersionUID = -4274316754397272303L;
 
         private Object id;
         private Class entity;

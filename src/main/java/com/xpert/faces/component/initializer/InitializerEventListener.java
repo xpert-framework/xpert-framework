@@ -19,10 +19,10 @@ public class InitializerEventListener implements ComponentSystemEventListener, S
 
     private String property;
     private ValueExpression valueExpression;
-    private FaceletContext faceletContext;
+    private transient FaceletContext faceletContext;
     private InitializerBean initializerBean;
     private EntityManager entityManager;
-    private UIComponent parent;
+    private transient UIComponent parent;
 
     public InitializerEventListener() {
     }
@@ -37,6 +37,7 @@ public class InitializerEventListener implements ComponentSystemEventListener, S
         this.entityManager = entityManager;
     }
 
+    @Override
     public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
         if (parent == null || faceletContext == null) {
             return;

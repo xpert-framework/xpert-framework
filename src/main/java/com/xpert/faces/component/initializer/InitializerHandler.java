@@ -54,16 +54,17 @@ public class InitializerHandler extends TagHandler implements Serializable {
         }
     }
 
+    @Override
     public void apply(final FaceletContext faceletContext, final UIComponent parent) throws IOException {
         if (ComponentHandler.isNew(parent)) {
 
-            EntityManager entityManager = getEntityManager(faceletContext);
+            EntityManager entityManagerParam = getEntityManager(faceletContext);
             
             ValueExpression valueExpression = getValueExpression(faceletContext);
-            InitializerBean initializerBean = getInitializerBean(faceletContext.getFacesContext(), entityManager);
+            InitializerBean initializerBean = getInitializerBean(faceletContext.getFacesContext(), entityManagerParam);
 
             InitializerEventListener initializerEventListener = new InitializerEventListener(
-                    getProperty(faceletContext), valueExpression, faceletContext, parent, initializerBean, entityManager);
+                    getProperty(faceletContext), valueExpression, faceletContext, parent, initializerBean, entityManagerParam);
 
             parent.subscribeToEvent(PreRenderComponentEvent.class, initializerEventListener);
         }
