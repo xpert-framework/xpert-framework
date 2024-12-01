@@ -237,5 +237,11 @@ public class DateUtils implements Serializable {
     public static LocalDateTime dateToLocalDateTime(Date date) {
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
-    
+
+    public static Date locaDateTimeToDate(LocalDateTime locaDateTime) {
+        return java.util.Date
+                .from(locaDateTime.atZone(ZoneId.systemDefault())
+                        .toInstant());
+    }
+
 }

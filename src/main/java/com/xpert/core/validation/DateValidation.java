@@ -1,6 +1,8 @@
 package com.xpert.core.validation;
 
+import com.xpert.utils.DateUtils;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,5 +37,15 @@ public class DateValidation implements Serializable {
             return false;
         }
 
+    }
+
+    public static boolean validateDateRange(LocalDateTime dataStart, LocalDateTime dataEnd) {
+        if (dataStart != null && dataEnd != null) {
+            Date inicio = DateUtils.locaDateTimeToDate(dataStart);
+            Date fim = DateUtils.locaDateTimeToDate(dataEnd);
+            return validateDateRange(inicio, fim);
+        } else {
+            return false;
+        }
     }
 }
