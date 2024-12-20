@@ -10,7 +10,6 @@ import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.persistence.EntityManager;
 import java.io.Serializable;
 import org.hibernate.LazyInitializationException;
-import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
@@ -20,6 +19,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLazinessInterceptor;
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.engine.internal.ManagedTypeHelper;
+import static org.hibernate.engine.internal.ManagedTypeHelper.asPersistentAttributeInterceptable;
+import static org.hibernate.engine.internal.ManagedTypeHelper.isPersistentAttributeInterceptable;
+import org.hibernate.engine.spi.PersistentAttributeInterceptor;
 
 /**
  *
@@ -28,7 +33,7 @@ import java.util.regex.Pattern;
 public class InitializerBean implements Serializable {
 
     private static final long serialVersionUID = 810845198330364145L;
-    
+
     private static final boolean DEBUG = false;
     private static final Logger logger = Logger.getLogger(InitializerBean.class.getName());
     private Map<ClassIdentifier, Object> cache = new HashMap<>();
@@ -92,39 +97,48 @@ public class InitializerBean implements Serializable {
                 value = FacesUtils.getBeanByEl(expression);
             }
         }
-        
-        if(value == null){
+
+        if (value == null) {
             return;
         }
 
-        LazyInitializer lazyInitializer = null;
+        if (ManagedTypeHelper.isHibernateProxy(value)) {
 
-        if (value instanceof HibernateProxy) {
-            lazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
-            Object cached = cache.get(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()));
-            if (cached != null) {
-                if (DEBUG) {
-                    logger.log(Level.INFO, "Initializer: Object from class {0} id {1} expression found in cache", new Object[]{lazyInitializer.getPersistentClass().getName(), lazyInitializer.getIdentifier(), expression});
+            HibernateProxy hibernateProxy = ManagedTypeHelper.asHibernateProxy(value);
+
+            if (hibernateProxy != null) {
+
+                LazyInitializer lazyInitializer = hibernateProxy.getHibernateLazyInitializer();
+                Object cached = cache.get(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()));
+
+                if (cached != null) {
+                    if (DEBUG) {
+                        logger.log(Level.INFO, "Initializer: Object from class {0} id {1} expression found in cache", new Object[]{lazyInitializer.getPersistentClass().getName(), lazyInitializer.getIdentifier(), expression});
+                    }
+                    FacesUtils.setValueEl(expression, cached);
+                    return;
                 }
-                FacesUtils.setValueEl(expression, cached);
-                return;
             }
-
         }
 
-        if (value instanceof HibernateProxy || value instanceof PersistentCollection) {
-            if (DEBUG) {
-                logger.log(Level.INFO, "Initializer: Initializing expression {0} in database", new Object[]{expression});
-            }
+        if (isPersistentAttributeInterceptable(value) || value instanceof PersistentCollection) {
+
             Object initialized = dao.getInitialized(value);
-            if (value instanceof HibernateProxy) {
-                if (lazyInitializer == null) {
-                    lazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
+
+            if (isPersistentAttributeInterceptable(value)) {
+                PersistentAttributeInterceptor interceptor = asPersistentAttributeInterceptable(value).$$_hibernate_getInterceptor();
+
+                if (interceptor != null && interceptor instanceof EnhancementAsProxyLazinessInterceptor lazinessInterceptor) {
+                    Object identifier = lazinessInterceptor.getEntityKey().getIdentifier();
+                    Class<?> entityClass = lazinessInterceptor.getEntityKey().getPersister().getMappedClass();
+                    cache.put(new ClassIdentifier(identifier, entityClass), initialized);
                 }
-                cache.put(new ClassIdentifier(lazyInitializer.getIdentifier(), lazyInitializer.getPersistentClass()), initialized);
             }
+
             FacesUtils.setValueEl(expression, initialized);
+
         }
+
     }
 
     /**

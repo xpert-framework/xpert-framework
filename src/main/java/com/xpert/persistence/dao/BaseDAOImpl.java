@@ -922,7 +922,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
 
         if (isPersistentAttributeInterceptable(object)) {
             final PersistentAttributeInterceptor interceptor = asPersistentAttributeInterceptable(object).$$_hibernate_getInterceptor();
-            if (interceptor instanceof EnhancementAsProxyLazinessInterceptor lazinessInterceptor) {
+            if (interceptor != null && interceptor instanceof EnhancementAsProxyLazinessInterceptor lazinessInterceptor) {
                 Object identifier = lazinessInterceptor.getEntityKey().getIdentifier();
                 Class<?> entity = lazinessInterceptor.getEntityKey().getPersister().getMappedClass();
                 return (U) getEntityManager().find(entity, identifier);
