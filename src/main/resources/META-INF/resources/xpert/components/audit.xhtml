@@ -34,11 +34,10 @@
                                  icon="#{cc.attrs.buttonIcon}"
                                  styleClass="x-button-detail-auditing #{cc.attrs.buttonStyleClass}"
                                  value="#{xmsg['auditing']}"
-                                 oncomplete="closeAllRowExpansion(); clickButton();">
+                                 onclick="clickButton();"
+                                 oncomplete="PF('x-widgetDataTableAudit').collapseAllRows();">
                     <f:setPropertyActionListener value="#{cc.attrs.entity}" target="#{auditBean.object}" />
                 </p:commandButton>
-
-                <p:remoteCommand name="closeAllRowExpansion" oncomplete="PF('x-widgetDataTableAudit').collapseAllRows()" />
 
                 <h:panelGroup rendered="#{not cc.attrs.collapsed}">
                     <f:event type="preRenderComponent" listener="#{auditBean.detail(cc.attrs.entity)}" />
