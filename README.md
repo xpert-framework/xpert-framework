@@ -1,4 +1,6 @@
-## What is Xpert-framework?
+## What is Xpert-framework 2025?
+
+Modernização do Xpert Framework para Jakarta EE 10+, Java 21, PrimeFaces Premium, novo layout Ultima.
 
 Xpert-Framework is a component suite for JSF 2, EJB and JPA/Hibernate, integrated with Primefaces, the main idea of xpert-framework is facilitate the development of Web applications.
 
