@@ -20,7 +20,6 @@ import org.hibernate.bytecode.enhance.spi.interceptor.EnhancementAsProxyLaziness
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.internal.ManagedTypeHelper;
 import org.hibernate.engine.spi.PersistentAttributeInterceptor;
-import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +44,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
 
     private static final long serialVersionUID = 2097589326637061615L;
 
-    private Class entityClass;
+    private Class<T> entityClass;
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
     private static final Map<ClassField, String> ORDER_BY_MAP = new HashMap<>();
 
@@ -97,8 +95,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
 
     @Override
     public Connection getConnection() throws SQLException {
-        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) getSession().getSessionFactory();
-        return sessionFactoryImpl.getJdbcServices().getBootstrapJdbcConnectionAccess().obtainConnection();
+        return getSession().doReturningWork(conn -> conn);
     }
 
     @Override
@@ -280,6 +277,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
         return find(id, false);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T find(Object id, boolean audit) {
         return (T) getEntityManager(audit).find(getEntityClass(), id);
@@ -600,7 +598,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
 
     @Override
     public List<T> listAttributes(String attributes, String order, boolean audit) {
-        return list(getEntityClass(), (List) null, order, null, null, attributes, audit);
+        return list(getEntityClass(), (List<Restriction>) null, order, null, null, attributes, audit);
     }
 
     @Override
@@ -1083,7 +1081,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>, Serializable {
      */
     private List<Restriction> getRestrictionsFromMap(Map<String, Object> args) {
         List<Restriction> restrictions = new ArrayList<>();
-        for (Entry e : args.entrySet()) {
+        for (Map.Entry<String, Object> e : args.entrySet()) {
             restrictions.add(new Restriction(e.getKey().toString(), e.getValue()));
         }
         return restrictions;

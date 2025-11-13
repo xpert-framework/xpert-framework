@@ -29,9 +29,9 @@
         <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
         
-        <primefaces.version>14.0.6</primefaces.version>
-        <hibernate.version>6.6.2.Final</hibernate.version>
-        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <primefaces.version>15.0.9</primefaces.version>
+        <hibernate.version>6.6.34.Final</hibernate.version>
+        <hibernate-validator.version>8.0.3.Final</hibernate-validator.version>
         
     </properties>
 
