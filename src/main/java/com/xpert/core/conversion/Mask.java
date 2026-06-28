@@ -42,7 +42,7 @@ public class Mask {
 
     public static String maskCnpj(String value) {
         if (value != null && !value.isEmpty()) {
-            value = value.replaceAll("[^\\d]", "");
+            value = value.replaceAll("[^A-Za-z0-9]", "");
             if (value.length() < CNPJ_LENGTH) {
                 value = fillZeros(value, CNPJ_LENGTH);
             }
@@ -72,7 +72,7 @@ public class Mask {
         }
         return value;
     }
-
+    
     public static String mask(String value, String mask) {
         for (int i = 0; i < value.length(); i++) {
             mask = mask.replaceFirst("#", value.substring(i, i + 1));

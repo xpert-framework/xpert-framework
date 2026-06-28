@@ -18,7 +18,7 @@ public class CpfCnpjConverter implements Converter {
         String cpfCnpj = "";
 
         if (value != null) {
-            cpfCnpj = value.replaceAll("[^\\d]", "");
+            cpfCnpj = value.replaceAll("[^A-Za-z0-9]", "");
         }
 
         return cpfCnpj;
