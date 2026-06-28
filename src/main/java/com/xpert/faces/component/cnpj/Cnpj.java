@@ -11,7 +11,8 @@ import org.primefaces.component.inputmask.InputMask;
  */
 public class Cnpj extends InputMask {
 
-    private static final String MASK = "99.999.999/9999-99";
+    //CNPN anterior: 99.999.999/9999-99
+    private static final String MASK = "**.***.***/****-99";
 
     public Cnpj() {
         setMask(MASK);

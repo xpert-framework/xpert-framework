@@ -95,50 +95,7 @@ public class Validation {
     }
 
     public static boolean validateCNPJ(String cnpj) {
-        @SuppressWarnings("unused")
-        int soma = 0, aux, dig;
-
-        cnpj = cnpj.replace(".", "").replace("-", "").replace("/", "");
-
-        if (cnpj.length() != 14) {
-            return false;
-        }
-
-        String cnpj_calc = cnpj.substring(0, 12);
-
-        char[] chr_cnpj = cnpj.toCharArray();
-
-        // Primeira parte
-        for (int i = 0; i < 4; i++) {
-            if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9) {
-                soma += (chr_cnpj[i] - 48) * (6 - (i + 1));
-            }
-        }
-        for (int i = 0; i < 8; i++) {
-            if (chr_cnpj[i + 4] - 48 >= 0 && chr_cnpj[i + 4] - 48 <= 9) {
-                soma += (chr_cnpj[i + 4] - 48) * (10 - (i + 1));
-            }
-        }
-        dig = 11 - (soma % 11);
-
-        cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
-
-        // Segunda parte
-        soma = 0;
-        for (int i = 0; i < 5; i++) {
-            if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9) {
-                soma += (chr_cnpj[i] - 48) * (7 - (i + 1));
-            }
-        }
-        for (int i = 0; i < 8; i++) {
-            if (chr_cnpj[i + 5] - 48 >= 0 && chr_cnpj[i + 5] - 48 <= 9) {
-                soma += (chr_cnpj[i + 5] - 48) * (10 - (i + 1));
-            }
-        }
-        dig = 11 - (soma % 11);
-        cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
-
-        return cnpj.equals(cnpj_calc);
+        return AlfaCNPJValidator.isValid(cnpj);
     }
 
     public static boolean validateEmail(String strEmail) {
@@ -153,7 +110,6 @@ public class Validation {
 
         return retorno;
     }
-
 
     public static boolean validateCEP(String cep) {
         boolean retorno = true;
@@ -170,15 +126,12 @@ public class Validation {
         return retorno;
     }
 
-  
-    
     public static boolean validateLongitude(String coordenada) {
         coordenada = coordenada.toUpperCase();
         try {
             if (coordenada.charAt(3) != 'º'
                     || coordenada.charAt(6) != '\''
-                    || !coordenada.substring(9, 11).equals("\'\'")
-                    ) {
+                    || !coordenada.substring(9, 11).equals("\'\'")) {
                 return false;
             }
             int graus = Integer.parseInt(coordenada.substring(0, 3));
@@ -194,14 +147,13 @@ public class Validation {
         }
         return true;
     }
-    
+
     public static boolean validateLatitude(String coordenada) {
         coordenada = coordenada.toUpperCase();
         try {
             if (coordenada.charAt(2) != 'º'
                     || coordenada.charAt(5) != '\''
-                    || !coordenada.substring(8, 10).equals("\'\'")
-                    ) {
+                    || !coordenada.substring(8, 10).equals("\'\'")) {
                 return false;
             }
             int graus = Integer.parseInt(coordenada.substring(0, 2));
@@ -217,8 +169,8 @@ public class Validation {
         }
         return true;
     }
-    
-     /**
+
+    /**
      * TRUE if String is blank
      *
      * @param string
@@ -232,7 +184,7 @@ public class Validation {
         return false;
 
     }
-    
+
     /**
      * TRUE if RENAVAM is valid
      *
@@ -241,22 +193,22 @@ public class Validation {
      */
     public static boolean validateRENAVAM(String string) {
 
-        if(isBlank(string)){
+        if (isBlank(string)) {
             return false;
         }
-        
+
         if (string.length() < 9 || string.length() > 11) {
             return false;
         }
-        
-        String dv = string.substring(string.length()-1);
-        
-        String dvGenerate = Mod11.getDV(string.substring(0, string.length()-1));
-        
-        if(dv.equals(dvGenerate)){
-             return true;
+
+        String dv = string.substring(string.length() - 1);
+
+        String dvGenerate = Mod11.getDV(string.substring(0, string.length() - 1));
+
+        if (dv.equals(dvGenerate)) {
+            return true;
         }
-        
+
         return false;
 
     }
